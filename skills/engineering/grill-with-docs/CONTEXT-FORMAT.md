@@ -26,4 +26,4 @@ A single Domain Glossary DB page = one canonical term. The **page title** is the
 
 ## Why this shape
 
-Notion's Domain Glossary DB is flat — there is no multi-context branching. One page per term, full stop. If a monorepo needs to separate ordering-domain terms from billing-domain terms, do it with a `Domain` select property on the DB schema (not by spawning multiple glossary DBs).
+Notion's Domain Glossary DB is flat — one page per term, no branching by domain. If a monorepo needs to separate ordering-domain terms from billing-domain terms, do it with a `Domain` select property on the DB schema (not by spawning multiple glossary DBs).
