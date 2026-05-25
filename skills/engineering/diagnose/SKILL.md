@@ -7,7 +7,7 @@ description: Disciplined diagnosis loop for hard bugs and performance regression
 
 A discipline for hard bugs. Skip phases only when explicitly justified.
 
-When exploring the codebase, use the project's domain glossary to get a clear mental model of the relevant modules, and check ADRs in the area you're touching.
+When exploring the codebase, ground your mental model of the relevant modules in the project's domain language and check documented architectural decisions. The pointers to the glossary and ADR sources live in CLAUDE.md / AGENTS.md under the `## Agent skills` section's **Domain language** entry, written by `/setup-bonai-skills`. If that entry is missing, the project hasn't been set up — proceed without grounding rather than guessing.
 
 ## Phase 1 — Build a feedback loop
 
@@ -89,6 +89,8 @@ Tool preference:
 **Perf branch.** For performance regressions, logs are usually wrong. Instead: establish a baseline measurement (timing harness, `performance.now()`, profiler, query plan), then bisect. Measure first, fix second.
 
 ## Phase 5 — Fix + regression test
+
+The regression-test command is `test_command` from `docs/agents/commands.md`. If that file is missing, stop and ask the user to run `/setup-bonai-skills`.
 
 Write the regression test **before the fix** — but only if there is a **correct seam** for it.
 
