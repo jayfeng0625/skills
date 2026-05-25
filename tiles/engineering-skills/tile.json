@@ -1,0 +1,11 @@
+{
+  "name": "bonai-dev/engineering-skills",
+  "version": "2026.05.0",
+  "summary": "Engineering skills for daily code work — Notion-first, language-agnostic",
+  "private": true,
+  "skills": {
+    "setup-bonai-skills": {
+      "path": "skills/setup-bonai-skills/SKILL.md"
+    }
+  }
+}
