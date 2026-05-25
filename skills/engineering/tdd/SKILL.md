@@ -15,6 +15,15 @@ description: Test-driven development with red-green-refactor loop. Use when user
 
 See [tests.md](tests.md) for examples and [mocking.md](mocking.md) for mocking guidelines.
 
+## Commands
+
+This skill never names a test runner directly. The canonical commands live in `docs/agents/commands.md`, written by `/setup-bonai-skills`:
+
+- Run the test suite with `test_command`.
+- Run the type-checker with `typecheck_command` (if set).
+
+If `docs/agents/commands.md` is missing, stop and ask the user to run `/setup-bonai-skills` — do not invent a command from `package.json`.
+
 ## Anti-Pattern: Horizontal Slices
 
 **DO NOT write all tests first, then all implementation.** This is "horizontal slicing" - treating RED as "write all tests" and GREEN as "write all code."
@@ -44,7 +53,7 @@ RIGHT (vertical):
 
 ### 1. Planning
 
-When exploring the codebase, use the project's domain glossary so that test names and interface vocabulary match the project's language, and respect ADRs in the area you're touching.
+When exploring the codebase, ground test names and interface vocabulary in the project's domain language, and respect documented architectural decisions. The pointers to the glossary and ADR sources live in CLAUDE.md / AGENTS.md under the `## Agent skills` section's **Domain language** entry, written by `/setup-bonai-skills`. If that entry is missing, the project hasn't been set up — proceed without grounding rather than guessing where the sources live.
 
 Before writing any code:
 
