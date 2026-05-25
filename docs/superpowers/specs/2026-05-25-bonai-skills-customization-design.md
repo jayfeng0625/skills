@@ -65,12 +65,14 @@ Skills only know **abstract verbs**. The tile-shipped `tracker-primitives/notion
 | `create issue page` | `/to-issues`, `/triage` |
 | `create PRD page` | `/to-prd` |
 | `create handoff page` | `/handoff` |
-| `read glossary` | `/tdd`, `/diagnose`, `/grill-with-docs`, `/triage`, `/to-issues`, `/to-prd`, `/improve-codebase-architecture` |
+| `read glossary` | `/grill-with-docs`, `/triage`, `/to-issues`, `/to-prd`, `/improve-codebase-architecture` |
 | `write glossary entry` | `/grill-with-docs`, `/improve-codebase-architecture` |
-| `read ADRs in area` | `/tdd`, `/diagnose`, `/grill-with-docs`, `/triage`, `/improve-codebase-architecture` |
+| `read ADRs in area` | `/grill-with-docs`, `/triage`, `/improve-codebase-architecture` |
 | `create ADR` | `/grill-with-docs`, `/improve-codebase-architecture` |
 
 Skills must not introduce new verbs without updating this list and the primitives files.
+
+**Read-without-primitives path.** Skills that *only* read (`/tdd`, `/diagnose`) and don't otherwise need `tracker-primitives/` consume the same conceptual reads — domain glossary and area-relevant ADRs — via a direct pointer in CLAUDE.md / AGENTS.md's `## Agent skills` → **Domain language** entry, written by `/setup-bonai-skills`. They do not invoke the verbs and do not load `tracker-primitives/`. The verbs stay in the vocabulary because skills that also *write* (`/grill-with-docs` and the Stage 2 set) pair them with `write glossary entry` / `create ADR` and benefit from the read+write API living in one file.
 
 ### 4.3 The 5 Notion databases
 
@@ -84,7 +86,7 @@ Skills must not introduce new verbs without updating this list and the primitive
 
 `/setup-bonai-skills` writes:
 
-- `CLAUDE.md` (or `AGENTS.md`): a minimal `## Agent skills` block pointing to the two config files
+- `CLAUDE.md` (or `AGENTS.md`): a minimal `## Agent skills` block with three entries — **Commands** (pointer to `docs/agents/commands.md`), **Notion** (pointer to `docs/agents/notion.md`), and **Domain language** (the read-without-primitives pointer used by `/tdd` and `/diagnose`)
 - `docs/agents/commands.md`: `test_command`, `lint_command`, `typecheck_command`, `build_command` — asked once at setup time, cached per repo (no per-run detection)
 - `docs/agents/notion.md`: workspace ID, 5 DB IDs, property→canonical-role mappings
 
@@ -181,13 +183,13 @@ The `.out-of-scope/*.md` knowledge base (used by `/triage` to avoid re-suggestin
 
 #### `tdd`
 
-- Replace "use the project's domain glossary" with abstract verb **`read glossary`**.
+- Replace "use the project's domain glossary" with a pointer to CLAUDE.md's `## Agent skills` → **Domain language** entry. TDD reads via the pointer; it does **not** load `tracker-primitives/` (see §4.2 "Read-without-primitives path").
 - Add explicit references to `docs/agents/commands.md` for `test_command` and `typecheck_command` wherever the skill body would otherwise need to name a runner. The skill body must never mention vitest/jest/pytest/junit/etc. by name.
 - Audit supporting files (`tests.md`, `mocking.md`, `deep-modules.md`, `interface-design.md`, `refactoring.md`) for vitest/jest/etc. leakage and neutralize.
 
 #### `diagnose`
 
-- Replace "domain glossary" / "check ADRs" with abstract verbs (`read glossary`, `read ADRs in area`).
+- Replace "domain glossary" / "check ADRs" with a pointer to CLAUDE.md's `## Agent skills` → **Domain language** entry. Diagnose reads via the pointer; it does **not** load `tracker-primitives/` (see §4.2 "Read-without-primitives path").
 - Phase 5 regression-test command → defer to `commands.md`.
 - Bundle `scripts/hitl-loop.template.sh` referenced in Phase 1 (verify existence; create if missing).
 
