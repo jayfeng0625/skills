@@ -1,5 +1,5 @@
 {
-  "name": "mattpocock-skills",
+  "name": "bonai-skills",
   "skills": [
     "./skills/engineering/diagnose",
     "./skills/engineering/grill-with-docs",
@@ -11,9 +11,9 @@
     "./skills/engineering/to-prd",
     "./skills/engineering/zoom-out",
     "./skills/engineering/prototype",
+    "./skills/engineering/handoff",
     "./skills/productivity/caveman",
     "./skills/productivity/grill-me",
-    "./skills/productivity/handoff",
     "./skills/productivity/write-a-skill"
   ]
 }
