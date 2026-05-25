@@ -19,22 +19,23 @@ Tailor the 14 engineering and productivity skills inherited from `mattpocock/ski
 | Packaging | Two tiles: `bonai-dev/engineering-skills`, `bonai-dev/productivity-skills` | Coarser versioning, simpler manifests than 14 per-skill tiles |
 | Versioning | Calver (`2026.05.0`), private | Continuously-evolving personal set; no public commitment yet |
 | Customization depth | Medium — keep Matt's names, rewrite ambiguous sections | Lowest churn; names are already outcome-shaped |
+| Skill posture | Outcome-driven — skills lean on agent-led interrogation (AskUserQuestion patterns) to extract requirements and remove ambiguity rather than rigid checklists | Maximizes use of the agent to decompose problems with the user instead of prescribing flows |
 | Tech stack posture | Language-agnostic | User works across TS/Node + Kotlin/JVM; skills should not assume |
 | Issue tracker | Notion via Notion MCP | User's actual workflow surface |
 | Superpowers relationship | Independent — no references | Bonai is intended to replace superpowers |
 | Cadence | Stage 1 (5 skills) → Stage 2 (rest) | Validate Notion+commands contract before scaling |
 
-## 3. Bucket reshuffle (target end state, after Stage 2)
+## 3. Bucket assignment
 
-`/handoff` moves from **productivity** to **engineering** because it requires Notion primitives (creating a page in the Handoffs DB). This keeps productivity completely independent of the tracker-primitives layer.
+`/handoff` moves from **productivity** to **engineering** because it requires Notion primitives (creating a page in the Handoffs DB). This keeps productivity completely independent of the tracker-primitives layer. The folder move happens in Stage 1 (§7.1 step 2), even though `/handoff`'s body customization waits until Stage 2.
 
-**Engineering tile (11 skills, target state)**
+**Engineering bucket (11 skills, post-reshuffle)**
 `setup-bonai-skills`, `tdd`, `diagnose`, `grill-with-docs`, `prototype`, `triage`, `to-issues`, `to-prd`, `improve-codebase-architecture`, `zoom-out`, `handoff`
 
-**Productivity tile (3 skills, target state)**
+**Productivity bucket (3 skills, post-reshuffle)**
 `caveman`, `grill-me`, `write-a-skill`
 
-Per the staged cadence (§7), Stage 1 publishes only the engineering tile with **5 skills in its manifest**. The remaining engineering skills + the productivity tile are added in Stage 2.
+Per the staged cadence (§7), Stage 1 publishes **only the engineering tile** with **5 skills in its manifest**. The remaining engineering skills (in the repo but excluded from the manifest) and the productivity tile (not scaffolded yet) are added in Stage 2.
 
 ## 4. The contract: how skills talk to Notion
 
@@ -84,7 +85,7 @@ Skills must not introduce new verbs without updating this list and the primitive
 `/setup-bonai-skills` writes:
 
 - `CLAUDE.md` (or `AGENTS.md`): a minimal `## Agent skills` block pointing to the two config files
-- `docs/agents/commands.md`: `test_command`, `lint_command`, `typecheck_command`, `build_command` — detected from `package.json` / `build.gradle` / `pyproject.toml`, confirmed with user, cached
+- `docs/agents/commands.md`: `test_command`, `lint_command`, `typecheck_command`, `build_command` — asked once at setup time, cached per repo (no per-run detection)
 - `docs/agents/notion.md`: workspace ID, 5 DB IDs, property→canonical-role mappings
 
 **Example `docs/agents/notion.md`:**
@@ -173,7 +174,7 @@ The `.out-of-scope/*.md` knowledge base (used by `/triage` to avoid re-suggestin
 
 - Promote Notion from "Other → freeform" to first-class default.
 - Drop GitHub/GitLab branches from the primary flow; keep them as references under `tracker-primitives/`.
-- New section **Commands**: detect from `package.json` / `build.gradle` / `pyproject.toml` / `Cargo.toml`, confirm with user, write to `docs/agents/commands.md`.
+- New section **Commands**: ask the user once per repo for `test_command`, `lint_command`, `typecheck_command`, `build_command` and cache the answers in `docs/agents/commands.md`. May surface candidate defaults from `package.json` / `build.gradle` / `pyproject.toml` / `Cargo.toml` as inference hints, but the user's answer is authoritative — no silent detection.
 - New section **Notion**: ask for 5 DB IDs + property mappings, write `docs/agents/notion.md`. Optionally offer to create missing DBs from seed schemas if user grants Notion MCP write access.
 - Drop the Domain Docs file-layout question (CONTEXT.md and ADRs moved to Notion).
 - Keep `disable-model-invocation: true` (user-invoked only).
@@ -181,7 +182,7 @@ The `.out-of-scope/*.md` knowledge base (used by `/triage` to avoid re-suggestin
 #### `tdd`
 
 - Replace "use the project's domain glossary" with abstract verb **`read glossary`**.
-- Replace any test-runner-agnostic prose with explicit reference to `docs/agents/commands.md` (`test_command`, `typecheck_command`).
+- Add explicit references to `docs/agents/commands.md` for `test_command` and `typecheck_command` wherever the skill body would otherwise need to name a runner. The skill body must never mention vitest/jest/pytest/junit/etc. by name.
 - Audit supporting files (`tests.md`, `mocking.md`, `deep-modules.md`, `interface-design.md`, `refactoring.md`) for vitest/jest/etc. leakage and neutralize.
 
 #### `diagnose`
@@ -198,7 +199,7 @@ The `.out-of-scope/*.md` knowledge base (used by `/triage` to avoid re-suggestin
 
 #### `prototype`
 
-- No skill-body changes (already validated as covering both static HTML mockups and interactive Opus prototypes).
+- No skill-body changes. User confirmed the existing skill already addresses both branches relevant to their workflow: state/logic prototypes (terminal app) and divergent UI variations (HTML routes). The Opus-4.7-driven interactive prototype and static-HTML-mockup use cases the user mentioned in Round 1 are covered by the existing UI branch.
 - Verify `LOGIC.md` and `UI.md` supporting files exist.
 
 ### 6.2 Stage 2 (later)
@@ -229,8 +230,8 @@ The `.out-of-scope/*.md` knowledge base (used by `/triage` to avoid re-suggestin
 
 #### `zoom-out`
 
-- Start as a 1-liner skill with supporting refs (modules map, callers index).
-- Evolution path toward a full workflow (Agent(Explore)-driven mapping).
+- Start as a 1-liner skill that loads supporting refs (modules map, callers index) when invoked. Stays close to today's terse shape.
+- Evolution path toward a full workflow: use Agent(Explore) to walk the codebase, map modules + callers, render the result as a tree, and name unfamiliar terms against the Notion Domain Glossary DB. Progress from 1-liner → full workflow as friction emerges, not on a fixed schedule.
 
 #### `handoff` (moved to engineering)
 
@@ -297,9 +298,8 @@ Stage 1 is done when:
 
 ## 9. Open items deferred to implementation
 
-- Exact `tile.json` schema — defer to whatever `mcp__tessl__new_tile` scaffolds.
-- Whether `/setup-bonai-skills` should **create** Notion DBs from seed schemas, or only accept existing IDs (lean toward offering both: detect-or-create on first run).
-- Whether the engineering tile bundles `gh.md` and `local.md` primitives in Stage 1 even though Stage 1 skills don't use them (lean toward yes — establishes the pattern).
+- Exact `tile.json` schema — defer to whatever `mcp__tessl__new_tile` scaffolds. The spec assumes the scaffold accepts a list of skills and a calver string; if the actual schema differs, the implementation plan will adapt.
+- **Default Issues DB property shape.** The original Round 4 question about state-machine→property mapping (Status-only vs Status+Category vs multi-select labels vs probe-schema) was dropped when the user re-asked Round 4 with baseline context. The §4.4 example assumes **Status + Category** as the default seed, but the property shape is ultimately user-supplied during `/setup-bonai-skills`. If the user prefers a different default (e.g. multi-select Labels for closer GitHub parity), call it out during implementation and the spec/example will be updated.
 
 ## 10. Out of scope
 
