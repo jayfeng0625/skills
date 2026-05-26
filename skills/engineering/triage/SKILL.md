@@ -39,6 +39,19 @@ These are canonical role names — the actual label strings used in the issue tr
 
 State transitions: an unlabeled issue normally goes to `needs-triage` first; from there it moves to `needs-info`, `ready-for-agent`, `ready-for-human`, or `wontfix`. `needs-info` returns to `needs-triage` once the reporter replies. The maintainer can override at any time — flag transitions that look unusual and ask before proceeding.
 
+## Verbs used
+
+This skill uses the following abstract verbs from `tracker-primitives/`:
+
+- `transition state` — when applying a state role to an issue
+- `post triage note` — for the reporter-facing notes (template below)
+- `post agent brief` — for the agent-facing work specification ([AGENT-BRIEF.md](AGENT-BRIEF.md))
+- `create issue page` — when triage produces a new issue (rare; mainly via `/to-issues`)
+- `read glossary` — to ground the issue summary in the project's domain language
+- `read ADRs in area` — to avoid re-suggesting work that an ADR forbids
+
+Backend-specific MCP / CLI mappings live in `../tracker-primitives/<backend>.md`.
+
 ## Invocation
 
 The maintainer invokes `/triage` and describes what they want in natural language. Interpret the request and act. Examples:
@@ -69,16 +82,16 @@ Show counts and a one-line summary per issue. Let the maintainer pick.
 4. **Grill (if needed).** If the issue needs fleshing out, run a `/grill-with-docs` session.
 
 5. **Apply the outcome:**
-   - `ready-for-agent` — post an agent brief comment ([AGENT-BRIEF.md](AGENT-BRIEF.md)).
-   - `ready-for-human` — same structure as an agent brief, but note why it can't be delegated (judgment calls, external access, design decisions, manual testing).
-   - `needs-info` — post triage notes (template below).
-   - `wontfix` (bug) — polite explanation, then close.
-   - `wontfix` (enhancement) — write to `.out-of-scope/`, link to it from a comment, then close ([OUT-OF-SCOPE.md](OUT-OF-SCOPE.md)).
-   - `needs-triage` — apply the role. Optional comment if there's partial progress.
+   - `ready-for-agent` — invoke `transition state` to set the state role, then `post agent brief` ([AGENT-BRIEF.md](AGENT-BRIEF.md)) as a child page of the issue.
+   - `ready-for-human` — invoke `transition state`, then `post agent brief` with the same template but note why it can't be delegated (judgment calls, external access, design decisions, manual testing).
+   - `needs-info` — invoke `transition state` (if not already in `needs-info`), then `post triage note` (template below) for the reporter.
+   - `wontfix` (bug) — invoke `transition state` to `wontfix` and post a brief explanation via `post triage note`; close the issue.
+   - `wontfix` (enhancement) — write to `.out-of-scope/` ([OUT-OF-SCOPE.md](OUT-OF-SCOPE.md)), then invoke `transition state` to `wontfix` and link to the file from a `post triage note`; close.
+   - `needs-triage` — invoke `transition state` to apply the role. Optional `post triage note` if there's partial progress.
 
 ## Quick state override
 
-If the maintainer says "move #42 to ready-for-agent", trust them and apply the role directly. Confirm what you're about to do (role changes, comment, close), then act. Skip grilling. If moving to `ready-for-agent` without a grilling session, ask whether they want to write an agent brief.
+If the maintainer says "move #42 to ready-for-agent", trust them and invoke `transition state` directly. Confirm what you're about to do (role changes, brief, close), then act. Skip grilling. If moving to `ready-for-agent` without a grilling session, ask whether they want to invoke `post agent brief` separately.
 
 ## Needs-info template
 

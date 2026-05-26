@@ -13,6 +13,15 @@ Tool: `gh issue edit <number> --add-label <mapped-label> --remove-label <old-map
 
 Tool: `gh issue comment <number> --body "<note>"`
 
+### `post agent brief`
+
+GitHub has no native "child page" concept on an issue. Two equivalents:
+
+- **Long comment** (Stage 1 fallback): `gh issue comment <number> --body "<rendered brief>"`. Works but loses the URL-stable child-page property of the Notion backend.
+- **Linked discussion / wiki page**: open a corresponding wiki page or repo discussion via `gh api`, then link to it from a short `gh issue comment` on the issue.
+
+Stage 2 ships the long-comment form by default for the gh backend; consuming skills (`/triage`) treat it as the fallback path when the chosen backend is gh.
+
 ### `create issue page`
 
 Tool: `gh issue create --title "<title>" --body "<body>" --label "<status-label>"`

@@ -5,6 +5,14 @@ description: Turn the current conversation context into a PRD and publish it to 
 
 This skill takes the current conversation context and codebase understanding and produces a PRD. Do NOT interview the user — just synthesize what you already know.
 
+## Verbs used
+
+- `create PRD page` — to write the PRD into the PRDs DB
+- `read glossary` — to align the PRD's vocabulary with the project's domain language
+- `read ADRs in area` — to respect documented architectural decisions
+
+Backend-specific MCP / CLI mappings live in `../tracker-primitives/<backend>.md`.
+
 The issue tracker and triage label vocabulary should have been provided to you — run `/setup-bonai-skills` if not.
 
 ## Process
@@ -15,7 +23,9 @@ The issue tracker and triage label vocabulary should have been provided to you �
 
 Check with the user that these seams match their expectations.
 
-3. Write the PRD using the template below, then publish it to the project issue tracker. Apply the `ready-for-agent` triage label - no need for additional triage.
+3. Write the PRD using the template below, then invoke `create PRD page` (PRDs DB).
+
+The PRDs DB does not carry a triage state property — the PRD itself is the deliverable, not a tracked workstream. If `/to-prd` is invoked alongside `/to-issues` (i.e. the PRD is the source for a set of issues), the issues created by `/to-issues` will be transitioned to `ready-for-agent` per that skill's own flow (Matt's "no additional triage" pattern is preserved at the issue level, not the PRD level).
 
 <prd-template>
 
