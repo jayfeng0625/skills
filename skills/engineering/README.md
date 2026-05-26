@@ -2,7 +2,7 @@
 
 Skills for daily code work. The 5 skills below are in the Stage 1 tile manifest. The rest are present in the repo but not yet customized for bonai — they remain in the bucket for visibility but ship in Stage 2.
 
-## Stage 1 (in `bonai-dev/engineering-skills@2026.05.0`)
+## Stage 1 (in `bonai-dev/engineering-skills@2026.5.0`)
 
 - **[setup-bonai-skills](./setup-bonai-skills/SKILL.md)** — Scaffold per-repo config (`docs/agents/commands.md`, `docs/agents/notion.md`) that the other engineering skills consume.
 - **[tdd](./tdd/SKILL.md)** — Test-driven development with a red-green-refactor loop. Reads commands from `docs/agents/commands.md`; never names a test runner.

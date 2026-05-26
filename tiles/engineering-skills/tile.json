@@ -1,23 +1,23 @@
 {
   "name": "bonai-dev/engineering-skills",
-  "version": "2026.05.0",
+  "version": "2026.5.0",
   "summary": "Engineering skills for daily code work — Notion-first, language-agnostic",
   "private": true,
   "skills": {
     "setup-bonai-skills": {
-      "path": "../../skills/engineering/setup-bonai-skills/SKILL.md"
+      "path": "skills/setup-bonai-skills/SKILL.md"
     },
     "tdd": {
-      "path": "../../skills/engineering/tdd/SKILL.md"
+      "path": "skills/tdd/SKILL.md"
     },
     "diagnose": {
-      "path": "../../skills/engineering/diagnose/SKILL.md"
+      "path": "skills/diagnose/SKILL.md"
     },
     "grill-with-docs": {
-      "path": "../../skills/engineering/grill-with-docs/SKILL.md"
+      "path": "skills/grill-with-docs/SKILL.md"
     },
     "prototype": {
-      "path": "../../skills/engineering/prototype/SKILL.md"
+      "path": "skills/prototype/SKILL.md"
     }
   }
 }

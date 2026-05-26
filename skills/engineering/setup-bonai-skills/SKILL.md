@@ -35,7 +35,7 @@ Repeat for `lint_command`, `typecheck_command`, `build_command`. If any of the f
 
 ### 3. Walk the user through Notion
 
-Notion is the default backend in Stage 1; the interactive flow below is Notion-specific. If the user does not use Notion, point them at the reference recipes in `../tracker-primitives/gh.md` or `../tracker-primitives/local.md` and let them hand-author `docs/agents/<backend>.md` from those files — the engineering tile still works, just without the interactive setup for that backend.
+Notion is the default backend in Stage 1; the interactive flow below is Notion-specific. If the user does not use Notion, point them at the reference recipes in [../tracker-primitives/gh.md](../tracker-primitives/gh.md) or [../tracker-primitives/local.md](../tracker-primitives/local.md) and let them hand-author `docs/agents/<backend>.md` from those files — the engineering tile still works, just without the interactive setup for that backend.
 
 For Notion users, ask in sequence:
 

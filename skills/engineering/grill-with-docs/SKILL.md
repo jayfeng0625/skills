@@ -17,7 +17,7 @@ If a question can be answered by exploring the codebase, explore the codebase in
 
 ## Domain awareness
 
-Before grilling starts, use the **`read glossary`** and **`read ADRs in area`** verbs (see `../tracker-primitives/`) to load the existing domain language and architectural decisions. Cache them for the session.
+Before grilling starts, use the **`read glossary`** and **`read ADRs in area`** verbs (see [tracker-primitives/](../tracker-primitives/README.md)) to load the existing domain language and architectural decisions. Cache them for the session.
 
 If `docs/agents/notion.md` is missing, stop and ask the user to run `/setup-bonai-skills` — without the tracker config, writes during the session will have nowhere to go.
 

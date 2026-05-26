@@ -4,7 +4,7 @@ A personal, Notion-first set of agent skills I use every day. Packaged as two pr
 
 | Tile | Skills | Calver |
 |---|---|---|
-| [`bonai-dev/engineering-skills`](./skills/engineering/) | Daily code-work skills (TDD, diagnosis, grilling against docs, prototyping, repo setup) | `2026.05.0` |
+| [`bonai-dev/engineering-skills`](./skills/engineering/) | Daily code-work skills (TDD, diagnosis, grilling against docs, prototyping, repo setup) | `2026.5.0` |
 | `bonai-dev/productivity-skills` | General workflow skills (not yet published) | — |
 
 Skills lean on the agent to interrogate the user (via `AskUserQuestion`-style flows) rather than prescribing rigid checklists. The set replaces my prior use of the `superpowers` plugin — bonai is standalone and has no superpowers fallback.
@@ -27,7 +27,7 @@ skills/
 In a target repo, install the engineering tile from tessl:
 
 ```sh
-tessl install bonai-dev/engineering-skills@2026.05.0
+tessl install bonai-dev/engineering-skills@2026.5.0
 ```
 
 Then run the setup skill once per repo:
@@ -46,7 +46,7 @@ Skill bodies use only **abstract verbs** — never concrete tool calls. `skills/
 
 ### Engineering (11)
 
-Stage 1 — in the `bonai-dev/engineering-skills@2026.05.0` tile manifest:
+Stage 1 — in the `bonai-dev/engineering-skills@2026.5.0` tile manifest:
 
 - [`setup-bonai-skills`](./skills/engineering/setup-bonai-skills/SKILL.md) — per-repo config scaffolding
 - [`tdd`](./skills/engineering/tdd/SKILL.md) — test-driven development loop
