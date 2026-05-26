@@ -7,6 +7,14 @@ description: Break a plan, spec, or PRD into independently-grabbable issues on t
 
 Break a plan into independently-grabbable issues using vertical slices (tracer bullets).
 
+## Verbs used
+
+- `create issue page` — for each vertical slice
+- `transition state` — to move each new issue to `ready-for-agent` immediately after creation (Matt's "no additional triage needed" pattern; these issues are already specified enough to ship)
+- `read glossary` — to align titles and descriptions with the project's domain language
+
+Backend-specific MCP / CLI mappings live in `../tracker-primitives/<backend>.md`.
+
 The issue tracker and triage label vocabulary should have been provided to you — run `/setup-bonai-skills` if not.
 
 ## Process
@@ -49,11 +57,13 @@ Ask the user:
 
 Iterate until the user approves the breakdown.
 
-### 5. Publish the issues to the issue tracker
+### 5. Publish the issues
 
-For each approved slice, publish a new issue to the issue tracker. Use the issue body template below. These issues are considered ready for AFK agents, so publish them with the correct triage label unless instructed otherwise.
+For each approved slice, invoke `create issue page` (Issues DB) with the body rendered from the template below.
 
-Publish issues in dependency order (blockers first) so you can reference real issue identifiers in the "Blocked by" field.
+Publish issues in **dependency order** (blockers first) so the `Blocked by` relation can reference real, already-created issue page IDs. The Notion `Blocked by` property is a relation to the Issues DB (self) — set its value to the array of blocking issue page IDs at creation time. For non-Notion backends, see `../tracker-primitives/<backend>.md` for the equivalent expression.
+
+After each issue is created, immediately invoke `transition state` to move it from `needs-triage` (the seed default) to `ready-for-agent`. These slices are already specified enough to ship — no additional triage step is needed. (This preserves Matt's "publish with the correct triage label" pattern from the original `/to-issues`.)
 
 <issue-template>
 ## Parent
