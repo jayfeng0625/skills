@@ -25,6 +25,17 @@ Tool: `mcp__notion__notion-create-comment`
 - Target: the issue page ID
 - Body: the triage note in markdown
 
+### `post agent brief`
+
+Used by `/triage` to attach a long, structured work specification to an issue when the issue moves to `ready-for-agent` (or `ready-for-human`). The brief lives as a **child page** of the issue page so it has a stable URL and isn't truncated to Notion's comment length limits.
+
+Tool: `mcp__notion__notion-create-pages`
+- Parent: `{ page_id: <issue page id> }`
+- Title: short brief name (e.g. "Agent brief: <issue title>")
+- Body: rendered from the `AGENT-BRIEF.md` template in `skills/engineering/triage/`
+
+When the issue is later fetched (`mcp__notion__notion-fetch` on the issue page id), the brief appears in the returned children — the AFK agent reads it directly without needing a separate lookup.
+
 ### `create issue page`
 
 Used by `/to-issues` and `/triage` to create a new issue in the Issues DB.

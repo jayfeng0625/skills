@@ -15,6 +15,7 @@ Skills may only use these verbs. Adding a new verb requires a recipe in every ba
 |---|---|
 | `transition state` | `/triage` |
 | `post triage note` | `/triage` |
+| `post agent brief` | `/triage` |
 | `create issue page` | `/to-issues`, `/triage` |
 | `create PRD page` | `/to-prd` |
 | `create handoff page` | `/handoff` |
