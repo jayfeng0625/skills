@@ -31,6 +31,10 @@ Blocked by: relation → Issues DB
 
 Area (optional select): <list of area values, or "n/a">
 
+## Handoffs DB properties
+
+Epic (select): per-project workstream values; add options in Notion as new workstreams begin.
+
 ## Domain Glossary DB properties
 
 (no structured properties — page title = term, page body = definition)
@@ -56,6 +60,7 @@ These are the property definitions to pass to `mcp__notion__notion-create-databa
 
 - **Name** (title) — required
 - **Date** (date) — default today
+- **Epic** (select) — per-project workstream values; seed empty (user adds options on first use) or with a placeholder option
 
 ### Domain Glossary DB
 
