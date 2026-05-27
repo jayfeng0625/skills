@@ -5,6 +5,8 @@ description: Implements features or fixes bugs by writing a failing test first (
 
 # Test-Driven Development
 
+> **The Iron Law:** No production code without a failing test first. If you didn't watch the test fail, you don't know if it tests the right thing.
+
 ## Core principle
 
 Tests verify behavior through public interfaces. The warning sign of an implementation-coupled test: it breaks during refactor when behavior hasn't changed. See [tests.md](tests.md) for good/bad examples and [mocking.md](mocking.md) for when mocking is appropriate.
@@ -32,8 +34,8 @@ Before writing any code:
 
 - [ ] Confirm with user what interface changes are needed
 - [ ] Confirm with user which behaviors to test (prioritize)
-- [ ] Identify opportunities for [deep modules](deep-modules.md) (small interface, deep implementation)
-- [ ] Design interfaces for [testability](interface-design.md)
+- [ ] Identify opportunities for [deep modules](deep-modules.md) for internal logic — but inject collaborators (db, HTTP, clock, files); don't encapsulate them
+- [ ] Design interfaces for [testability](interface-design.md); see [mocking.md](mocking.md) for boundary patterns and mock shape
 - [ ] List the behaviors to test (not implementation steps)
 - [ ] Get user approval on the plan
 
@@ -61,9 +63,15 @@ Then write the minimal `checkout()` needed to turn it GREEN. Don't add the disco
 For each remaining behavior:
 
 ```
-RED:   Write next test → fails
-GREEN: Minimal code to pass → passes
+RED:   Write next test
+       Run test_command — confirm it fails for the right reason
+       (feature missing, not typo / setup / import error)
+GREEN: Minimal code to pass
+       Run test_command — confirm it passes
+       Other tests still pass; output pristine (no errors, warnings)
 ```
+
+If RED passes immediately, the test isn't exercising the new behavior — fix the test before proceeding. If GREEN can't be reached with minimal code, the test or the design is wrong — back up rather than write speculative code.
 
 Rules:
 
@@ -83,6 +91,28 @@ After all tests pass, look for [refactor candidates](refactoring.md):
 - [ ] Run tests after each refactor step
 
 **Never refactor while RED.** Get to GREEN first.
+
+## Common rationalizations
+
+These excuses lead to skipping TDD. They are not pragmatic — they cost more downstream:
+
+| Excuse | Reality |
+|---|---|
+| "Too simple to test" | Simple code breaks. Test takes 30 seconds. |
+| "I'll test after" | Tests-after answer "what does this do?" Tests-first answer "what should this do?" Tests written after pass immediately and prove nothing. |
+| "Already manually tested it" | Ad-hoc ≠ systematic. No record, can't re-run, easy to forget under pressure. |
+| "Hard to write the test = the test is wrong" | More often: hard to test = hard to use. Listen to the test — simplify the interface. |
+
+## Red flags — STOP and reset
+
+Any of these means you've drifted out of TDD. Discard what you just wrote and restart the cycle from RED:
+
+- Wrote code before the test
+- Test passed on first run (you're testing existing behavior, not new behavior)
+- Can't explain why the test failed
+- "I'll add tests later"
+- "This case is different"
+- Mocking your own classes or internal collaborators
 
 ## Checklist Per Cycle
 
