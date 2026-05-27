@@ -1,6 +1,6 @@
 ---
 name: grill-with-docs
-description: Grilling session that challenges your plan against the existing domain model, sharpens terminology, and writes glossary entries and ADRs to the project's tracker inline as decisions crystallise. Use when user wants to stress-test a plan against their project's language and documented decisions.
+description: Grills a plan against the project's existing domain model — challenges proposed terminology, walks each branch of the decision tree, and writes new glossary entries / ADRs to the project's tracker inline as decisions crystallise (Notion DB by default). Use when the user says "grill this with docs", "stress-test this against our domain model", "challenge my plan", "let's grill this with the glossary", or when a design proposal needs to be confronted with the project's documented decisions before being adopted.
 ---
 
 <what-to-do>
