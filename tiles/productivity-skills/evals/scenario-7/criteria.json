@@ -1,0 +1,56 @@
+{
+  "context": "Tests whether the agent applies grill-me conventions when producing a strategy grilling document: provides a recommended answer for every question, walks each branch of the design tree, and covers the strategy comprehensively rather than stopping at surface questions.",
+  "type": "weighted_checklist",
+  "checklist": [
+    {
+      "name": "Recommended answer per question",
+      "description": "Every numbered question in grill-session.md is immediately followed by a recommended answer from the agent (not just a question list)",
+      "max_score": 20
+    },
+    {
+      "name": "Pricing branch explored",
+      "description": "grill-session.md contains at least one question examining the pricing decision ($49/month, monthly billing, no annual discount)",
+      "max_score": 8
+    },
+    {
+      "name": "Distribution branch explored",
+      "description": "grill-session.md contains at least one question challenging the sales-only distribution strategy or trade show reliance",
+      "max_score": 8
+    },
+    {
+      "name": "Word of mouth assumption challenged",
+      "description": "grill-session.md contains at least one question challenging the 40% word-of-mouth growth assumption",
+      "max_score": 8
+    },
+    {
+      "name": "Competitive response branch explored",
+      "description": "grill-session.md contains at least one question about the missing competitive response model",
+      "max_score": 8
+    },
+    {
+      "name": "Team gap branch explored",
+      "description": "grill-session.md contains at least one question about the missing sales/marketing expertise on the founding team",
+      "max_score": 8
+    },
+    {
+      "name": "Minimum 8 questions",
+      "description": "grill-session.md contains at least 8 distinct numbered questions (relentless coverage, not a brief skim)",
+      "max_score": 15
+    },
+    {
+      "name": "Dependency ordering",
+      "description": "Questions that depend on each other are ordered logically — e.g. pricing questions come before customer acquisition math that assumes the price",
+      "max_score": 10
+    },
+    {
+      "name": "Non-code content only",
+      "description": "grill-session.md does NOT reference any codebase, implementation details, or suggest reading code to answer the questions",
+      "max_score": 8
+    },
+    {
+      "name": "Questions are distinct",
+      "description": "Each numbered question targets a different aspect of the strategy (no two questions ask essentially the same thing)",
+      "max_score": 7
+    }
+  ]
+}

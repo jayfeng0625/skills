@@ -1,0 +1,56 @@
+{
+  "context": "Tests whether the agent designs interfaces for testability: accepting external dependencies as parameters (not creating them internally), returning results rather than relying on side effects, and keeping the public surface area small.",
+  "type": "weighted_checklist",
+  "checklist": [
+    {
+      "name": "Dependency injection",
+      "description": "EmailService accepts the external email provider client as a constructor argument or function parameter — does NOT instantiate it internally (no 'new SendGridClient()' or 'new MailgunClient()' inside the implementation)",
+      "max_score": 15
+    },
+    {
+      "name": "Dependencies not created internally",
+      "description": "No external service clients, HTTP clients, or SDK instances are created inside EmailService methods — all external dependencies come in from outside",
+      "max_score": 12
+    },
+    {
+      "name": "Returns results",
+      "description": "EmailService methods return a value (e.g. a result object, success boolean, or message ID) rather than only producing side effects with void/undefined returns",
+      "max_score": 12
+    },
+    {
+      "name": "Small public surface",
+      "description": "EmailService exposes 3 or fewer public methods (e.g. sendWelcome, sendPasswordReset, send) — not a large number of methods",
+      "max_score": 10
+    },
+    {
+      "name": "Simple parameters",
+      "description": "Public methods take simple, minimal parameters — not large config objects or many positional arguments (simple params = fewer things to set up in tests)",
+      "max_score": 10
+    },
+    {
+      "name": "Tests use mock provider",
+      "description": "Example tests pass a mock/stub email provider client into EmailService — they do not make real network calls",
+      "max_score": 10
+    },
+    {
+      "name": "Interface design explained",
+      "description": "interface-design.md explains at least 2 interface decisions made for testability and the alternatives considered",
+      "max_score": 10
+    },
+    {
+      "name": "No internal collaborator creation",
+      "description": "Implementation does not create loggers, config loaders, or other internal collaborators inside methods — these are either passed in or not present",
+      "max_score": 8
+    },
+    {
+      "name": "Complexity hidden",
+      "description": "Complex details (email template rendering, provider-specific formatting) are hidden inside the implementation, not exposed in the public interface",
+      "max_score": 8
+    },
+    {
+      "name": "Fewer methods = fewer tests",
+      "description": "interface-design.md mentions that fewer public methods reduces the number of tests needed (acknowledging surface-area as a testability concern)",
+      "max_score": 5
+    }
+  ]
+}

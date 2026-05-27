@@ -1,0 +1,56 @@
+{
+  "context": "Tests whether the agent applies correct mocking strategy (boundary mocking only), uses dependency injection, designs SDK-style interfaces, and avoids mocking internal collaborators when writing tests for a function that calls an external payment API.",
+  "type": "weighted_checklist",
+  "checklist": [
+    {
+      "name": "Boundary-only mock",
+      "description": "The payment provider client is mocked/stubbed (it is an external system boundary)",
+      "max_score": 10
+    },
+    {
+      "name": "No internal mocks",
+      "description": "Internal order validation and total calculation logic is NOT mocked — real implementations are used in tests",
+      "max_score": 10
+    },
+    {
+      "name": "Dependency injection",
+      "description": "processOrder accepts the payment client as a parameter rather than instantiating it internally (e.g. function processOrder(order, paymentClient) not new StripeClient() inside)",
+      "max_score": 12
+    },
+    {
+      "name": "SDK-style functions",
+      "description": "The payment API interface (api.js or equivalent) defines specific named functions per operation (e.g. chargeCard, refundPayment) rather than a single generic fetch/request function",
+      "max_score": 12
+    },
+    {
+      "name": "No conditional mock logic",
+      "description": "Mock implementations contain no conditional branching — each mock function returns one specific shape",
+      "max_score": 10
+    },
+    {
+      "name": "Each function independently mockable",
+      "description": "Each payment operation is a separately mockable function rather than combined behind a single generic entry point",
+      "max_score": 10
+    },
+    {
+      "name": "No own-code mocks",
+      "description": "Does NOT mock the team's own internal modules (order validator, price calculator, etc.) — only the third-party payment boundary is mocked",
+      "max_score": 10
+    },
+    {
+      "name": "Tests verify behavior",
+      "description": "Tests assert on observable outcomes (e.g. order.status === 'paid') not on mock call counts or internal call sequences",
+      "max_score": 10
+    },
+    {
+      "name": "Functions return results",
+      "description": "processOrder returns a result value rather than only producing side effects (callers can inspect the return value)",
+      "max_score": 8
+    },
+    {
+      "name": "Type safety per endpoint",
+      "description": "Each specific payment function has its own documented/typed shape, not a generic any/object return",
+      "max_score": 8
+    }
+  ]
+}

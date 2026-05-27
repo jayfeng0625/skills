@@ -1,0 +1,56 @@
+{
+  "context": "Tests whether the agent adds a utility script for deterministic validation logic rather than relying on generated code each run. Validation of environment variables is deterministic and would otherwise be regenerated identically on each invocation — exactly the case that warrants a bundled script.",
+  "type": "weighted_checklist",
+  "checklist": [
+    {
+      "name": "scripts/ directory created",
+      "description": "The skill directory contains a scripts/ subdirectory",
+      "max_score": 15
+    },
+    {
+      "name": "Validation script exists",
+      "description": "At least one script file exists inside scripts/ that performs the env validation logic",
+      "max_score": 15
+    },
+    {
+      "name": "Script is deterministic",
+      "description": "The script implements fixed validation rules (presence checks, format checks, or placeholder detection) rather than being a template or stub that generates different code each time",
+      "max_score": 12
+    },
+    {
+      "name": "SKILL.md references scripts",
+      "description": "SKILL.md explicitly mentions or links to the script(s) in scripts/",
+      "max_score": 10
+    },
+    {
+      "name": "SKILL.md line count",
+      "description": "SKILL.md is 100 lines or fewer",
+      "max_score": 10
+    },
+    {
+      "name": "Description has Use when",
+      "description": "The frontmatter description includes 'Use when' with specific trigger conditions for the skill",
+      "max_score": 10
+    },
+    {
+      "name": "Third-person description",
+      "description": "The frontmatter description is written in third person",
+      "max_score": 8
+    },
+    {
+      "name": "Quick start section",
+      "description": "SKILL.md contains a Quick start section showing minimal usage",
+      "max_score": 10
+    },
+    {
+      "name": "Concrete example",
+      "description": "SKILL.md or the script includes at least one example showing sample input and expected output or error",
+      "max_score": 8
+    },
+    {
+      "name": "Script not a stub",
+      "description": "The script in scripts/ contains real implementation logic — NOT just TODO comments, placeholder functions, or empty shells that require the agent to generate code on each run",
+      "max_score": 2
+    }
+  ]
+}

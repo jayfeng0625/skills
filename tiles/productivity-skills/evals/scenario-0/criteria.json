@@ -1,0 +1,66 @@
+{
+  "context": "Tests whether the agent creates a well-structured skill following the write-a-skill conventions: correct directory layout, a SKILL.md with frontmatter and required sections, a properly-formatted description, and a review checklist that is actually applied.",
+  "type": "weighted_checklist",
+  "checklist": [
+    {
+      "name": "Third-person description",
+      "description": "The SKILL.md frontmatter description is written in third person (does NOT use 'I', 'me', 'my', 'we')",
+      "max_score": 8
+    },
+    {
+      "name": "Use when triggers",
+      "description": "The description includes a 'Use when' clause listing specific triggers (keywords, contexts, or situations)",
+      "max_score": 10
+    },
+    {
+      "name": "Description length",
+      "description": "The description field is 1024 characters or fewer",
+      "max_score": 5
+    },
+    {
+      "name": "SKILL.md frontmatter",
+      "description": "SKILL.md has YAML frontmatter with both 'name' and 'description' fields",
+      "max_score": 8
+    },
+    {
+      "name": "Quick start section",
+      "description": "SKILL.md contains a 'Quick start' section (or equivalent minimal-example section)",
+      "max_score": 8
+    },
+    {
+      "name": "Workflows section",
+      "description": "SKILL.md contains a 'Workflows' section with step-by-step processes",
+      "max_score": 8
+    },
+    {
+      "name": "SKILL.md line count",
+      "description": "SKILL.md is 100 lines or fewer",
+      "max_score": 10
+    },
+    {
+      "name": "No time-sensitive info",
+      "description": "SKILL.md does NOT contain time-sensitive information (specific dates, version numbers that change, current pricing, etc.)",
+      "max_score": 8
+    },
+    {
+      "name": "Concrete examples",
+      "description": "SKILL.md includes at least one concrete example (a sample post, a worked scenario, or an example output)",
+      "max_score": 10
+    },
+    {
+      "name": "Consistent terminology",
+      "description": "SKILL.md uses consistent terminology throughout (does not alternate between different names for the same concept)",
+      "max_score": 8
+    },
+    {
+      "name": "Correct directory name",
+      "description": "The skill directory is named 'social-media-scheduler' (or a kebab-case variant)",
+      "max_score": 7
+    },
+    {
+      "name": "SKILL.md is only required file",
+      "description": "The directory contains SKILL.md; any additional files (REFERENCE.md, EXAMPLES.md, scripts/) are optional and only present if the content genuinely warrants them",
+      "max_score": 10
+    }
+  ]
+}

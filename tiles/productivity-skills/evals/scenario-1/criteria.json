@@ -1,0 +1,56 @@
+{
+  "context": "Tests whether the agent correctly applies file-splitting conventions when a skill domain is complex enough to warrant it: SKILL.md stays under 100 lines, a separate REFERENCE.md (or equivalent) holds detailed docs, and the Advanced features section in SKILL.md links out rather than embedding detail.",
+  "type": "weighted_checklist",
+  "checklist": [
+    {
+      "name": "SKILL.md line count",
+      "description": "SKILL.md is 100 lines or fewer",
+      "max_score": 15
+    },
+    {
+      "name": "Separate reference file exists",
+      "description": "A separate file (REFERENCE.md or similar) exists in the skill directory containing the detailed domain documentation",
+      "max_score": 15
+    },
+    {
+      "name": "SKILL.md links to reference",
+      "description": "SKILL.md contains a link or explicit reference to the separate detailed file (e.g. 'See REFERENCE.md' or a markdown hyperlink)",
+      "max_score": 12
+    },
+    {
+      "name": "References one level deep",
+      "description": "SKILL.md does NOT link to files more than one level deep (no links to files inside subdirectories of the skill folder unless via scripts/)",
+      "max_score": 8
+    },
+    {
+      "name": "Advanced features section",
+      "description": "SKILL.md contains an 'Advanced features' section (or equivalent) that points to the separate file rather than embedding advanced content inline",
+      "max_score": 10
+    },
+    {
+      "name": "Quick start section",
+      "description": "SKILL.md contains a 'Quick start' section covering the common-path workflow",
+      "max_score": 8
+    },
+    {
+      "name": "Description has Use when",
+      "description": "The frontmatter description includes 'Use when' with specific trigger conditions",
+      "max_score": 10
+    },
+    {
+      "name": "Third-person description",
+      "description": "The frontmatter description is written in third person",
+      "max_score": 8
+    },
+    {
+      "name": "No time-sensitive info",
+      "description": "Neither SKILL.md nor REFERENCE.md contains time-sensitive data (specific dates, current rates, version-specific API details)",
+      "max_score": 7
+    },
+    {
+      "name": "Concrete example present",
+      "description": "At least one concrete worked example appears somewhere in the skill files",
+      "max_score": 7
+    }
+  ]
+}
