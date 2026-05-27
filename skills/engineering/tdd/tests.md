@@ -26,10 +26,12 @@ Characteristics:
 
 **Implementation-detail tests**: Coupled to internal structure.
 
+The `mock(...)` helper below is illustrative — the actual mocking API depends on the project's test runner. Pick whatever the test runner exposes.
+
 ```typescript
 // BAD: Tests implementation details
 test("checkout calls paymentService.process", async () => {
-  const mockPayment = jest.mock(paymentService);
+  const mockPayment = mock(paymentService);
   await checkout(cart, payment);
   expect(mockPayment.process).toHaveBeenCalledWith(cart.total);
 });

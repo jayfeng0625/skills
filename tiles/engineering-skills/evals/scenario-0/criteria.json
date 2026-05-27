@@ -1,0 +1,56 @@
+{
+  "context": "Tests whether the agent follows TDD discipline when building a new feature from scratch: writing behavior-oriented tests through public interfaces, using vertical slices (one test → one implementation at a time), and starting with a tracer bullet.",
+  "type": "weighted_checklist",
+  "checklist": [
+    {
+      "name": "Behavior-describing tests",
+      "description": "Test names describe observable outcomes (e.g. 'user can add item to cart') rather than implementation steps (e.g. 'addItem calls repository')",
+      "max_score": 10
+    },
+    {
+      "name": "Public interface only",
+      "description": "Tests only call public functions/methods — no access to private methods, internal state properties, or internal collaborators",
+      "max_score": 10
+    },
+    {
+      "name": "No internal mocking",
+      "description": "Tests do NOT mock any internal cart or discount logic — only external boundaries (if any) are mocked",
+      "max_score": 10
+    },
+    {
+      "name": "Tracer bullet first",
+      "description": "The tdd-log.md shows the first cycle is a simple end-to-end test (e.g. 'empty cart has zero total') before more detailed scenarios",
+      "max_score": 10
+    },
+    {
+      "name": "Vertical slicing evidenced",
+      "description": "The tdd-log.md shows tests added one at a time with implementation following each test — not all tests written before any implementation",
+      "max_score": 10
+    },
+    {
+      "name": "One logical assertion per test",
+      "description": "Each test function contains exactly one logical assertion (one expect/assert statement per test, or one conceptual outcome being verified)",
+      "max_score": 10
+    },
+    {
+      "name": "Minimal implementation",
+      "description": "Implementation code is minimal for each cycle — no speculative features, no code written without a failing test driving it (evidenced by the tdd-log)",
+      "max_score": 10
+    },
+    {
+      "name": "What not how",
+      "description": "Tests describe WHAT the cart does, not HOW (no assertions like 'expect(addItem).toHaveBeenCalledWith(...)')",
+      "max_score": 10
+    },
+    {
+      "name": "Refactor-surviving tests",
+      "description": "Tests do not reference internal function names, internal class names, or internal data structures — they would survive renaming internals",
+      "max_score": 10
+    },
+    {
+      "name": "Behaviors listed not steps",
+      "description": "The tdd-log.md lists user-facing behaviors (e.g. 'cart total updates when item removed') not implementation steps",
+      "max_score": 10
+    }
+  ]
+}

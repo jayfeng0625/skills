@@ -1,0 +1,9 @@
+{
+  "name": "bonai-dev/skills",
+  "mode": "vendored",
+  "dependencies": {
+    "bonai-dev/engineering-skills": {
+      "version": "2026.5.28"
+    }
+  }
+}

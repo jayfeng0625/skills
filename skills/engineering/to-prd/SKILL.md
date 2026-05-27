@@ -1,23 +1,31 @@
 ---
 name: to-prd
-description: Turn the current conversation context into a PRD and publish it to the project issue tracker. Use when user wants to create a PRD from the current context.
+description: Synthesizes the current conversation and codebase understanding into a product requirements document (Problem / Solution / User Stories / Implementation Decisions / Testing Decisions / Out of Scope / Further Notes) and writes it to the project's PRDs DB. Does not re-interview the user — works from existing context. Use when the user says "write a PRD", "turn this into a spec", "create a product requirements document", "draft a PRD from what we discussed", or wants the current conversation captured as a deliverable spec.
 ---
 
 This skill takes the current conversation context and codebase understanding and produces a PRD. Do NOT interview the user — just synthesize what you already know.
 
-The issue tracker and triage label vocabulary should have been provided to you — run `/setup-matt-pocock-skills` if not.
+## Verbs used
+
+- `create PRD page` — to write the PRD into the PRDs DB
+- `read glossary` — to align the PRD's vocabulary with the project's domain language
+- `read ADRs in area` — to respect documented architectural decisions
+
+Backend-specific MCP / CLI mappings live in `../tracker-primitives/<backend>.md`.
+
+The issue tracker and triage label vocabulary should have been provided to you — run `/setup-bonai-skills` if not.
 
 ## Process
 
 1. Explore the repo to understand the current state of the codebase, if you haven't already. Use the project's domain glossary vocabulary throughout the PRD, and respect any ADRs in the area you're touching.
 
-2. Sketch out the major modules you will need to build or modify to complete the implementation. Actively look for opportunities to extract deep modules that can be tested in isolation.
+2. Sketch the major modules you will need to build or modify. Look for opportunities to extract **deep modules** (see `/improve-codebase-architecture` for the deep/shallow vocabulary). Check with the user that the module sketch matches their expectations, and ask which modules they want tests written for.
 
-A deep module (as opposed to a shallow module) is one which encapsulates a lot of functionality in a simple, testable interface which rarely changes.
+3. Write the PRD using the template below, then invoke `create PRD page` (PRDs DB) — for the Notion backend this is `mcp__notion__notion-create-pages` with `parent={ database_id: <PRDs DB ID from docs/agents/notion.md> }`, `properties={ Name: <short PRD title> }`, and the rendered template as `content`. Other backends are wired in `../tracker-primitives/<backend>.md`. The PRDs DB does not carry a triage state — the PRD itself is the deliverable. (When `/to-prd` is invoked alongside `/to-issues`, the downstream issues are transitioned to `ready-for-agent` by `/to-issues`; this skill does no state transitions of its own.)
 
-Check with the user that these modules match their expectations. Check with the user which modules they want tests written for.
+4. After the page is written, confirm with the user: tell them the PRD page URL, surface a one-line summary of the PRD body, and ask whether they want corrections before downstream tools (`/to-issues`) consume it.
 
-3. Write the PRD using the template below, then publish it to the project issue tracker. Apply the `ready-for-agent` triage label - no need for additional triage.
+**Fallbacks.** If `read glossary` returns empty (no Domain Glossary DB yet, or DB has zero entries), write the PRD using terms extracted from the conversation itself and note in the PRD's *Further Notes* section: _"No project glossary found — terms used in this PRD are conversation-local; consider running `/grill-with-docs` to crystallise the vocabulary."_ Same pattern if `read ADRs in area` returns empty: skip the ADR alignment step, no note required.
 
 <prd-template>
 
@@ -31,15 +39,7 @@ The solution to the problem, from the user's perspective.
 
 ## User Stories
 
-A LONG, numbered list of user stories. Each user story should be in the format of:
-
-1. As an <actor>, I want a <feature>, so that <benefit>
-
-<user-story-example>
-1. As a mobile bank customer, I want to see balance on my accounts, so that I can make better informed decisions about my spending
-</user-story-example>
-
-This list of user stories should be extremely extensive and cover all aspects of the feature.
+A LONG, numbered list. Example: _"1. As a mobile bank customer, I want to see balance on my accounts, so that I can make better informed decisions about my spending."_ Cover all aspects of the feature.
 
 ## Implementation Decisions
 

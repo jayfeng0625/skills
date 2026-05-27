@@ -1,0 +1,56 @@
+{
+  "context": "Tests caveman rules around technical exactness and code preservation: technical terms must remain exact (not paraphrased), code blocks must be unchanged, and the pattern [thing] [action] [reason] [next step] should be visible in the prose structure.",
+  "type": "weighted_checklist",
+  "checklist": [
+    {
+      "name": "Code blocks intact",
+      "description": "Any code or pseudocode in rate-limiting.md appears in fenced code blocks (``` or ~~~) and is NOT paraphrased, summarized, or written in prose",
+      "max_score": 15
+    },
+    {
+      "name": "Technical terms exact",
+      "description": "Technical terms like 'token bucket', 'sliding window', 'fixed window', 'rate limit' are used with their correct names — not replaced with informal synonyms or loose paraphrases",
+      "max_score": 12
+    },
+    {
+      "name": "Caveman prose structure",
+      "description": "The prose sections follow the caveman pattern: short declarative statements about what something is, why it matters, and what to do next — not long flowing paragraphs",
+      "max_score": 12
+    },
+    {
+      "name": "No filler words",
+      "description": "rate-limiting.md does NOT contain: 'basically', 'essentially', 'simply', 'really', 'actually', 'just' used as filler",
+      "max_score": 10
+    },
+    {
+      "name": "No pleasantries",
+      "description": "rate-limiting.md does NOT start with or contain pleasantries: 'Sure', 'Certainly', 'Great', 'Happy to', 'Of course'",
+      "max_score": 8
+    },
+    {
+      "name": "Arrows used for causality",
+      "description": "rate-limiting.md uses arrow notation (-> or →) to express at least one cause-and-effect relationship",
+      "max_score": 10
+    },
+    {
+      "name": "Abbreviations present",
+      "description": "rate-limiting.md uses at least one standard abbreviation (req, res, config, DB, API, impl, fn) instead of the full word",
+      "max_score": 8
+    },
+    {
+      "name": "All three approaches covered",
+      "description": "rate-limiting.md addresses all three: fixed window, sliding window, and token bucket",
+      "max_score": 10
+    },
+    {
+      "name": "Short synonyms preferred",
+      "description": "rate-limiting.md uses short words over verbose alternatives: e.g. 'fast' not 'performant', 'big' not 'significant', 'use' not 'utilize'",
+      "max_score": 8
+    },
+    {
+      "name": "Fragments present",
+      "description": "rate-limiting.md contains sentence fragments (intentionally incomplete sentences for compression)",
+      "max_score": 7
+    }
+  ]
+}

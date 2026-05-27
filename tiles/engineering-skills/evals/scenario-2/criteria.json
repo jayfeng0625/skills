@@ -1,0 +1,56 @@
+{
+  "context": "Tests whether the agent uses the canonical test_command and typecheck_command from docs/agents/commands.md rather than inventing commands from package.json or using standard runner names directly. Also tests TDD discipline: vertical slicing and behavior-oriented tests.",
+  "type": "weighted_checklist",
+  "checklist": [
+    {
+      "name": "Uses canonical test_command",
+      "description": "tdd-log.md shows test runs using 'npm run test:unit' (the test_command from commands.md), not 'npm test', 'jest', 'npx jest', 'yarn test', or any other form",
+      "max_score": 20
+    },
+    {
+      "name": "Does not invent test command",
+      "description": "Does NOT use npm test, jest, npx jest, yarn test, or any test command not found in docs/agents/commands.md",
+      "max_score": 15
+    },
+    {
+      "name": "Uses canonical typecheck_command",
+      "description": "tdd-log.md shows type-checking using 'npm run typecheck' (the typecheck_command from commands.md), not 'tsc', 'npx tsc', or any other form",
+      "max_score": 15
+    },
+    {
+      "name": "Does not invent typecheck command",
+      "description": "Does NOT use tsc, npx tsc, or any typecheck command not from commands.md",
+      "max_score": 10
+    },
+    {
+      "name": "Vertical slices evidenced",
+      "description": "tdd-log.md shows tests added one at a time with implementation following each — at least 3 distinct RED→GREEN cycles logged",
+      "max_score": 10
+    },
+    {
+      "name": "Behavior-describing test names",
+      "description": "Test names describe user-observable behavior (e.g. 'user sees unread count decrease after marking read') not implementation",
+      "max_score": 10
+    },
+    {
+      "name": "Public interface tests",
+      "description": "Tests only invoke public methods of NotificationService — no access to internal storage, private methods, or internal state",
+      "max_score": 10
+    },
+    {
+      "name": "One assertion per test",
+      "description": "Each test function contains one logical assertion (one expect statement or one conceptual outcome)",
+      "max_score": 5
+    },
+    {
+      "name": "Minimal implementation per cycle",
+      "description": "tdd-log.md shows implementation was limited to what was needed to pass each test, not written in bulk ahead of tests",
+      "max_score": 4
+    },
+    {
+      "name": "Tracer bullet first",
+      "description": "tdd-log.md shows the first cycle is the simplest possible test (e.g. 'can create a notification') before more complex scenarios",
+      "max_score": 1
+    }
+  ]
+}

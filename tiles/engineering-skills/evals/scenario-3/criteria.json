@@ -1,0 +1,56 @@
+{
+  "context": "Tests whether the agent follows the TDD planning phase: listing behaviors (not implementation steps), identifying deep module opportunities, designing for testability, planning a tracer bullet first, and flagging items for user confirmation.",
+  "type": "weighted_checklist",
+  "checklist": [
+    {
+      "name": "Behaviors not steps",
+      "description": "The behavior list describes user-observable outcomes (e.g. 'registered member can log in') not implementation steps (e.g. 'hash password with bcrypt')",
+      "max_score": 12
+    },
+    {
+      "name": "Tracer bullet identified",
+      "description": "The plan identifies a single simplest end-to-end test as the first RED→GREEN cycle (the tracer bullet)",
+      "max_score": 10
+    },
+    {
+      "name": "Incremental order planned",
+      "description": "The plan shows a sequence of individual behaviors/tests, not a bulk list of all tests followed by all implementations",
+      "max_score": 10
+    },
+    {
+      "name": "Deep module opportunity identified",
+      "description": "Plan explicitly identifies at least one opportunity for a deep module — where complex logic (e.g. password hashing, token generation) is hidden behind a small public interface",
+      "max_score": 12
+    },
+    {
+      "name": "Testability design decision",
+      "description": "Plan explicitly addresses at least one interface design decision made to improve testability (e.g. dependency injection of token generator or hash function)",
+      "max_score": 12
+    },
+    {
+      "name": "Public interface designed",
+      "description": "Plan proposes a public interface with method signatures — covering at minimum register, login, and session validation",
+      "max_score": 10
+    },
+    {
+      "name": "Questions for user",
+      "description": "Plan includes at least one question to confirm with the team before starting (e.g. which behaviors to prioritize, what the session interface should look like)",
+      "max_score": 10
+    },
+    {
+      "name": "Domain language used",
+      "description": "Plan uses 'Member' for users and 'Session' for authenticated context (as specified in the domain language), not generic terms like 'user' or 'token'",
+      "max_score": 10
+    },
+    {
+      "name": "Interface accepts dependencies",
+      "description": "Proposed interface shows external dependencies (e.g. mailer, token store) accepted as parameters rather than created internally",
+      "max_score": 8
+    },
+    {
+      "name": "Behaviors prioritized",
+      "description": "Plan notes which behaviors are most critical and should be tested first, not treating all behaviors as equal",
+      "max_score": 6
+    }
+  ]
+}
