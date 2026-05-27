@@ -1,6 +1,6 @@
 # Engineering
 
-Skills for daily code work. All 11 skills below are in the `bonai-dev/engineering-skills` tile manifest at the current `2026.5.27` calver.
+Skills for daily code work. All 11 skills below are in the `bonai-dev/engineering-skills` tile manifest at the current `2026.5.28` calver.
 
 - **[setup-bonai-skills](./setup-bonai-skills/SKILL.md)** — Scaffold per-repo config (`docs/agents/commands.md`, `docs/agents/notion.md`) that the other engineering skills consume.
 - **[tdd](./tdd/SKILL.md)** — Test-driven development with a red-green-refactor loop. Reads commands from `docs/agents/commands.md`; never names a test runner.
