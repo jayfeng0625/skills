@@ -1,6 +1,6 @@
 ---
 name: handoff
-description: Compact the current conversation into a handoff document for another agent to pick up. Writes to the per-repo Handoffs DB with the workstream's Epic tag.
+description: Compacts the current conversation into a structured handoff document (Goal / What's done / Open questions / Suggested skills / Key files / Sensitive-info note) and writes it to the per-repo Handoffs DB tagged with the workstream's Epic. Use when context is approaching limits, the user says "hand off", "pass this to another session", "write a handoff", "summarize for the next agent", or when pausing work that another session must resume.
 argument-hint: "What will the next session be used for?"
 ---
 

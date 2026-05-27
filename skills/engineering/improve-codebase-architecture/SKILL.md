@@ -1,6 +1,6 @@
 ---
 name: improve-codebase-architecture
-description: Find deepening opportunities in a codebase, informed by the project's domain glossary and architectural decisions (loaded via tracker-primitives). Use when the user wants to improve architecture, find refactoring opportunities, consolidate tightly-coupled modules, or make a codebase more testable and AI-navigable.
+description: Surveys a codebase for **deepening opportunities** — shallow modules whose interface is nearly as complex as their implementation — and proposes refactors that move complexity behind smaller interfaces, producing an HTML report with before/after diagrams per candidate. Grounded in the project's domain glossary and ADRs so suggestions use canonical names and don't re-litigate documented decisions. Use when the user says "improve the architecture", "find refactoring opportunities", "clean up the code structure", "reduce technical debt", "find code smells", "simplify dependencies", "make this more testable", "consolidate tightly-coupled modules", "find deepening opportunities", or wants a high-level architectural review of a codebase.
 ---
 
 # Improve Codebase Architecture
@@ -18,24 +18,9 @@ Backend-specific MCP / CLI mappings live in `../tracker-primitives/<backend>.md`
 
 ## Glossary
 
-Use these terms exactly in every suggestion. Consistent language is the point — don't drift into "component," "service," "API," or "boundary." Full definitions in [LANGUAGE.md](LANGUAGE.md).
+Use these terms exactly: **Module**, **Interface**, **Implementation**, **Depth** (Deep / Shallow), **Seam**, **Adapter**, **Leverage**, **Locality**. Don't drift into "component," "service," "API," or "boundary." Full definitions and key principles (deletion test, the-interface-is-the-test-surface, two-adapters-make-a-seam) in [LANGUAGE.md](LANGUAGE.md).
 
-- **Module** — anything with an interface and an implementation (function, class, package, slice).
-- **Interface** — everything a caller must know to use the module: types, invariants, error modes, ordering, config. Not just the type signature.
-- **Implementation** — the code inside.
-- **Depth** — leverage at the interface: a lot of behaviour behind a small interface. **Deep** = high leverage. **Shallow** = interface nearly as complex as the implementation.
-- **Seam** — where an interface lives; a place behaviour can be altered without editing in place. (Use this, not "boundary.")
-- **Adapter** — a concrete thing satisfying an interface at a seam.
-- **Leverage** — what callers get from depth.
-- **Locality** — what maintainers get from depth: change, bugs, knowledge concentrated in one place.
-
-Key principles (see [LANGUAGE.md](LANGUAGE.md) for the full list):
-
-- **Deletion test**: imagine deleting the module. If complexity vanishes, it was a pass-through. If complexity reappears across N callers, it was earning its keep.
-- **The interface is the test surface.**
-- **One adapter = hypothetical seam. Two adapters = real seam.**
-
-This skill is _informed_ by the project's domain model. The domain language gives names to good seams; ADRs record decisions the skill should not re-litigate.
+This skill is _informed_ by the project's domain model — the domain language gives names to good seams; ADRs record decisions the skill should not re-litigate.
 
 ## Process
 
@@ -55,7 +40,20 @@ Apply the **deletion test** to anything you suspect is shallow: would deleting i
 
 ### 2. Present candidates as an HTML report
 
-Write a self-contained HTML file to the OS temp directory so nothing lands in the repo. Resolve the temp dir from `$TMPDIR`, falling back to `/tmp` (or `%TEMP%` on Windows), and write to `<tmpdir>/architecture-review-<timestamp>.html` so each run gets a fresh file. Open it for the user — `xdg-open <path>` on Linux, `open <path>` on macOS, `start <path>` on Windows — and tell them the absolute path.
+Write a self-contained HTML file to the OS temp directory so nothing lands in the repo. Concrete pattern (POSIX shells):
+
+```bash
+tmp="${TMPDIR:-/tmp}"
+ts=$(date +%Y%m%d-%H%M%S)
+report="$tmp/architecture-review-$ts.html"
+# … write HTML to "$report" …
+case "$(uname -s)" in
+  Darwin) open "$report" ;;
+  Linux)  xdg-open "$report" ;;
+  *)      echo "Open manually: $report" ;;
+esac
+echo "Report written to: $report"
+```
 
 The report uses **Tailwind via CDN** for layout and styling, and **Mermaid via CDN** for diagrams where a graph/flow/sequence reliably communicates the structure. Mix Mermaid with hand-crafted CSS/SVG visuals — use Mermaid when relationships are graph-shaped (call graphs, dependencies, sequences), and hand-built divs/SVG when you want something more editorial (mass diagrams, cross-sections, collapse animations). Each candidate gets a **before/after visualisation**. Be visual.
 
@@ -73,6 +71,23 @@ End the report with a **Top recommendation** section: which candidate you'd tack
 **Use the project's domain glossary vocabulary for the domain, and [LANGUAGE.md](LANGUAGE.md) vocabulary for the architecture.** If the glossary defines "Order," talk about "the Order intake module" — not "the FooBarHandler," and not "the Order service."
 
 **ADR conflicts**: if a candidate contradicts an existing ADR, only surface it when the friction is real enough to warrant revisiting the ADR. Mark it clearly in the card (e.g. a warning callout: _"contradicts ADR-0007 — but worth reopening because…"_). Don't list every theoretical refactor an ADR forbids.
+
+Minimal candidate-card sketch (one per opportunity, dropped into the report body):
+
+```html
+<article class="rounded-lg border p-4 mb-4">
+  <header class="flex justify-between">
+    <h2 class="font-bold">OrderIntake — collapse 4 shallow handlers</h2>
+    <span class="rounded bg-green-200 px-2 text-sm">Strong</span>
+  </header>
+  <p><strong>Problem:</strong> the 4 handlers share state and ordering rules; callers must know all 4.</p>
+  <p><strong>Solution:</strong> single OrderIntake adapter behind one method; handlers become private impl.</p>
+  <div class="grid grid-cols-2 gap-2 mt-2">
+    <pre class="mermaid">graph LR; A-->H1; A-->H2; A-->H3; A-->H4</pre>
+    <pre class="mermaid">graph LR; A-->OrderIntake</pre>
+  </div>
+</article>
+```
 
 See [HTML-REPORT.md](HTML-REPORT.md) for the full HTML scaffold, diagram patterns, and styling guidance.
 

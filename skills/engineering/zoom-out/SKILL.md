@@ -1,6 +1,6 @@
 ---
 name: zoom-out
-description: Tell the agent to zoom out and give broader context or a higher-level perspective. Use when you're unfamiliar with a section of code or need to understand how it fits into the bigger picture.
+description: Pulls back from line-level focus to give a higher-level read of an unfamiliar code area — module boundaries, callers, how the section fits the larger architecture. Use when asked to "zoom out", "explain this code", "give me the bigger picture", "what does this module do", "how does this fit in", or when entering an unfamiliar codebase area and needing orientation before diving deeper.
 disable-model-invocation: true
 ---
 

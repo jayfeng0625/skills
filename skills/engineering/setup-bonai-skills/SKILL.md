@@ -1,6 +1,6 @@
 ---
 name: setup-bonai-skills
-description: Sets up an `## Agent skills` block in AGENTS.md/CLAUDE.md and `docs/agents/` so the engineering skills know this repo's per-language commands and Notion database IDs. Run before first use of `tdd`, `diagnose`, `grill-with-docs`, `prototype`, or any other engineering skill that reads from `docs/agents/`.
+description: Scaffolds an `## Agent skills` block in AGENTS.md/CLAUDE.md plus the `docs/agents/commands.md` and `docs/agents/notion.md` files that bonai-dev engineering skills read for per-language test/lint/build commands and per-repo Notion database IDs. Interactive — asks for tracker backend, language, and DB IDs. Use when the user says "setup bonai", "initialize bonai skills", "configure agent skills", "set up this repo for the engineering skills", or before first use of `tdd`, `diagnose`, `grill-with-docs`, `prototype`, `triage`, `to-issues`, `to-prd`, `improve-codebase-architecture`, or `handoff` in a new repo.
 disable-model-invocation: true
 ---
 
