@@ -1,0 +1,11 @@
+{
+  "name": "bonai-dev/productivity-skills",
+  "version": "0.1.0",
+  "summary": "Productivity skills for non-code workflow — caveman compression, non-code grilling, skill authoring",
+  "private": true,
+  "skills": {
+    "caveman": {
+      "path": "skills/caveman/SKILL.md"
+    }
+  }
+}
