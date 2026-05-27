@@ -1,0 +1,56 @@
+{
+  "context": "Tests whether the agent applies the write-a-skill review checklist to identify and fix problems in an existing SKILL.md: missing 'Use when' triggers, time-sensitive information, poor description quality, and lack of concrete examples. The fixture SKILL.md has all four problems deliberately embedded.",
+  "type": "weighted_checklist",
+  "checklist": [
+    {
+      "name": "Use when added to description",
+      "description": "The improved description includes a 'Use when' clause with specific triggers (keywords or contexts that should cause the skill to load)",
+      "max_score": 15
+    },
+    {
+      "name": "Time-sensitive info removed",
+      "description": "The improved SKILL.md does NOT contain any time-sensitive information (no specific dates, no 'as of Q1 2026', no 'moving to Teams in Q2', no date-stamped template versions)",
+      "max_score": 15
+    },
+    {
+      "name": "Third-person description",
+      "description": "The improved frontmatter description is written in third person (no 'I will', 'I'll', 'we use')",
+      "max_score": 10
+    },
+    {
+      "name": "Concrete example included",
+      "description": "The improved SKILL.md includes at least one concrete, realistic example (a sample meeting note excerpt, a worked action item, or a filled-in template)",
+      "max_score": 12
+    },
+    {
+      "name": "SKILL.md under 100 lines",
+      "description": "The improved SKILL.md is 100 lines or fewer",
+      "max_score": 8
+    },
+    {
+      "name": "Internal-only references removed",
+      "description": "The improved SKILL.md does NOT reference internal-only resources (no wiki.internal links, no VPN references, no internal tool names that would be inaccessible to an external agent)",
+      "max_score": 10
+    },
+    {
+      "name": "Description specificity improved",
+      "description": "The improved description is more specific than 'Helps with meeting notes. Good for meetings.' — it explains the capability and when to use it meaningfully",
+      "max_score": 10
+    },
+    {
+      "name": "Review report created",
+      "description": "A review-report.md file exists and lists at least two specific problems found in the original",
+      "max_score": 10
+    },
+    {
+      "name": "Core purpose preserved",
+      "description": "The improved skill is still about meeting notes (not rewritten for a completely different domain)",
+      "max_score": 8
+    },
+    {
+      "name": "Consistent terminology",
+      "description": "The improved SKILL.md uses consistent terminology throughout — the same word for the same concept each time it appears",
+      "max_score": 2
+    }
+  ]
+}

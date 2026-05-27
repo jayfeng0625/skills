@@ -1,0 +1,56 @@
+{
+  "context": "Tests whether the agent understands deep vs shallow modules and can redesign a shallow module into a deep one by reducing the number of public methods, simplifying parameters, and hiding complexity behind the interface.",
+  "type": "weighted_checklist",
+  "checklist": [
+    {
+      "name": "Fewer public methods",
+      "description": "configLoader-v2.js exports fewer public methods than the original 7 — ideally 3 or fewer (e.g. load, get, getOptional)",
+      "max_score": 15
+    },
+    {
+      "name": "Simpler parameters",
+      "description": "Callers no longer need to pass the raw config object between function calls — the module manages config state internally or via a returned accessor object",
+      "max_score": 15
+    },
+    {
+      "name": "Complexity hidden",
+      "description": "Type checking, validation, and error messaging logic is hidden inside the module — callers do not need to call separate getStringValue / getNumberValue / getBooleanValue functions",
+      "max_score": 12
+    },
+    {
+      "name": "Design rationale explains shallowness",
+      "description": "design-rationale.md explicitly names what made the original module shallow (e.g. large interface that passes complexity to callers)",
+      "max_score": 10
+    },
+    {
+      "name": "Design rationale explains deepening decisions",
+      "description": "design-rationale.md explains at least 2 specific interface decisions made to deepen the module",
+      "max_score": 10
+    },
+    {
+      "name": "Method count comparison",
+      "description": "design-rationale.md explicitly compares the number of public methods before and after",
+      "max_score": 8
+    },
+    {
+      "name": "Tests on new public interface only",
+      "description": "configLoader-v2.test.js only tests through the new public interface — no tests on extracted private helpers or internal functions",
+      "max_score": 12
+    },
+    {
+      "name": "Behavior preserved",
+      "description": "New module supports the same operations as the original (required keys, optional keys with defaults, type validation) — no functionality dropped",
+      "max_score": 10
+    },
+    {
+      "name": "Deletion test applied",
+      "description": "design-rationale.md mentions that deleting the original module would scatter complexity to many callers (deletion test reasoning)",
+      "max_score": 7
+    },
+    {
+      "name": "Can reduce methods check",
+      "description": "design-rationale.md explicitly asks 'can I reduce the number of methods?' and answers it for the original module",
+      "max_score": 1
+    }
+  ]
+}

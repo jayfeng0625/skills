@@ -1,0 +1,56 @@
+{
+  "context": "Tests vertical TDD slicing discipline: one test at a time, tracer bullet first, minimal implementation per cycle, no anticipating future tests. Also tests time-dependency injection for mockable clock control.",
+  "type": "weighted_checklist",
+  "checklist": [
+    {
+      "name": "Tracer bullet documented",
+      "description": "tdd-cycles.md shows the first cycle is the simplest possible test (e.g. 'first request is allowed') before more complex scenarios",
+      "max_score": 10
+    },
+    {
+      "name": "Vertical slices only",
+      "description": "tdd-cycles.md shows at least 5 distinct RED→GREEN cycles — not all tests written in one batch followed by one implementation",
+      "max_score": 12
+    },
+    {
+      "name": "One test per cycle",
+      "description": "Each cycle in tdd-cycles.md adds exactly one new test before implementation — not multiple tests at once",
+      "max_score": 12
+    },
+    {
+      "name": "Minimal implementation per cycle",
+      "description": "tdd-cycles.md shows implementation limited to making the current test pass — no features added ahead of tests",
+      "max_score": 10
+    },
+    {
+      "name": "Time dependency injected",
+      "description": "Rate limiter accepts a clock/time function as a parameter (e.g. getNow or clock) rather than calling Date.now() directly — so tests can control time",
+      "max_score": 14
+    },
+    {
+      "name": "No real time delays in tests",
+      "description": "Tests do NOT use setTimeout, sleep, or real time delays — they control time via the injected clock",
+      "max_score": 10
+    },
+    {
+      "name": "Behavior-describing tests",
+      "description": "Test names describe rate limiter behaviors (e.g. 'client is blocked after exceeding limit') not implementation (e.g. 'counter increments')",
+      "max_score": 10
+    },
+    {
+      "name": "Public interface only",
+      "description": "Tests only call public methods of the rate limiter — no access to internal counters, maps, or timestamps",
+      "max_score": 10
+    },
+    {
+      "name": "No horizontal slicing",
+      "description": "tdd-cycles.md does NOT show a phase of writing all tests followed by a phase of writing all implementation",
+      "max_score": 8
+    },
+    {
+      "name": "Next test rationale given",
+      "description": "tdd-cycles.md explains why each behavior was chosen as the next to test (sequencing rationale)",
+      "max_score": 4
+    }
+  ]
+}
