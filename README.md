@@ -4,8 +4,8 @@ A personal, Notion-first set of agent skills I use every day. Packaged as two pr
 
 | Tile | Skills | Latest |
 |---|---|---|
-| [`bonai-dev/engineering-skills`](./skills/engineering/) | Daily code-work skills (setup, TDD, diagnosis, grilling, prototyping, triage, PRD/issue conversion, architecture review, zoom-out, thermo-nuclear quality review) | `2026.6.0` |
-| [`bonai-dev/productivity-skills`](./skills/productivity/) | General workflow skills (caveman compression, non-code grilling, teaching, cross-session handoffs, skill authoring) | `2026.6.0` |
+| [`bonai-dev/engineering-skills`](./skills/engineering/) | Daily code-work skills (setup, TDD, diagnosis, grilling, prototyping, triage, PRD/issue conversion, architecture review, zoom-out, thermo-nuclear quality review) | `2026.6.1` |
+| [`bonai-dev/productivity-skills`](./skills/productivity/) | General workflow skills (caveman compression, non-code grilling, teaching, cross-session handoffs, skill authoring) | `2026.6.1` |
 
 Skills lean on the agent to interrogate the user (via `AskUserQuestion`-style flows) rather than prescribing rigid checklists. The set replaces my prior use of the `superpowers` plugin — bonai is standalone and has no superpowers fallback.
 
@@ -27,8 +27,8 @@ skills/
 In a target repo:
 
 ```sh
-tessl install bonai-dev/engineering-skills@2026.6.0
-tessl install bonai-dev/productivity-skills@2026.6.0
+tessl install bonai-dev/engineering-skills@2026.6.1
+tessl install bonai-dev/productivity-skills@2026.6.1
 ```
 
 Then run the setup skill once per repo:
