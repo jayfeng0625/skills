@@ -1,11 +1,11 @@
 # Bonai Skills
 
-A personal, Notion-first set of agent skills I use every day. Packaged as two private tessl tiles under the `bonai-dev` workspace; both ship at the same YYYY.MM.patch calver.
+A personal, Notion-first set of agent skills I use every day. Packaged as two private tessl tiles under the `bonai-dev` workspace; both ship at the same YYYY.M.patch calver.
 
 | Tile | Skills | Latest |
 |---|---|---|
-| [`bonai-dev/engineering-skills`](./skills/engineering/) | Daily code-work skills (setup, TDD, diagnosis, grilling, prototyping, triage, handoff, PRD/issue conversion, architecture review, zoom-out) | `2026.06.0` |
-| [`bonai-dev/productivity-skills`](./skills/productivity/) | General workflow skills (caveman compression, non-code grilling, skill authoring) | `2026.06.0` |
+| [`bonai-dev/engineering-skills`](./skills/engineering/) | Daily code-work skills (setup, TDD, diagnosis, grilling, prototyping, triage, PRD/issue conversion, architecture review, zoom-out, thermo-nuclear quality review) | `2026.6.0` |
+| [`bonai-dev/productivity-skills`](./skills/productivity/) | General workflow skills (caveman compression, non-code grilling, teaching, cross-session handoffs, skill authoring) | `2026.6.0` |
 
 Skills lean on the agent to interrogate the user (via `AskUserQuestion`-style flows) rather than prescribing rigid checklists. The set replaces my prior use of the `superpowers` plugin — bonai is standalone and has no superpowers fallback.
 
@@ -27,8 +27,8 @@ skills/
 In a target repo:
 
 ```sh
-tessl install bonai-dev/engineering-skills@2026.06.0
-tessl install bonai-dev/productivity-skills@2026.06.0
+tessl install bonai-dev/engineering-skills@2026.6.0
+tessl install bonai-dev/productivity-skills@2026.6.0
 ```
 
 Then run the setup skill once per repo:
@@ -57,12 +57,14 @@ Skill bodies use only **abstract verbs** — never concrete tool calls. `skills/
 - [`to-prd`](./skills/engineering/to-prd/SKILL.md) — synthesize current context into a PRD
 - [`improve-codebase-architecture`](./skills/engineering/improve-codebase-architecture/SKILL.md) — find deepening opportunities, HTML-report-driven
 - [`zoom-out`](./skills/engineering/zoom-out/SKILL.md) — higher-level perspective on unfamiliar code
-- [`handoff`](./skills/engineering/handoff/SKILL.md) — cross-session handoff documents, written to the Handoffs DB with an Epic tag
+- [`thermo-nuclear-code-quality-review`](./skills/engineering/thermo-nuclear-code-quality-review/SKILL.md) — extremely strict maintainability review hunting code-judo simplifications
 
-### Productivity (3)
+### Productivity (5)
 
 - [`caveman`](./skills/productivity/caveman/SKILL.md) — ultra-compressed communication mode
 - [`grill-me`](./skills/productivity/grill-me/SKILL.md) — non-code interrogation about a plan / design / talk
+- [`teach`](./skills/productivity/teach/SKILL.md) — teach a skill or concept over multiple sessions in a stateful workspace
+- [`handoff`](./skills/productivity/handoff/SKILL.md) — cross-session handoff documents, written to the Handoffs DB with an Epic tag (uses engineering's `tracker-primitives`)
 - [`write-a-skill`](./skills/productivity/write-a-skill/SKILL.md) — produce a new skill folder (tile-agnostic)
 
 ## License

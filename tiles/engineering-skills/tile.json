@@ -1,6 +1,6 @@
 {
   "name": "bonai-dev/engineering-skills",
-  "version": "2026.06.0",
+  "version": "2026.6.0",
   "summary": "Engineering skills for daily code work — Notion-first, language-agnostic",
   "private": true,
   "skills": {
@@ -34,8 +34,8 @@
     "zoom-out": {
       "path": "skills/zoom-out/SKILL.md"
     },
-    "handoff": {
-      "path": "skills/handoff/SKILL.md"
+    "thermo-nuclear-code-quality-review": {
+      "path": "skills/thermo-nuclear-code-quality-review/SKILL.md"
     }
   }
 }

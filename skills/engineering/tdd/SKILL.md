@@ -76,7 +76,9 @@ If RED passes immediately, the test isn't exercising the new behavior — fix th
 Rules:
 
 - One test at a time
-- Only enough code to pass current test
+- **One logical assertion per test.** A test pins down one behavior. Asserting one outcome may take a couple of physical asserts (e.g. `order.status` and `order.total` both describe "a confirmed order"), but never bundle unrelated behaviors into one test — split "rejects empty cart" and "applies discount" into separate tests so a failure names exactly what broke.
+- **Name the test after the behavior, not the method.** `test_rejects_checkout_when_cart_empty`, not `test_checkout_2`. The name should read as a sentence about observable behavior.
+- Only enough code to pass current test — the minimal change. If you're typing logic the current test doesn't force, stop; it belongs to a later test.
 - Don't anticipate future tests
 - Keep tests focused on observable behavior
 
@@ -117,9 +119,11 @@ Any of these means you've drifted out of TDD. Discard what you just wrote and re
 ## Checklist Per Cycle
 
 ```
+[ ] Test name describes the behavior, not the method
 [ ] Test describes behavior, not implementation
+[ ] Test asserts one logical outcome (no unrelated behaviors bundled)
 [ ] Test uses public interface only
 [ ] Test would survive internal refactor
-[ ] Code is minimal for this test
+[ ] Code is minimal for this test — nothing the test doesn't force
 [ ] No speculative features added
 ```
