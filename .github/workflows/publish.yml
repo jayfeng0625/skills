@@ -104,26 +104,8 @@ jobs:
             echo "::group::publish $tile"
             # Wrapper materializes the skill symlinks so Tessl sees real files,
             # then restores them. Version is read from the bumped manifest.
+            # publish runs a publish-time eval over the tile's evals/, which
+            # refreshes the registry Impact score — no separate eval run needed.
             scripts/tessl-with-tiles.sh plugin publish "$tile"
-            echo "::endgroup::"
-          done
-
-      - name: Refresh Impact scores (eval run)
-        env:
-          TESSL_TOKEN: ${{ secrets.TESSL_TOKEN }}
-          VERSION: ${{ steps.ver.outputs.version }}
-        run: |
-          # Unlike publish, `eval run` produces the registry Impact score (it
-          # solves each scenario with and without the skill and diffs them).
-          # eval run executes inside the linked project; a fresh checkout has a
-          # different source path than the one recorded at link time, so point
-          # the project at this checkout before running.
-          tessl project repair --update-source --yes
-          for tile in tiles/*/; do
-            tile="${tile%/}"
-            echo "::group::eval $tile"
-            # Pin the agent so Impact stays comparable across releases. eval run
-            # submits the run and returns; scoring completes server-side.
-            scripts/tessl-with-tiles.sh eval run "$tile" --agent=claude:claude-sonnet-4-6 --label "release @$VERSION"
             echo "::endgroup::"
           done
