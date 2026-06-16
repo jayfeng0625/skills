@@ -16,6 +16,12 @@ set -euo pipefail
 #   scripts/tessl-with-tiles.sh plugin publish tiles/productivity-skills
 #
 # Anything after the script name is passed straight through to `tessl`.
+#
+# Mutates the working tree in place (rather than packing to a temp dir) because
+# `tessl eval run` must execute inside the linked project directory — running it
+# from a copy elsewhere breaks project resolution. The restore trap keeps the
+# tree clean. Do not run two copies concurrently: they share the same tile
+# symlinks (e.g. tracker-primitives) and would corrupt each other's restore.
 
 REPO="$(cd "$(dirname "$0")/.." && pwd)"
 TILES_DIR="$REPO/tiles"
@@ -47,17 +53,26 @@ restore() {
   done < "$manifest"
   rm -f "$manifest"
 }
-trap restore EXIT INT TERM
-
-# -L makes find follow into the tree but still report symlinks via -type l.
+# Pre-flight: fail before mutating anything if any tile symlink is dangling, so
+# an aborted run can never leave a half-materialized working tree.
 while IFS= read -r link; do
-  target="$(readlink "$link")"          # raw target, e.g. ../../../skills/engineering/tdd
-  printf '%s\t%s\n' "$link" "$target" >> "$manifest"
-  resolved="$(readlink -f "$link")"
-  if [ ! -e "$resolved" ]; then
-    echo "error: dangling symlink $link -> $target" >&2
+  if [ ! -e "$(readlink -f "$link")" ]; then
+    echo "error: dangling symlink $link -> $(readlink "$link")" >&2
     exit 1
   fi
+done < <(find "$TILES_DIR" -type l)
+
+# Arm the restore trap only now that the pre-flight passed and we are about to
+# mutate the tree.
+trap restore EXIT INT TERM
+
+# Plain -type l (no -L): report the tile's top-level skill symlinks without
+# descending through them. Record each link before rm so restore can recreate
+# it even if a later copy fails.
+while IFS= read -r link; do
+  target="$(readlink "$link")"          # raw target, e.g. ../../../skills/engineering/tdd
+  resolved="$(readlink -f "$link")"
+  printf '%s\t%s\n' "$link" "$target" >> "$manifest"
   rm "$link"
   cp -r "$resolved" "$link"
 done < <(find "$TILES_DIR" -type l)
