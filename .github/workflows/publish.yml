@@ -1,0 +1,93 @@
+name: Publish skills
+
+# On every merge to main: bump all tiles to a calver version (yyyy.M.patch),
+# build + publish them to the Tessl registry, then commit the version bump back.
+#
+# Publishing reads each tile's version from its .tessl-plugin/plugin.json and
+# runs Tessl's publish-time eval over the scenarios in the tile's evals/.
+#
+# Requires a repo secret TESSL_TOKEN (a Tessl API key with publish permission
+# in the bonai-dev workspace: `tessl api-key create --workspace bonai-dev`).
+
+on:
+  push:
+    branches: [main]
+
+# Never let two publish runs race on the version bump / git push.
+concurrency:
+  group: publish-main
+  cancel-in-progress: false
+
+permissions:
+  contents: write
+
+jobs:
+  publish:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Install tessl CLI
+        run: |
+          curl -fsSL https://get.tessl.io | sh
+          echo "$HOME/.local/bin" >> "$GITHUB_PATH"
+
+      - name: Verify Tessl auth
+        env:
+          TESSL_TOKEN: ${{ secrets.TESSL_TOKEN }}
+        run: tessl whoami
+
+      - name: Compute calver version (yyyy.M.patch)
+        id: ver
+        run: |
+          prefix="$(date -u +%Y).$(date -u +%-m)"
+          # Highest patch already used this month across tiles; -1 -> first is .0
+          maxpatch=-1
+          for f in tiles/*/.tessl-plugin/plugin.json; do
+            v="$(jq -r '.version' "$f")"
+            case "$v" in
+              "$prefix".*)
+                p="${v##*.}"
+                if [ "$p" -gt "$maxpatch" ]; then maxpatch="$p"; fi
+                ;;
+            esac
+          done
+          version="$prefix.$((maxpatch + 1))"
+          echo "version=$version" >> "$GITHUB_OUTPUT"
+          echo "Next version: $version"
+
+      - name: Bump tile manifests
+        run: |
+          for f in tiles/*/.tessl-plugin/plugin.json; do
+            tmp="$(mktemp)"
+            jq --arg v "${{ steps.ver.outputs.version }}" '.version = $v' "$f" > "$tmp"
+            mv "$tmp" "$f"
+            echo "bumped $f -> ${{ steps.ver.outputs.version }}"
+          done
+
+      - name: Build + publish tiles
+        env:
+          TESSL_TOKEN: ${{ secrets.TESSL_TOKEN }}
+        run: |
+          for tile in tiles/*/; do
+            tile="${tile%/}"
+            echo "::group::publish $tile"
+            # Wrapper materializes the skill symlinks so Tessl sees real files,
+            # then restores them. Version is read from the bumped manifest.
+            scripts/tessl-with-tiles.sh plugin publish "$tile"
+            echo "::endgroup::"
+          done
+
+      - name: Commit version bump back to main
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add tiles/*/.tessl-plugin/plugin.json
+          if git diff --cached --quiet; then
+            echo "No version changes to commit"
+          else
+            git commit -m "chore: publish tiles @${{ steps.ver.outputs.version }} [skip ci]"
+            git push origin HEAD:main
+          fi
