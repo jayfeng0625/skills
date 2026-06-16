@@ -4,15 +4,17 @@ A personal, Notion-first set of agent skills I use every day. Packaged as two pr
 
 | Tile | Skills | Latest |
 |---|---|---|
-| [`bonai-dev/engineering-skills`](./skills/engineering/) | Daily code-work skills (setup, TDD, diagnosis, grilling, prototyping, triage, PRD/issue conversion, architecture review, zoom-out, thermo-nuclear quality review) | `2026.6.1` |
-| [`bonai-dev/productivity-skills`](./skills/productivity/) | General workflow skills (caveman compression, non-code grilling, teaching, cross-session handoffs, skill authoring) | `2026.6.1` |
+| [`bonai-dev/engineering-skills`](./skills/engineering/) | Daily code-work skills (setup, TDD, diagnosis, grilling, prototyping, triage, PRD/issue conversion, architecture review, zoom-out, thermo-nuclear quality review) | `2026.6.2` |
+| [`bonai-dev/productivity-skills`](./skills/productivity/) | General workflow skills (caveman compression, non-code grilling, teaching, cross-session handoffs, skill authoring) | `2026.6.2` |
+
+Versions follow `YYYY.M.patch` calver and are published automatically on merge to `main` (see [Development & publishing](#development--publishing)).
 
 Skills lean on the agent to interrogate the user (via `AskUserQuestion`-style flows) rather than prescribing rigid checklists. The set replaces my prior use of the `superpowers` plugin — bonai is standalone and has no superpowers fallback.
 
 ## Layout
 
 ```
-skills/
+skills/               ← single source of truth for every skill
   engineering/        ← daily code work (tile: bonai-dev/engineering-skills)
     tracker-primitives/ ← shared MCP/CLI recipes for the abstract-verb contract
   productivity/       ← daily non-code workflow (tile: bonai-dev/productivity-skills)
@@ -20,6 +22,11 @@ skills/
   personal/           ← tied to my own setup, not promoted
   in-progress/        ← drafts not yet ready to ship
   deprecated/         ← no longer used
+tiles/                ← packaging roots; each tile has .tessl-plugin/plugin.json,
+  engineering-skills/   its skills symlinked from skills/, and evals/ scenarios
+  productivity-skills/
+scripts/
+  tessl-with-tiles.sh ← run any tessl command against the tiles (materializes the symlinks)
 ```
 
 ## How to install (consumer side)
@@ -27,9 +34,11 @@ skills/
 In a target repo:
 
 ```sh
-tessl install bonai-dev/engineering-skills@2026.6.1
-tessl install bonai-dev/productivity-skills@2026.6.1
+tessl install bonai-dev/engineering-skills
+tessl install bonai-dev/productivity-skills
 ```
+
+(Append `@<version>` to pin a specific calver release; omitting it installs the latest.)
 
 Then run the setup skill once per repo:
 
@@ -66,6 +75,23 @@ Skill bodies use only **abstract verbs** — never concrete tool calls. `skills/
 - [`teach`](./skills/productivity/teach/SKILL.md) — teach a skill or concept over multiple sessions in a stateful workspace
 - [`handoff`](./skills/productivity/handoff/SKILL.md) — cross-session handoff documents, written to the Handoffs DB with an Epic tag (uses engineering's `tracker-primitives`)
 - [`write-a-skill`](./skills/productivity/write-a-skill/SKILL.md) — produce a new skill folder (tile-agnostic)
+
+## Development & publishing
+
+Each tile under `tiles/` is a Tessl plugin: a `.tessl-plugin/plugin.json` manifest, the tile's skills symlinked from `skills/`, and an `evals/` folder of scenarios that measure the skills' impact.
+
+Because the skills are symlinked (single source of truth in `skills/`) and Tessl excludes symlinks from plugins, run every tile command through the wrapper — it materializes the symlinks into real files for the duration of the command and restores them afterwards:
+
+```sh
+scripts/tessl-with-tiles.sh plugin lint    tiles/engineering-skills
+scripts/tessl-with-tiles.sh plugin pack    tiles/engineering-skills
+scripts/tessl-with-tiles.sh eval run       tiles/engineering-skills   # produces the registry Impact score
+scripts/tessl-with-tiles.sh plugin publish tiles/engineering-skills
+```
+
+Install the CLI with `curl -fsSL https://get.tessl.io | sh` and authenticate via `tessl login` (or a `TESSL_TOKEN` in the environment). Canonical repo commands live in [`docs/agents/commands.md`](./docs/agents/commands.md).
+
+**Releases are automated.** On merge to `main`, [`.github/workflows/publish.yml`](./.github/workflows/publish.yml) computes the next `YYYY.M.patch` version, bumps every tile manifest, publishes the tiles, and commits the bump back. It needs a `TESSL_TOKEN` repo secret with publish permission in `bonai-dev`.
 
 ## License
 
