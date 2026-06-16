@@ -1,6 +1,6 @@
 # Engineering
 
-Skills for daily code work. All 11 skills below are in the `bonai-dev/engineering-skills` tile manifest at the current `2026.6.1` calver.
+Skills for daily code work. All 11 skills below are in the `bonai-dev/engineering-skills` tile manifest at the current `2026.6.2` calver.
 
 - **[setup-bonai-skills](./setup-bonai-skills/SKILL.md)** — Scaffold per-repo config (`commands.md` + `workflow-config.md`, written into a config dir chosen at setup, default `docs/agents/`) that the other engineering skills consume.
 - **[tdd](./tdd/SKILL.md)** — Test-driven development with a red-green-refactor loop. Reads commands from the `commands.md` named in the `## Agent skills` block's Config dir; never names a test runner.
