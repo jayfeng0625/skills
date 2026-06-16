@@ -7,14 +7,16 @@ description: Surveys a codebase for **deepening opportunities** — shallow modu
 
 Surface architectural friction and propose **deepening opportunities** — refactors that turn shallow modules into deep ones. The aim is testability and AI-navigability.
 
-## Verbs used
+## Glossary & ADRs
 
-- `read glossary` — to learn the canonical names for modules, seams, and concepts before proposing renames
-- `read ADRs in area` — to avoid suggesting refactors that an ADR forbids
-- `write glossary entry` — when a deepened module needs a new canonical name
-- `create ADR` — when the user rejects a candidate for a non-obvious, durable reason
+The domain glossary and ADRs are fixed filesystem conventions — read and write them directly:
 
-Backend-specific MCP / CLI mappings live in `../tracker-primitives/<backend>.md`.
+- **Read the glossary** from `CONTEXT.md` at the repo root — to learn the canonical names for modules, seams, and concepts before proposing renames.
+- **Read the ADRs** from `docs/adr/` — to avoid suggesting refactors that an ADR forbids.
+- **Write a glossary entry** by appending to `CONTEXT.md` — when a deepened module needs a new canonical name.
+- **Create an ADR** as `docs/adr/NNNN-<slug>.md` (`NNNN` = highest existing number plus one) — when the user rejects a candidate for a non-obvious, durable reason.
+
+This is a soft dependency: if `CONTEXT.md` or `docs/adr/` is absent, degrade gracefully — proceed with the architecture review and skip the grounding/writes that have nowhere to read from or land.
 
 ## Glossary
 
@@ -26,7 +28,7 @@ This skill is _informed_ by the project's domain model — the domain language g
 
 ### 1. Explore
 
-Before exploring, invoke `read glossary` and `read ADRs in area` to load the canonical vocabulary and respect documented decisions.
+Before exploring, read the glossary from `CONTEXT.md` and the ADRs from `docs/adr/` to load the canonical vocabulary and respect documented decisions. If either is absent, proceed without it.
 
 Then use the Agent tool with `subagent_type=Explore` to walk the codebase. Don't follow rigid heuristics — explore organically and note where you experience friction:
 
@@ -99,7 +101,7 @@ Once the user picks a candidate, drop into a grilling conversation. Walk the des
 
 Side effects happen inline as decisions crystallize:
 
-- **Naming a deepened module after a concept not in the glossary?** Invoke `write glossary entry` for the new term — same discipline as `/grill-with-docs` (see [CONTEXT-FORMAT.md](../grill-with-docs/CONTEXT-FORMAT.md) for the page-body shape).
-- **Sharpening a fuzzy term during the conversation?** Invoke `write glossary entry` right there (use `mcp__notion__notion-update-page` for the matching page if one already exists).
-- **User rejects the candidate with a load-bearing reason?** Offer an ADR via `create ADR`, framed as: _"Want me to record this as an ADR so future architecture reviews don't re-suggest it?"_ Only offer when the reason would actually be needed by a future explorer to avoid re-suggesting the same thing — skip ephemeral reasons ("not worth it right now") and self-evident ones. See [ADR-FORMAT.md](../grill-with-docs/ADR-FORMAT.md) for the page-body shape.
+- **Naming a deepened module after a concept not in the glossary?** Append a glossary entry for the new term to `CONTEXT.md` — same discipline as `/grill-with-docs` (see [CONTEXT-FORMAT.md](../grill-with-docs/CONTEXT-FORMAT.md) for the entry shape).
+- **Sharpening a fuzzy term during the conversation?** Update `CONTEXT.md` right there — edit the existing entry in place if the term is already defined, otherwise append a new one.
+- **User rejects the candidate with a load-bearing reason?** Offer an ADR — write it as `docs/adr/NNNN-<slug>.md` (`NNNN` = highest existing number plus one), framed as: _"Want me to record this as an ADR so future architecture reviews don't re-suggest it?"_ Only offer when the reason would actually be needed by a future explorer to avoid re-suggesting the same thing — skip ephemeral reasons ("not worth it right now") and self-evident ones. See [ADR-FORMAT.md](../grill-with-docs/ADR-FORMAT.md) for the file shape.
 - **Want to explore alternative interfaces for the deepened module?** See [INTERFACE-DESIGN.md](INTERFACE-DESIGN.md).

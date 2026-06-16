@@ -1,0 +1,16 @@
+{
+  "name": "@acme/commerce",
+  "version": "0.1.0",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "test": "vitest",
+    "check:units": "vitest run",
+    "check:types": "tsc --noEmit",
+    "bundle": "tsc -p tsconfig.build.json"
+  },
+  "devDependencies": {
+    "typescript": "^5.4.0",
+    "vitest": "^1.5.0"
+  }
+}
