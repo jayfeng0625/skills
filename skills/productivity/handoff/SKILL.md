@@ -11,9 +11,10 @@ Write a handoff document so a fresh agent can resume this work in a later sessio
 ## Verbs used
 
 - `create handoff page` — writes the handoff to the Handoffs DB
-- `read glossary` (optional) — only if a term used in the handoff needs a canonical-vocabulary check
 
 Backend-specific MCP / CLI mappings live in `../tracker-primitives/<backend>.md`.
+
+Optionally read the glossary (`CONTEXT.md`) directly if a term used in the handoff needs a canonical-vocabulary check — a filesystem convention, not a backend verb.
 
 ## Process
 
@@ -21,7 +22,7 @@ Backend-specific MCP / CLI mappings live in `../tracker-primitives/<backend>.md`
 
 Before composing the body, ask which **Epic** this handoff belongs to:
 
-- Read the Handoffs DB's `Epic` property options (via `mcp__notion__notion-fetch` on the Handoffs DB ID from `docs/agents/notion.md`).
+- Read the Handoffs DB's `Epic` property options (via `mcp__notion__notion-fetch` on the Handoffs DB ID from the workflow config named in the `## Agent skills` block).
 - Present the existing options as a single AskUserQuestion. Default to the most recently used option if context suggests it (e.g. an in-progress Epic that's been written to today).
 - If no existing option fits, offer "Add a new Epic" — when picked, ask for the new Epic name. Read the current option list, append the new option, and call `mcp__notion__notion-update-data-source` with `ALTER COLUMN "Epic" SET SELECT(...)` listing all existing options **plus** the new one. (ALTER COLUMN replaces the option list wholesale; do not use ADD COLUMN — that adds a new property, not a new option.)
 
@@ -42,7 +43,7 @@ If the user passed arguments to the slash command, treat them as a description o
 
 Show the drafted body to the user before invoking `create handoff page`. If they edit it, accept the edit. Then invoke `create handoff page`:
 
-- Parent: Handoffs DB ID from `docs/agents/notion.md`
+- Parent: Handoffs DB ID from the workflow config named in the `## Agent skills` block
 - Title: short slug summarizing the handoff (e.g. "Stage 2 publish blocker — productivity tile scaffold")
 - Properties: `Name` (title), `Date` (today), `Epic` (the value chosen in step 1)
 - Body: the composed sections from step 2

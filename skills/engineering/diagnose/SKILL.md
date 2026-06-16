@@ -90,7 +90,7 @@ Tool preference:
 
 ## Phase 5 — Fix + regression test
 
-The regression-test command is `test_command` from `docs/agents/commands.md`. If that file is missing, stop and ask the user to run `/setup-bonai-skills`.
+The regression-test command is `test_command` from the commands file named via `Config dir:` in the `## Agent skills` block. If that file is missing, stop and ask the user to run `/setup-bonai-skills`.
 
 Write the regression test **before the fix** — but only if there is a **correct seam** for it.
 

@@ -4,19 +4,24 @@ A collection of agent skills (slash commands and behaviors) loaded by Claude Cod
 
 ## Language
 
+**Workflow backend**:
+The per-repo tool that hosts a repo's **Issues**, **PRDs**, and **Handoffs** — one of Notion, GitHub, or a local `.scratch/` markdown convention. Selected by the `Backend:` token in the `## Agent skills` block; its IDs/paths live in `workflow-config.md`. `tracker-primitives/<backend>.md` translates each abstract verb into this backend's concrete calls.
+_Avoid_: tracker (ambiguous with **Issue tracker**), backlog backend
+
 **Issue tracker**:
-The tool that hosts a repo's issues — GitHub Issues, Linear, a local `.scratch/` markdown convention, or similar. Skills like `to-issues`, `to-prd`, `triage`, and `qa` read from and write to it.
+The **Issue**-hosting facet of the **Workflow backend** — where `to-issues`, `triage`, and `qa` read and write Issues. PRDs and Handoffs are sibling stores in the same backend, not Issues.
 _Avoid_: backlog manager, backlog backend, issue host
 
 **Issue**:
-A single tracked unit of work inside an **Issue tracker** — a bug, task, PRD, or slice produced by `to-issues`.
+A single tracked unit of work in the **Issue tracker** — a bug, task, or vertical slice produced by `to-issues`. A **PRD** or a **Handoff** is not an Issue.
 _Avoid_: ticket (use only when quoting external systems that call them tickets)
 
 **Triage role**:
-A canonical state-machine label applied to an **Issue** during triage (e.g. `needs-triage`, `ready-for-afk`). Each role maps to a real label string in the **Issue tracker** via `docs/agents/triage-labels.md`.
+A canonical state-machine label applied to an **Issue** during triage (e.g. `needs-triage`, `ready-for-agent`). Each role maps to a real label string in the **Issue tracker** via the role→string mapping in `workflow-config.md` (for the Notion backend, the Issues DB `Status` select).
 
 ## Relationships
 
+- A **Workflow backend** hosts **Issues** (via its **Issue tracker**), **PRDs**, and **Handoffs**
 - An **Issue tracker** holds many **Issues**
 - An **Issue** carries one **Triage role** at a time
 
@@ -24,3 +29,4 @@ A canonical state-machine label applied to an **Issue** during triage (e.g. `nee
 
 - "backlog" was previously used to mean both the *tool* hosting issues and the *body of work* inside it — resolved: the tool is the **Issue tracker**; "backlog" is no longer used as a domain term.
 - "backlog backend" / "backlog manager" — resolved: collapsed into **Issue tracker**.
+- "tracker" / `tracker.md` was proposed as the unified config filename but conflates the umbrella **Workflow backend** with the narrower **Issue tracker** — resolved: the config file is `workflow-config.md`; "tracker" alone is avoided as a domain term (the verb-translation folder keeps its established `tracker-primitives/` name).

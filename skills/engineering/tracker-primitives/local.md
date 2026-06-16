@@ -1,6 +1,6 @@
 # Local markdown primitives
 
-Reference backend. All "tracker" state lives in the repo as markdown files. Per-repo config lives in `docs/agents/local.md` (folder paths) — written by `/setup-bonai-skills` when the user picks local.
+Reference backend. All "tracker" state lives in the repo as markdown files. Per-repo config (folder paths) lives in the `workflow-config.md` named by `Config dir:` in the `## Agent skills` block of CLAUDE.md / AGENTS.md — written by `/setup-bonai-skills` when the user picks local. Read it once at the start; name no path here.
 
 ## Layout
 
@@ -9,9 +9,9 @@ Reference backend. All "tracker" state lives in the repo as markdown files. Per-
   issues/<id>-<slug>.md       ← one file per issue
   prds/<id>-<slug>.md         ← one file per PRD
   handoffs/<date>-<slug>.md   ← one file per handoff
-CONTEXT.md                    ← glossary
-docs/adr/NNNN-<slug>.md       ← ADRs
 ```
+
+The glossary (`CONTEXT.md`) and ADRs (`docs/adr/`) at repo root are fixed filesystem conventions, not tracker verbs — skills read and write them directly, so they are not part of this backend's verb set.
 
 ## Verbs
 
@@ -38,22 +38,6 @@ Create `.scratch/prds/<next-id>-<slug>.md` with the PRD body.
 ### `create handoff page`
 
 Create `.scratch/handoffs/<YYYY-MM-DD>-<slug>.md` with the handoff sections.
-
-### `read glossary`
-
-Read `CONTEXT.md` from the repo root.
-
-### `write glossary entry`
-
-Append to `CONTEXT.md` using the page-body template from `skills/engineering/grill-with-docs/CONTEXT-FORMAT.md`.
-
-### `read ADRs in area`
-
-Read files from `docs/adr/` matching the area folder convention if `docs/agents/local.md` defines one; otherwise read all.
-
-### `create ADR`
-
-Write `docs/adr/NNNN-<slug>.md` using the ADR page-body template. NNNN = max existing + 1.
 
 ## Notes
 

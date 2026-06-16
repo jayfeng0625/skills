@@ -1,6 +1,6 @@
-# ADR page-body template
+# ADR file template
 
-A single ADRs DB page = one decision. The **page title** is the short decision name. The **page body** uses this shape:
+A single ADR file (`docs/adr/NNNN-<slug>.md`) = one decision. The **`# ` heading** is the short decision name. The **body** uses this shape:
 
 ```md
 {1-3 sentences: what's the context, what did we decide, and why.}
@@ -15,13 +15,21 @@ Only add these when they genuinely help. Most ADRs won't need them.
 - **Considered Options** — when the rejected alternatives are worth remembering
 - **Consequences** — when non-obvious downstream effects need to be called out
 
-## Optional DB properties
+## Optional frontmatter
 
-The ADRs DB may have these properties (configured in `docs/agents/notion.md`):
+The ADR file may carry YAML frontmatter at the top. All fields are optional — add them only when they earn their place:
 
-- **Status** (`proposed | accepted | deprecated | superseded`) — useful when decisions are revisited
-- **Area** — for multi-area repos, tag the part of the system this ADR governs
-- **Superseded by** (relation) — link to the page that replaces this one
+```md
+---
+status: accepted   # proposed | accepted | deprecated | superseded
+area: billing      # for multi-area repos, the part of the system this ADR governs
+superseded_by: 0012-<slug>  # the ADR file that replaces this one
+---
+```
+
+- **status** (`proposed | accepted | deprecated | superseded`) — useful when decisions are revisited
+- **area** — for multi-area repos, tag the part of the system this ADR governs
+- **superseded_by** — name the ADR file that replaces this one
 
 ## When to offer an ADR
 

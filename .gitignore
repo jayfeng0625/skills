@@ -10,3 +10,6 @@
 .claude/
 .github/
 .tessl/
+
+# Per-repo agent config (consumer-state; carries private Notion IDs)
+docs/agents/workflow-config.md

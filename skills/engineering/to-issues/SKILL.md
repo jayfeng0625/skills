@@ -11,9 +11,10 @@ Break a plan into independently-grabbable issues using vertical slices (tracer b
 
 - `create issue page` — for each vertical slice
 - `transition state` — to move each new issue to `ready-for-agent` immediately after creation (Matt's "no additional triage needed" pattern; these issues are already specified enough to ship)
-- `read glossary` — to align titles and descriptions with the project's domain language
 
 Backend-specific MCP / CLI mappings live in `../tracker-primitives/<backend>.md`.
+
+To align titles and descriptions with the project's domain language, read the glossary (`CONTEXT.md`) directly — a filesystem convention, not a backend verb.
 
 The issue tracker and triage label vocabulary should have been provided to you — run `/setup-bonai-skills` if not.
 

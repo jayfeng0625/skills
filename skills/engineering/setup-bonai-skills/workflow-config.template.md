@@ -1,4 +1,10 @@
-# Notion config
+# Workflow config
+
+Backend-routed config for the workflow tracker (Issues / PRDs / Handoffs). The active backend is named by the `Backend:` token in the `## Agent skills` block; this file holds that backend's database IDs and property mappings. The glossary and ADRs are **not** here — they are fixed filesystem conventions (`CONTEXT.md` + `docs/adr/`).
+
+## Backend
+
+notion
 
 ## Workspace
 
@@ -6,11 +12,9 @@ ID: <workspace-id>
 
 ## Databases
 
-Issues DB:           <id>
-PRDs DB:             <id>
-Handoffs DB:         <id>
-Domain Glossary DB:  <id>
-ADRs DB:             <id>
+Issues DB:    <id>
+PRDs DB:      <id>
+Handoffs DB:  <id>
 
 ## Issues DB properties
 
@@ -27,23 +31,15 @@ Category (select):
 
 Blocked by: relation → Issues DB
 
-## ADRs DB properties
-
-Area (optional select): <list of area values, or "n/a">
-
 ## Handoffs DB properties
 
 Epic (select): per-project workstream values; add options in Notion as new workstreams begin.
-
-## Domain Glossary DB properties
-
-(no structured properties — page title = term, page body = definition)
 
 ---
 
 ## DB seed schemas
 
-These are the property definitions to pass to `mcp__notion__notion-create-database` when the user picks `create` for a missing DB in `/setup-bonai-skills`. The output config section above is what gets written to `docs/agents/notion.md` after IDs are known — this section is the *input* used to build the DBs in the first place.
+These are the property definitions to pass to `mcp__notion__notion-create-database` when the user picks `create` for a missing DB in `/setup-bonai-skills`. The config sections above are what gets written to `workflow-config.md` (in the config dir) after IDs are known — this section is the *input* used to build the DBs in the first place.
 
 ### Issues DB
 
@@ -61,14 +57,3 @@ These are the property definitions to pass to `mcp__notion__notion-create-databa
 - **Name** (title) — required
 - **Date** (date) — default today
 - **Epic** (select) — per-project workstream values; seed empty (user adds options on first use) or with a placeholder option
-
-### Domain Glossary DB
-
-- **Name** (title) — required (the canonical term)
-
-### ADRs DB
-
-- **Name** (title) — required
-- **Status** (select) — options: `proposed`, `accepted`, `deprecated`, `superseded`
-- **Area** (select) — options left empty; user adds per-project as needed
-- **Superseded by** (relation) — relates to ADRs DB (self)

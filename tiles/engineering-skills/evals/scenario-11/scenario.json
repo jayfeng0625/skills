@@ -1,0 +1,1 @@
+{ "description": "Grounds a TDD plan in the project's filesystem domain docs (CONTEXT.md glossary + docs/adr/) without being handed the terms", "include": ["./inputs"] }

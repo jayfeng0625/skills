@@ -1,0 +1,1 @@
+{ "description": "Resolves the test/typecheck commands via the Agent skills block when the config lives at a non-default Config dir", "include": ["./inputs"] }

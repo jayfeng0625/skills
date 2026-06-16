@@ -8,3 +8,5 @@ We split these into **hard-dependency** and **soft-dependency** skills:
 - **Soft dependency** (`diagnose`, `tdd`, `improve-codebase-architecture`, `zoom-out`) — reference "the project's domain glossary" and "ADRs in the area you're touching" in vague prose only. If the docs aren't there, the skill still works; output is just less sharp.
 
 The split keeps soft-dependency skills token-light and avoids cargo-culting the setup pointer into places where it isn't load-bearing.
+
+**Hardness is per-(skill × config-type), not per-skill.** The bullets above classify each skill's dependency on the **domain glossary/ADRs**. A single skill can be hard on one config and soft on another. `tdd`/`diagnose` are *soft* on glossary/ADRs but **hard** on `commands.md` — without the test command they cannot run a test and must not invent one — so they keep the explicit "run `/setup-bonai-skills` if missing" stop for the *commands* dependency while carrying only vague prose for glossary/ADRs. De-hardcoding a skill's config *path* (resolving it through the `## Agent skills` block) is independent of whether that dependency is hard or soft: the stop stays, only the literal path goes.
