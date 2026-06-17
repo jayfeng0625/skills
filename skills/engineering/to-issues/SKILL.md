@@ -66,6 +66,8 @@ Publish issues in **dependency order** (blockers first) so the `Blocked by` rela
 
 After each issue is created, immediately invoke `transition state` to move it from `needs-triage` (the seed default) to `ready-for-agent`. These slices are already specified enough to ship — no additional triage step is needed. (This preserves Matt's "publish with the correct triage label" pattern from the original `/to-issues`.)
 
+**Write tersely, and don't duplicate the PRD.** Each issue is read by the implementing agent — carry only what *this slice* needs: its delta and its acceptance criteria. For shared spec that lives in the linked PRD (full registries, cross-slice tables), reference the PRD rather than re-embedding it; but inline, **verbatim**, any load-bearing detail the agent can't build the slice without (the slice's own patterns, schema, ordering). Cut articles, hedging, and restated context; bullets over paragraphs.
+
 <issue-template>
 ## Parent
 
@@ -73,9 +75,9 @@ A reference to the parent issue on the issue tracker (if the source was an exist
 
 ## What to build
 
-A concise description of this vertical slice. Describe the end-to-end behavior, not layer-by-layer implementation.
+The end-to-end behavior of this slice in a few lines — not layer-by-layer implementation, and not a restatement of the whole PRD. Lead with the slice's delta. Reference the linked PRD for shared spec; inline only the load-bearing detail this slice can't be built without (its own patterns, schema, ordering) — verbatim, not paraphrased.
 
-Avoid specific file paths or code snippets — they go stale fast. Exception: if a prototype produced a snippet that encodes a decision more precisely than prose can (state machine, reducer, schema, type shape), inline it here and note briefly that it came from a prototype. Trim to the decision-rich parts — not a working demo, just the important bits.
+Avoid specific file paths or code snippets — they go stale fast. Exception: if a prototype produced a snippet that encodes a decision more precisely than prose can (state machine, reducer, schema, type shape), inline it and note briefly that it came from a prototype — the decision-rich parts only, not a working demo.
 
 ## Acceptance criteria
 

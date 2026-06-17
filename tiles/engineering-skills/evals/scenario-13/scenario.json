@@ -1,0 +1,1 @@
+{ "description": "to-issues breaks a PRD into terse vertical-slice issues that reference the PRD for shared spec and inline only each slice's own load-bearing detail — no wholesale duplication of the PRD's event-catalog table into every issue", "include": ["./inputs"] }
