@@ -33,6 +33,8 @@ This is the deliverable's house style and it **overrides any default verbosity**
 
 **Fidelity is the hard constraint: terseness compresses prose, never the spec. When the two pull against each other, fidelity wins.**
 
+Terseness governs **prose and Implementation Decisions** — it does **not** thin out the User Stories (keep those extensive, per that section) or the spec.
+
 - Bullets and short clauses over paragraphs. Cut articles, hedging, preamble, and any sentence that restates a heading or repeats the Problem/Solution.
 - State each decision once. Don't re-explain context already given above.
 - **Never compress the spec.** Tables, regex literals, schema/type shapes, and explicit ordering blocks are reproduced verbatim — terseness applies to prose, never to load-bearing detail. Render tabular data **as a table with every row and column intact**; never collapse a table into a sentence, summarise its rows, or drop a column to save space. Terseness lives in the prose *around* the spec, not in the spec.
@@ -50,7 +52,7 @@ The solution to the problem, from the user's perspective.
 
 ## User Stories
 
-The minimal set of **distinct** stories — one per actor + goal. Merge near-duplicates; do not enumerate variations of the same need. Format: _"As a <role>, I want <capability>, so that <outcome>."_ Add a story only when it carries a goal no other story already covers — not to look thorough.
+A LONG, numbered list — **extremely extensive and covering all aspects** of the feature. When in doubt, enumerate rather than merge: breadth here is the point. Format: _"1. As a <role>, I want <capability>, so that <outcome>."_
 
 ## Implementation Decisions
 

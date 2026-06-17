@@ -1,5 +1,5 @@
 {
-  "context": "Tests whether /to-prd produces a TERSE but FAITHFUL PRD. The agreed design notes in task.md are deliberately wordy and contain near-duplicate developer wants plus load-bearing spec (an event-type table, a fixed backoff schedule, an HMAC signature format, and a prototype-sourced state machine). A good PRD compresses the prose — one-line implementation decisions, a minimal set of distinct user stories, no restated context — WITHOUT dropping or paraphrasing any load-bearing spec. The two sides are scored together so terseness cannot be achieved by deleting substance. The PRD is written to the local tracker at .scratch/prds/<id>-<slug>.md; score that file.",
+  "context": "Tests whether /to-prd produces a TERSE but FAITHFUL PRD. The agreed design notes in task.md are deliberately wordy and contain load-bearing spec (an event-type table, a fixed backoff schedule, an HMAC signature format, and a prototype-sourced state machine). A good PRD compresses the PROSE and Implementation Decisions — one line per decision, no restated context — WITHOUT dropping or paraphrasing any load-bearing spec, and WITHOUT thinning the User Stories (upstream intent: an extensive list covering all aspects). The sides are scored together so terseness cannot be achieved by deleting substance or breadth. The PRD is written to the local tracker at .scratch/prds/<id>-<slug>.md; score that file.",
   "type": "weighted_checklist",
   "checklist": [
     {
@@ -8,8 +8,8 @@
       "max_score": 18
     },
     {
-      "name": "Near-duplicate user stories merged",
-      "description": "User Stories contain no two entries with the same actor+goal. In particular the source's overlapping developer wants 'see whether a given delivery succeeded' and 'find out when a delivery has failed' are merged into a single delivery-status story, not listed as two.",
+      "name": "User stories extensive, cover all aspects",
+      "description": "Per upstream intent, User Stories are an extensive numbered list covering all aspects — every actor (third-party developer, support engineer) and every capability (subscribe to events, delivery status, failure visibility, replay, secret rotation, subscription health) appears. Breadth is rewarded; do NOT penalise enumerating closely-related wants separately.",
       "max_score": 14
     },
     {
