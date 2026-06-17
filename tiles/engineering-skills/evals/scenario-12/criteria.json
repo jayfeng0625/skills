@@ -1,0 +1,51 @@
+{
+  "context": "Tests whether /to-prd produces a TERSE but FAITHFUL PRD. The agreed design notes in task.md are deliberately wordy and contain near-duplicate developer wants plus load-bearing spec (an event-type table, a fixed backoff schedule, an HMAC signature format, and a prototype-sourced state machine). A good PRD compresses the prose — one-line implementation decisions, a minimal set of distinct user stories, no restated context — WITHOUT dropping or paraphrasing any load-bearing spec. The two sides are scored together so terseness cannot be achieved by deleting substance. The PRD is written to the local tracker at .scratch/prds/<id>-<slug>.md; score that file.",
+  "type": "weighted_checklist",
+  "checklist": [
+    {
+      "name": "One-line implementation decisions",
+      "description": "In the PRD's Implementation Decisions section, each decision is a single line — a claim plus at most one short 'why' clause. No decision is a multi-sentence paragraph that restates the Problem or Solution. Inlined spec (tables, code blocks) is exempt from the one-line rule.",
+      "max_score": 18
+    },
+    {
+      "name": "Near-duplicate user stories merged",
+      "description": "User Stories contain no two entries with the same actor+goal. In particular the source's overlapping developer wants 'see whether a given delivery succeeded' and 'find out when a delivery has failed' are merged into a single delivery-status story, not listed as two.",
+      "max_score": 14
+    },
+    {
+      "name": "No restatement or filler sections",
+      "description": "No section merely restates the Problem or Solution. Further Notes is either absent or contains only links/follow-up bullets (no prose paragraphs), and does not repeat Out of Scope.",
+      "max_score": 10
+    },
+    {
+      "name": "Overall terse prose",
+      "description": "PRD prose is terse throughout — short clauses and bullets, minimal hedging/preamble/filler. (Tables, code blocks, and patterns are exempt and may be as long as needed.)",
+      "max_score": 8
+    },
+    {
+      "name": "Event-type table verbatim",
+      "description": "The event-type table is reproduced with all four rows (order.created, order.refunded, customer.updated, payout.settled) and all three columns (event, payload, default-subscribed) intact — not summarized, truncated, or dropped.",
+      "max_score": 16
+    },
+    {
+      "name": "Backoff schedule verbatim",
+      "description": "The retry policy is reproduced exactly: up to 5 attempts with the fixed backoff 1 min, 5 min, 30 min, 2 hr, 6 hr, and dead-after-5th. All five intervals present and unchanged.",
+      "max_score": 11
+    },
+    {
+      "name": "Signature format verbatim",
+      "description": "The signing spec is reproduced exactly: header X-Signature: sha256=<hex>, where <hex> is lowercase hex HMAC-SHA256 of the raw body keyed by the subscription secret.",
+      "max_score": 8
+    },
+    {
+      "name": "State machine inlined with prototype provenance",
+      "description": "The delivery state machine is inlined as a snippet/diagram preserving its states and transitions (pending, delivering, delivered, failed, retrying, dead), AND the PRD notes it came from a prototype.",
+      "max_score": 8
+    },
+    {
+      "name": "No distinct decision dropped",
+      "description": "Every distinct decision from the notes is present: secret rotation with 24h overlap, committed-seed-merged-ahead-of-overrides storage, HTTPS-only + reachability-ping validation, disabled-subscriptions-retain-log. Terseness did not silently drop any of these.",
+      "max_score": 7
+    }
+  ]
+}
