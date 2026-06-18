@@ -6,8 +6,14 @@
     "./skills/engineering/diagnose",
     "./skills/engineering/grill-with-docs",
     "./skills/engineering/prototype",
+    "./skills/engineering/domain-modeling",
+    "./skills/engineering/codebase-design",
     "./skills/engineering/triage",
+    "./skills/engineering/triage-issue",
+    "./skills/engineering/implement",
+    "./skills/engineering/resolving-merge-conflicts",
     "./skills/engineering/improve-codebase-architecture",
+    "./skills/engineering/ask-matt",
     "./skills/engineering/to-issues",
     "./skills/engineering/to-prd",
     "./skills/engineering/zoom-out",
@@ -16,6 +22,7 @@
     "./skills/productivity/grill-me",
     "./skills/productivity/handoff",
     "./skills/productivity/teach",
-    "./skills/productivity/write-a-skill"
+    "./skills/productivity/write-a-skill",
+    "./skills/productivity/writing-great-skills"
   ]
 }
