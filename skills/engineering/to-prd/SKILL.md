@@ -36,7 +36,7 @@ This is the deliverable's house style and it **overrides any default verbosity**
 Terseness governs **prose and Implementation Decisions** — it does **not** thin out the User Stories (keep those extensive, per that section) or the spec.
 
 - Bullets and short clauses over paragraphs. Cut articles, hedging, preamble, and any sentence that restates a heading or repeats the Problem/Solution.
-- State each decision once. Don't re-explain context already given above.
+- State each decision once. Don't re-explain context already given above. If a section would only restate what another section says, cut it entirely.
 - **Never compress the spec.** Tables, regex literals, schema/type shapes, and explicit ordering blocks are reproduced verbatim — terseness applies to prose, never to load-bearing detail. Render tabular data **as a table with every row and column intact**; never collapse a table into a sentence, summarise its rows, or drop a column to save space. Terseness lives in the prose *around* the spec, not in the spec.
 - Keep every *distinct* decision. Terse means fewer words, not fewer decisions.
 
@@ -54,19 +54,27 @@ The solution to the problem, from the user's perspective.
 
 A LONG, numbered list — **extremely extensive and covering all aspects** of the feature. When in doubt, enumerate rather than merge: breadth here is the point. Format: _"1. As a <role>, I want <capability>, so that <outcome>."_
 
+Extraction rule: identify every distinct **actor** and every distinct **capability** mentioned anywhere in the input (problem, solution, design notes, agreed decisions), and ensure each combination has an entry. Do not collapse related wants into one entry — list them separately. Do not thin this section because the input is already structured; if anything, a well-structured input should yield *more* entries, not fewer.
+
 ## Implementation Decisions
 
-Numbered list. **Each decision is one line: the claim.** Add at most one clause of *why*, and only when the choice is non-obvious or counterintuitive — never restate context already in Problem/Solution. Cover: modules built/modified and their interfaces, architectural calls, schema changes, API contracts, key interactions, developer clarifications.
+Numbered list. **Each decision is exactly one line.** One line = one claim, plus at most one short *why* clause on the same line — and only when the reasoning is non-obvious. Do NOT write multi-sentence paragraphs. Do NOT re-explain context from Problem/Solution — if the reason is already obvious from what's above, drop it entirely.
+
+Cover: modules built/modified and their interfaces, architectural calls, schema changes, API contracts, key interactions, developer clarifications.
 
 Do NOT include specific file paths or code snippets — they go stale fast.
 
-Exception: if the decision *is* a spec (state machine, reducer, schema, type shape, match patterns, ordering, or a table/catalog) that prose would state less precisely, inline it verbatim — a table or the decision-rich lines of a snippet only, not a working demo. If the snippet came from a prototype, note that briefly. These are load-bearing: reproduce them exactly, don't paraphrase — and the rule holds wherever the spec lands in the PRD (Problem, Solution, anywhere), not only in this section.
+**Spec exception — inline verbatim:** If a decision *is* a spec (state machine, reducer, schema, type shape, match patterns, ordering, or a table/catalog), inline it verbatim — a table or the decision-rich lines of a snippet only, not a working demo. These are load-bearing: reproduce them exactly, don't paraphrase. The one-line rule does not apply to the inlined spec block itself.
+
+**Prototype provenance:** If the spec came from a prototype or throwaway experiment, say so explicitly on the line that introduces it — e.g. "Delivery state machine — inlined from prototype:". Do not omit the attribution.
+
+This rule applies wherever spec appears in the PRD (Problem, Solution, anywhere), not only in this section.
 
 Terse vs bloated — same decision:
 
-> ✅ **Overrides live in a committed file, merged ahead of the generated config.** The generated file is rewritten every build, so hand edits there would be lost.
+> ✅ `Subscriptions and delivery log live in the primary datastore.`
 >
-> ❌ _"We have decided that the overrides should be placed into a new committed file maintained by hand, because as you may recall the generated config is produced by a build step that fetches the upstream source and overwrites the file entirely, which means any entries we were to add there would be lost on the next build, and therefore we need a separate file..."_
+> ❌ _"We have decided that subscriptions should be stored in the primary datastore because our primary datastore is already our source of truth for other entities, and co-locating subscriptions there allows us to leverage existing backup and replication infrastructure rather than spinning up an additional database..."_
 
 ## Testing Decisions
 
@@ -82,6 +90,6 @@ A description of the things that are out of scope for this PRD.
 
 ## Further Notes
 
-Omit unless something fits nowhere above. When present, **links and follow-ups only, as bullets** — no prose paragraphs, nothing that repeats Out of Scope.
+**Default: omit this section entirely.** Only include it when there is a genuine follow-up link or open question that fits nowhere else. When present, **bullets only** — links, follow-up action items, open questions. No prose paragraphs. Nothing that repeats Out of Scope or restates Problem/Solution. If you're tempted to write a paragraph here, delete it.
 
 </prd-template>
