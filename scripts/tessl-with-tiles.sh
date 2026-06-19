@@ -80,6 +80,17 @@ done < <(find "$TILES_DIR" -type l)
 count="$(wc -l < "$manifest" | tr -d ' ')"
 echo "materialized $count tile symlink(s); running: tessl $*" >&2
 
+# Default eval agent — injected when running eval run without an explicit --agent flag.
+EVAL_AGENT="${TESSL_EVAL_AGENT:-claude:glm-5.1}"
+args=("$@")
+if [[ "${args[0]:-}" == "eval" && "${args[1]:-}" == "run" ]]; then
+  has_agent=0
+  for a in "${args[@]}"; do
+    [[ "$a" == --agent* ]] && has_agent=1 && break
+  done
+  [[ "$has_agent" -eq 0 ]] && args=("${args[0]}" "${args[1]}" "--agent" "$EVAL_AGENT" "${args[@]:2}")
+fi
+
 # Run the requested tessl command from the repo root (where tessl.json lives).
 cd "$REPO"
-tessl "$@"
+tessl "${args[@]}"
