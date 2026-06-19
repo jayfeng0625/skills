@@ -1,23 +1,23 @@
-I just joined this team and need orientation on the `PaymentService` module. Map it for me.
+I just joined this team and need orientation on the `PaymentService` module. Map it for me by following these steps:
 
-1. Read `CONTEXT.md` first for domain vocabulary.
-2. Read `src/payments/PaymentService.ts` to anchor the module — that's your target.
+1. Read `CONTEXT.md` first to load domain vocabulary (Payment, PaymentMethod, Order, Cart).
+2. Read `src/payments/PaymentService.ts` — that's your anchor module.
 3. List only its publicly exported names (functions, types, interfaces) — skip private internals.
-4. Search the codebase for files that import `PaymentService` (use grep or rg on `../payments/PaymentService` or `PaymentService`). List each caller with its file path.
-5. Summarize the target and each direct collaborator (callers + downstream deps) in exactly one line — what it owns, not how it works internally.
+4. Read the other TypeScript files in `src/` to find which ones import `PaymentService`. List each caller with its file path.
+5. Write one line per neighbour (callers + downstream deps) describing what it owns — not how it works.
 6. State which architectural layer PaymentService belongs to and what role it plays there.
 7. Name the single best next file to read to go one level deeper, with a one-line reason.
 
-Write your output in this compact map format:
+Output in this compact map format:
 ```
-<target> — <one-line responsibility>
+PaymentService — <one-line responsibility>
   exports:  <key public symbols>
   called by:
-    <module A> — <why it calls in>
-    <module B> — <why it calls in>
+    <file path> — <why it calls in>
+    <file path> — <why it calls in>
   depends on:
-    <module C> — <what it needs downstream>
-  fits: <which layer / subsystem, and the role it plays there>
+    <interface/dep> — <what it needs downstream>
+  fits: <architectural layer and role>
 ```
 
 End with: "Next: `<file path>` — <one-line reason>"

@@ -13,8 +13,8 @@
       "max_score": 16
     },
     {
-      "name": "Traces actual callers via search",
-      "description": "The agent uses grep, rg, or equivalent to search the codebase for importers and call sites of PaymentService — it does not guess callers from context or list plausible callers without evidence. At least two distinct callers are identified with their file paths.",
+      "name": "Traces actual callers via search or file reads",
+      "description": "The agent identifies at least two distinct callers of PaymentService with their file paths — by reading the source files in the codebase (CartService.ts, OrderService.ts) or by using grep/rg. The callers must be confirmed from actual files, not guessed. At minimum: CartService (src/cart/CartService.ts) and OrderService (src/orders/OrderService.ts) should be identified.",
       "max_score": 18
     },
     {
