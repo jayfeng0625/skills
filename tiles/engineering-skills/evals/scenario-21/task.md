@@ -82,18 +82,20 @@ export function validateLineItem(item: unknown): ValidationResult {
 
 ---
 
-For EACH of the three modules, produce this exact compact format:
+This is a read-only written assessment. Do not edit, refactor, or rewrite any code — write your entire answer as plain text in this response.
+
+For EACH of the three modules, write this exact compact report block:
 
 ```
 <module> — Shallow | Deep
   why: <one line — is the Interface nearly as complex as the implementation, or does a small Interface hide meaningful complexity?>
   deletion test: <if Shallow: would inlining concentrate complexity in callers (confirms shallow) or just move it?>
-  refactor: <if Shallow: concrete before/after, e.g. "8 methods → 2 (find/save)"; if Deep: "none — already deep">
+  what a deepening would look like: <if Shallow: describe the smaller interface in words, e.g. "8 methods collapse to 2 — find(criteria) and save(workspace)"; if Deep: "none — already deep">
 ```
 
 Rules:
 - Use the vocabulary terms: **Module, Interface, Shallow, Deep, Seam, Leverage, Locality**.
 - Use domain glossary terms where relevant: Ledger, LineItem, Workspace.
-- Exactly one of the three modules is already Deep — mark it `Deep` and write `refactor: none — already deep`. Do not propose a refactor for it.
+- Exactly one of the three modules is already Deep — mark it `Deep` and write `what a deepening would look like: none — already deep`.
 
 End with: "Tackle first: `<module>` — <one-line reason>"
