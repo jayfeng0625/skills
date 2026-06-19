@@ -1,6 +1,6 @@
 # Engineering
 
-Skills for daily code work. All 18 skills below are in the `bonai-dev/engineering-skills` tile manifest at the current `2026.6.2` calver.
+Skills for daily code work. All 17 skills below are in the `bonai-dev/engineering-skills` tile manifest at the current `2026.6.2` calver.
 
 - **[setup-bonai-skills](./setup-bonai-skills/SKILL.md)** — Scaffold per-repo config (`commands.md` + `workflow-config.md`, written into a config dir chosen at setup, default `docs/agents/`) that the other engineering skills consume.
 - **[tdd](./tdd/SKILL.md)** — Test-driven development with a red-green-refactor loop. Reads commands from the `commands.md` named in the `## Agent skills` block's Config dir; never names a test runner.
@@ -10,7 +10,7 @@ Skills for daily code work. All 18 skills below are in the `bonai-dev/engineerin
 - **[domain-modeling](./domain-modeling/SKILL.md)** — Actively build and sharpen a project's domain model; challenges terms, updates CONTEXT.md and ADRs inline. Model-invoked so other skills can reach it.
 - **[codebase-design](./codebase-design/SKILL.md)** — Shared vocabulary for designing deep modules (depth, seams, adapters). Model-invoked reference skill for designing or improving module interfaces.
 - **[triage](./triage/SKILL.md)** — Triage issues through a state machine of triage roles; posts agent briefs as child pages of the issue.
-- **[triage-issue](./triage-issue/SKILL.md)** — Investigate a bug by exploring the codebase to find root cause, then create a GitHub issue with a TDD-based fix plan.
+- **[triage-issue](./triage-issue/SKILL.md)** — Investigate a bug by exploring the codebase to find root cause, then create an issue in the configured tracker with a TDD-based fix plan.
 - **[implement](./implement/SKILL.md)** — Implement a piece of work based on a PRD or set of issues; uses /tdd at pre-agreed seams and reviews on completion.
 - **[resolving-merge-conflicts](./resolving-merge-conflicts/SKILL.md)** — Resolve an in-progress git merge or rebase conflict by understanding original intent and preserving both changes where possible.
 - **[ask-matt](./ask-matt/SKILL.md)** — Router over the entire skill system; maps the main idea→ship flow, on-ramps, and standalone skills. Ask this when you're unsure which skill to reach for.

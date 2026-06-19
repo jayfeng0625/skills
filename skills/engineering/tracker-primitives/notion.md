@@ -65,6 +65,22 @@ Tool: `mcp__notion__notion-create-pages`
 - Properties: title (required); date defaults to today
 - Body: handoff document with the standard sections (Goal / What's done / Open questions / Suggested skills / Key files / Sensitive-info note)
 
+### `list property options`
+
+Used by `/handoff` to fetch the current options for a Select/Multi-select property on a DB (e.g. the `Epic` column on the Handoffs DB).
+
+Tool: `mcp__notion__notion-fetch`
+- Target: the DB ID from `workflow-config.md`
+- Read the `properties.<PropertyName>.select.options` (or `.multi_select.options`) array from the response.
+
+### `add property option`
+
+Used by `/handoff` to append a new option to a Select property without overwriting existing ones. Must call `list property options` first to capture the current list.
+
+Tool: `mcp__notion__notion-update-data-source`
+- `ALTER COLUMN "<PropertyName>" SET SELECT(...)` listing all existing options **plus** the new one.
+- Do NOT use `ADD COLUMN` — that adds a new property, not a new option.
+
 ## Error handling
 
 If a Notion MCP call fails (auth, missing DB, schema mismatch), stop the verb invocation and tell the user. Do not silently retry or fall back to another backend.

@@ -54,7 +54,7 @@ Skill bodies use only **abstract verbs** — never concrete tool calls. `skills/
 
 ## Skills
 
-### Engineering (18)
+### Engineering (17)
 
 - [`ask-matt`](./skills/engineering/ask-matt/SKILL.md) — router over the entire skill system; maps idea→ship flow, on-ramps, and standalone skills
 - [`setup-bonai-skills`](./skills/engineering/setup-bonai-skills/SKILL.md) — per-repo config scaffolding
