@@ -1,1 +1,1 @@
-{ "description": "Zoom out on an unfamiliar module — export surface, callers, responsibilities, architecture fit" }
+{ "description": "Zoom out on an unfamiliar module — export surface, callers, responsibilities, architecture fit", "include": ["./inputs"] }
