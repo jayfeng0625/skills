@@ -14,7 +14,7 @@
     },
     {
       "name": "Traces actual callers via search or file reads",
-      "description": "The agent identifies at least two distinct callers of PaymentService with their file paths — by reading the source files in the codebase (CartService.ts, OrderService.ts) or by using grep/rg. The callers must be confirmed from actual files, not guessed. At minimum: CartService (src/cart/CartService.ts) and OrderService (src/orders/OrderService.ts) should be identified.",
+      "description": "The agent identifies at least two distinct callers of PaymentService with their file paths — by reading the source files in the codebase (inputs/src/cart/CartService.ts, inputs/src/orders/OrderService.ts) or by using grep/rg. The callers must be confirmed from actual files, not guessed. At minimum: CartService (inputs/src/cart/CartService.ts) and OrderService (inputs/src/orders/OrderService.ts) should be identified.",
       "max_score": 18
     },
     {
