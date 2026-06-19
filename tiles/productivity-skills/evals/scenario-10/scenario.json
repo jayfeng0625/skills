@@ -1,1 +1,1 @@
-{ "description": "teach grounds a mission, gates on sources before teaching, produces a self-contained HTML lesson with cited sources" }
+{ "description": "teach creates a self-contained HTML lesson at the right level from pre-filled MISSION.md and RESOURCES.md, citing sources and writing a learning record", "include": ["./inputs"] }

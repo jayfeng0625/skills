@@ -1,41 +1,36 @@
 {
-  "context": "Tests whether /teach follows its mandatory checkpoint sequence: grounds a mission in MISSION.md before teaching, populates RESOURCES.md with external vetted sources before creating a lesson, and produces a self-contained HTML lesson that cites those sources rather than teaching from parametric knowledge. Also checks that the lesson is pitched at the right level (assumes JavaScript but not async) and that a learning record is written after the lesson.",
+  "context": "Tests whether /teach produces a high-quality first lesson when MISSION.md and RESOURCES.md are already populated. The agent should read MISSION.md to understand what level to pitch the lesson at (JavaScript-fluent but weak on async edge cases), create a self-contained HTML lesson in ./lessons/, cite specific sources from RESOURCES.md for every factual claim (never from parametric memory alone), update reference material in ./reference/, and write a learning record capturing the non-obvious insight from the lesson.",
   "type": "weighted_checklist",
   "checklist": [
     {
-      "name": "Creates MISSION.md before any lesson",
-      "description": "The agent writes MISSION.md before creating any lesson file. MISSION.md must describe why the user wants to learn async/await in terms of their goals, not just restate the topic. Check that the file exists and was created before the first lesson file.",
-      "max_score": 14
-    },
-    {
-      "name": "Populates RESOURCES.md with high-trust external sources",
-      "description": "The agent creates RESOURCES.md with at least two external, high-trust sources (e.g. MDN Web Docs, the ECMAScript spec, or well-known books) before creating any lesson. Sources must be real URLs or citations, not placeholder text.",
-      "max_score": 14
-    },
-    {
-      "name": "Does not create the lesson before RESOURCES.md is populated",
-      "description": "The lesson file (lessons/*.html) must not be created before RESOURCES.md exists and has at least one vetted source. If the agent produces a lesson without gathering sources first, this checkpoint gate has been violated. Check file creation order in the transcript.",
-      "max_score": 16
-    },
-    {
-      "name": "Lesson is a self-contained HTML file in ./lessons/",
-      "description": "A file exists at ./lessons/NNNN-<dash-case-name>.html (four-digit prefix, kebab-case slug). The file must be a complete, valid HTML document with inline styles — not a markdown file, not a bare snippet, and not at an arbitrary path.",
-      "max_score": 14
-    },
-    {
-      "name": "Every factual claim in the lesson cites a specific source",
-      "description": "Each knowledge claim in the lesson body is backed by a hyperlink or inline citation pointing to a source from RESOURCES.md or another external reference. Claims stated without citation fail this check. 'From memory' or uncited assertions are not acceptable.",
+      "name": "Reads MISSION.md before creating lesson",
+      "description": "The agent reads MISSION.md before producing any lesson content. Evidence: the lesson is pitched at a JavaScript-fluent learner (not a beginner who needs 'what is a function'), and targets the specific gaps stated in the mission (error propagation, parallel execution) rather than a generic intro to async/await.",
       "max_score": 18
     },
     {
-      "name": "Lesson is pitched at the right level",
-      "description": "The lesson assumes JavaScript knowledge (variables, functions, callbacks) but does not assume prior knowledge of async patterns or Promises. It should introduce async/await from the angle of 'you know callbacks and want something cleaner' — not start from scratch with JavaScript syntax, and not assume the user already understands Promises deeply.",
-      "max_score": 12
+      "name": "Creates a self-contained HTML lesson",
+      "description": "The agent creates an HTML file in ./lessons/ (not plain text or Markdown). The file is self-contained — it can be opened in a browser without additional dependencies that aren't CDN-linked. Award zero marks if the lesson is Markdown or plain text.",
+      "max_score": 20
     },
     {
-      "name": "Learning record written after the lesson",
-      "description": "A file exists at ./learning-records/NNNN-<dash-case-name>.md after the lesson is created. The record captures a non-obvious insight from the lesson (not just 'user learned async/await'), suitable for driving a future ZPD decision.",
-      "max_score": 12
+      "name": "Every factual claim cites a source from RESOURCES.md",
+      "description": "Each factual statement in the lesson (how await works, what async returns, how Promise.all short-circuits) is backed by a citation to one of the three MDN sources in RESOURCES.md. Statements from parametric memory with no citation do not count. Award proportionally: full marks if all major claims are cited, partial if most are, zero if citations are absent.",
+      "max_score": 20
+    },
+    {
+      "name": "Lesson pitched at zone of proximal development",
+      "description": "The lesson does not explain basic JavaScript (variables, functions, callbacks). It starts from the learner's stated prior knowledge (Promise basics) and extends into async/await semantics, error handling, or parallel execution — the stated gaps in MISSION.md. Award zero marks if the lesson starts from 'what is a function' or 'what is a callback'.",
+      "max_score": 18
+    },
+    {
+      "name": "Writes a learning record after the lesson",
+      "description": "The agent creates a file in ./learning-records/ capturing the non-obvious insight from this lesson. A learning record is not a lesson summary — it captures the insight that would help choose what to teach next. Award partial marks for a summary; full marks for a forward-looking insight.",
+      "max_score": 14
+    },
+    {
+      "name": "Does not teach from parametric knowledge alone",
+      "description": "The agent does not produce a lesson that is entirely from its training data with no source citations. At minimum, key claims must reference RESOURCES.md. If the lesson reads as a generic LLM explanation with no citations at all, award zero marks for this check.",
+      "max_score": 10
     }
   ]
 }
