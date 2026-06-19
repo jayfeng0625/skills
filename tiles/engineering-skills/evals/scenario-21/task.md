@@ -1,7 +1,10 @@
-Survey the codebase in the inputs/ directory for deepening opportunities.
+Survey the codebase in the inputs/ directory for deepening opportunities — shallow modules whose interface is nearly as complex as their implementation.
 
-Use the improve-codebase-architecture skill. Read CONTEXT.md first to ground your analysis in the project's domain vocabulary. Check docs/adr/ for any documented decisions that should constrain your suggestions (degrade gracefully if the directory is absent).
+1. Read `CONTEXT.md` first to load the project's domain vocabulary (Ledger, LineItem, Workspace). Use these canonical names when describing candidates.
+2. Check `docs/adr/` for documented decisions (degrade gracefully if absent).
+3. Walk each TypeScript file and decide: is the module Shallow (many small methods each wrap one implementation step, caller must know which to call) or Deep (one or two methods hide meaningful complexity)?
+4. Apply the **deletion test** to each candidate you suspect is shallow: if you deleted this module and put its logic inline in each caller, would complexity concentrate in the callers, or just move there unchanged? A "concentrates" answer confirms shallowness.
+5. For each genuine deepening opportunity: explain what makes it shallow, apply the deletion test, propose a specific refactor that reduces the public interface (show before/after method counts), and explain how the refactor reduces caller burden.
+6. Explicitly avoid flagging modules that already hide meaningful complexity behind a small interface — call them out as already deep if you evaluated them and passed.
 
-For each candidate you identify, explain what makes it shallow, apply the deletion test to justify why it is worth deepening, propose a specific refactor that reduces interface complexity, and show before/after interface counts. Write your findings as a structured text analysis directly in this conversation — do not write to external files.
-
-Do not flag modules whose interface already hides meaningful complexity — only surface genuine deepening opportunities.
+Write your entire analysis as structured text **in this conversation** — do not write to files. Use these vocabulary terms throughout: Module, Interface, Shallow, Deep, Seam, Leverage, Locality.
