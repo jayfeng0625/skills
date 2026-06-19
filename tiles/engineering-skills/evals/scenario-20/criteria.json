@@ -1,0 +1,41 @@
+{
+  "context": "Tests whether /grill-with-docs correctly grounds a design proposal in the project's existing domain model. The proposal introduces 'Refund' and 'Dispute' — terms absent from the glossary — while referencing existing terms ('Customer', 'Payment', 'Order') that have precise definitions. A good grilling session reads CONTEXT.md before asking any questions, surfaces conflicts between proposal terminology and the glossary, asks one question at a time with a recommended answer, writes new glossary entries back to CONTEXT.md as terms crystallise, and offers an ADR only when a decision is genuinely hard to reverse, surprising without context, and the result of a real trade-off.",
+  "type": "weighted_checklist",
+  "checklist": [
+    {
+      "name": "Reads CONTEXT.md before grilling",
+      "description": "The agent reads (or attempts to read) CONTEXT.md before asking any grilling questions. Reading it after the first question, or skipping it entirely, does not satisfy this check. Look for a Read tool call or explicit acknowledgement of the glossary contents before any questions are posed.",
+      "max_score": 15
+    },
+    {
+      "name": "Identifies terminology conflicts or gaps",
+      "description": "The agent explicitly calls out at least one term in the proposal that conflicts with or is absent from the existing glossary — e.g. 'Refund' and 'Dispute' are not defined; 'customer disputes a charge' is ambiguous given that Payment is a separate entity from Order. Generic observation that 'new terms appear' is insufficient; the agent must name the specific conflict or gap.",
+      "max_score": 15
+    },
+    {
+      "name": "Questions one at a time",
+      "description": "The agent asks one question per turn rather than batching all questions upfront. A single opening question followed by waiting for a response satisfies this. A list of five questions in the first turn does not, even if the agent says it will wait.",
+      "max_score": 15
+    },
+    {
+      "name": "Provides a recommended answer per question",
+      "description": "For each question asked, the agent proposes its own recommended answer or preferred interpretation rather than leaving the question open-ended. 'Do you mean X or Y? I'd recommend X because...' satisfies this; 'Do you mean X or Y?' alone does not.",
+      "max_score": 12
+    },
+    {
+      "name": "Writes new glossary entries to CONTEXT.md",
+      "description": "As terms are resolved (Refund, Dispute, or others surfaced during grilling), the agent writes new glossary entries to CONTEXT.md inline — not as a final batch at the end. At least one new entry must be appended to CONTEXT.md during or after a resolved question.",
+      "max_score": 18
+    },
+    {
+      "name": "ADR offered only for qualifying decisions",
+      "description": "If the agent offers an ADR, it is for a decision that is genuinely hard to reverse, surprising without context, and the result of a real trade-off (e.g. whether Refund is a state on Payment vs. a separate entity). ADRs must NOT be offered for trivial choices (e.g. naming conventions, field ordering). If no ADR is offered at all, check whether any qualifying decision was actually reached; award full marks if none was reached and none was offered, partial credit if one was reached and an ADR was offered but for the wrong reasons.",
+      "max_score": 15
+    },
+    {
+      "name": "Does not write ADRs for reversible decisions",
+      "description": "No ADR is written for decisions that are easy to change later (e.g. which HTTP status code to return, what to name an internal variable, whether to add an optional display field). If the agent writes an ADR for a reversible decision, deduct points in proportion to how clearly reversible that decision is.",
+      "max_score": 10
+    }
+  ]
+}
