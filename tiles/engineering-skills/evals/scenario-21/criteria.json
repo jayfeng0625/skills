@@ -1,0 +1,46 @@
+{
+  "context": "Tests whether the agent correctly runs improve-codebase-architecture against a small TypeScript module cluster that contains two shallow modules (workspaceRepository.ts with 8 thin DB-wrapping methods, and ledgerFormatter.ts with 6 trivially-thin formatting functions) and one already-deep module (lineItemValidator.ts, which hides 6 validation rules behind a single validateLineItem call). The agent must read CONTEXT.md first and use the domain vocabulary (Ledger, LineItem, Workspace) when naming candidates, correctly identify both shallow modules, avoid flagging the deep module, propose concrete refactors for each candidate, and produce an HTML report with before/after comparisons.",
+  "type": "weighted_checklist",
+  "checklist": [
+    {
+      "name": "Reads CONTEXT.md before proposing candidates",
+      "description": "The agent reads CONTEXT.md before naming any candidates. Evidence: it uses the canonical domain terms — Ledger, LineItem, Workspace — when describing the candidates (not generic alternatives like 'transaction store', 'charge record', or 'tenant').",
+      "max_score": 12
+    },
+    {
+      "name": "Identifies workspaceRepository as a candidate",
+      "description": "The agent flags workspaceRepository.ts (or names it using the canonical Workspace term) as a shallow module. It should note that the 8 individual methods all wrap single DB calls and that callers must know which method to call for each lookup or mutation.",
+      "max_score": 15
+    },
+    {
+      "name": "Identifies ledgerFormatter as a candidate",
+      "description": "The agent flags ledgerFormatter.ts (or names it using the canonical Ledger / LineItem terms) as a shallow module. It should note that each exported function is a trivial one-liner and that the interface offers no hiding of complexity over inline calls.",
+      "max_score": 12
+    },
+    {
+      "name": "Does NOT flag lineItemValidator as a candidate",
+      "description": "The agent correctly avoids flagging lineItemValidator.ts as a shallow module. lineItemValidator exposes one method (validateLineItem) that hides six distinct validation rules, bounds checks, and error aggregation — it is already deep. Flagging it is a false positive. Award full marks only if it is absent from the candidates list or is explicitly called out as already deep.",
+      "max_score": 18
+    },
+    {
+      "name": "Proposes a specific refactor for each candidate",
+      "description": "For each candidate the agent names a concrete change — not vague advice like 'consolidate this module'. For workspaceRepository the refactor should collapse the 8 methods into something like 2 methods (e.g. find(criteria) and save(workspace)). For ledgerFormatter the refactor should collapse the 6 functions into a single formatter object or function with one call site.",
+      "max_score": 18
+    },
+    {
+      "name": "Proposed refactors genuinely reduce interface complexity",
+      "description": "Each proposed refactor results in a smaller public interface (fewer exported names or fewer required call sites for callers). The agent should articulate the reduction: e.g. '8 methods → 2' or '6 exports → 1 formatter call'.",
+      "max_score": 10
+    },
+    {
+      "name": "Produces an HTML report",
+      "description": "The output is an HTML file written to the OS temp directory (not a plain-text or Markdown response). The report path is printed or opened automatically. Award partial marks if the agent writes HTML but to the wrong location.",
+      "max_score": 10
+    },
+    {
+      "name": "Each candidate has a before/after comparison",
+      "description": "The HTML report includes a before/after visualisation (diagram, code diff, or structural comparison) for each candidate that illustrates the reduction in interface complexity.",
+      "max_score": 5
+    }
+  ]
+}
