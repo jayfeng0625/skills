@@ -41,9 +41,9 @@ A starting situation that generates work, then merges onto the main flow.
 
 Not the queue — one concrete problem you need to understand and fix.
 
-- **Theory not yet confirmed** → **`/diagnose`** first. It runs a disciplined loop: build a feedback loop, reproduce, form ranked hypotheses, instrument, fix, regression-test. Use it when you need to understand _why_ something breaks before writing a fix plan.
-- **Theory in hand, want a tracked fix plan** → **`/triage-issue`**. It investigates the codebase, finds the root cause, and creates a fully-specified agent-ready issue with a TDD fix plan in the configured tracker. Skip to here when you already know the cause and just need a tracked, executable issue.
-  - After `/triage-issue` the natural next step is **`/implement`**, which picks up the issue and ships the fix.
+Default to **`/triage-issue`**: it investigates the codebase, finds the root cause, and creates a fully-specified agent-ready issue with a TDD fix plan in the configured tracker. This is the right start when you have a theory or a repro and want a tracked, executable plan. After `/triage-issue`, the natural next step is **`/implement`**, which picks up the issue and ships the fix.
+
+Use **`/diagnose`** instead _only_ if you cannot yet reproduce the bug or have no idea which code path is responsible — it runs a disciplined reproduce → hypothesise → instrument loop to establish a confirmed cause before you write the fix plan. After `/diagnose` you'll typically continue to `/triage-issue`.
 
 These are **standalone** — they are not part of the main idea-to-ship flow (grill-with-docs → to-prd → to-issues → implement). Start here directly; don't route through grill-with-docs or to-prd for a bug.
 
