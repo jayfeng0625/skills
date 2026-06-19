@@ -1,0 +1,1 @@
+{ "description": "handoff writes a structured cross-session document via tracker-primitives — correct path, all six canonical sections, no sensitive info embedded", "include": ["./inputs"] }

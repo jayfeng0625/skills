@@ -1,0 +1,36 @@
+{
+  "context": "Tests whether /handoff writes a structured cross-session document to the correct local tracker path via tracker-primitives, includes all six canonical sections in the correct order, writes a forward-looking Goal (not a backward-looking summary), references artifacts by path rather than re-embedding them, and includes a sensitive-info note. The local backend writes to .scratch/handoffs/<date>-<slug>.md.",
+  "type": "weighted_checklist",
+  "checklist": [
+    {
+      "name": "Handoff file written to correct path via tracker-primitives",
+      "description": "A file exists at .scratch/handoffs/<date>-<slug>.md (ISO date prefix, kebab-case slug). This asserts the skill used the 'create handoff page' verb via tracker-primitives rather than writing to an arbitrary path or calling Notion/GitHub directly.",
+      "max_score": 18
+    },
+    {
+      "name": "All six canonical sections present in correct order",
+      "description": "The handoff body contains all six sections in order: Goal, What's done, Open questions, Suggested skills, Key files, Sensitive-info note. Missing or reordered sections fail this check.",
+      "max_score": 20
+    },
+    {
+      "name": "Goal is forward-looking",
+      "description": "The Goal section describes what the NEXT session should accomplish — e.g. 'identify the module owning the retry counter and confirm whether it's in-memory or persistent' — not a backward-looking summary of what this session did. A Goal that reads like a status update fails this check.",
+      "max_score": 16
+    },
+    {
+      "name": "Open questions name what's at stake and what's blocking each question",
+      "description": "The Open questions section lists at least two specific decision points. Each names what's at stake (e.g. 'if in-memory, all in-flight retries are lost on restart') and what's blocking resolution (e.g. 'need to trace the retry counter initialization path'). Vague questions like 'figure out the bug' fail this check.",
+      "max_score": 16
+    },
+    {
+      "name": "Sensitive-info note is present",
+      "description": "The handoff includes a Sensitive-info note section, even if it states 'None — all referenced material is repo-internal'. The section must be explicitly present, not omitted.",
+      "max_score": 14
+    },
+    {
+      "name": "Does not embed credentials, PII, or internal IDs in the handoff body",
+      "description": "The handoff body contains no API keys, auth tokens, passwords, email addresses, internal Notion/GitHub IDs, or other sensitive data. References to such data (if any were present in context) should appear only as redacted placeholders or notes in the Sensitive-info section.",
+      "max_score": 16
+    }
+  ]
+}
