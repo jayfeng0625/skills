@@ -7,4 +7,4 @@ We've been debugging a webhook retry bug for the past hour. Here's what we know 
 
 The context window is getting full and another agent will continue this work. Write a handoff document so the next session can pick up immediately.
 
-Use "Webhook Debugging" as the Epic for this handoff.
+Use "Webhook Debugging" as the Epic for this handoff. Compose all six canonical sections, then write the handoff file directly without waiting for confirmation.

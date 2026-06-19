@@ -37,6 +37,16 @@ A starting situation that generates work, then merges onto the main flow.
 
   Triage is only for issues **you didn't create** — bug reports, incoming feature requests, anything that arrives raw. Issues that `/to-issues` produced are already agent-ready, so **don't triage them**.
 
+## Debugging a specific bug
+
+Not the queue — one concrete problem you need to understand and fix.
+
+- **Theory not yet confirmed** → **`/diagnose`** first. It runs a disciplined loop: build a feedback loop, reproduce, form ranked hypotheses, instrument, fix, regression-test. Use it when you need to understand _why_ something breaks before writing a fix plan.
+- **Theory in hand, want a tracked fix plan** → **`/triage-issue`**. It investigates the codebase, finds the root cause, and creates a fully-specified agent-ready issue with a TDD fix plan in the configured tracker. Skip to here when you already know the cause and just need a tracked, executable issue.
+  - After `/triage-issue` the natural next step is **`/implement`**, which picks up the issue and ships the fix.
+
+These are **standalone** — they are not part of the main idea-to-ship flow (grill-with-docs → to-prd → to-issues → implement). Start here directly; don't route through grill-with-docs or to-prd for a bug.
+
 ## Codebase health
 
 Not feature work — upkeep.

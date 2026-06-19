@@ -14,7 +14,7 @@
     },
     {
       "name": "Names anti-patterns correctly",
-      "description": "The agent uses the skill's vocabulary: at minimum calls out 'shallow interface' for the passthrough getters, 'spaghetti growth' or equivalent for the conditional chain, and 'wrong-layer logic' or 'mixed concerns' for the god-function.",
+      "description": "The agent uses the skill's vocabulary: at minimum calls out 'thin wrapper', 'identity pass-through', or 'shallow interface' for the passthrough getters, 'spaghetti growth' or equivalent for the conditional chain, and 'wrong-layer logic' or 'mixed concerns' for the god-function.",
       "max_score": 15
     },
     {
