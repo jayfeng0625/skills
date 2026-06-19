@@ -46,6 +46,11 @@
       "name": "No distinct decision dropped",
       "description": "Every distinct decision from the notes is present: secret rotation with 24h overlap, committed-seed-merged-ahead-of-overrides storage, HTTPS-only + reachability-ping validation, disabled-subscriptions-retain-log. Terseness did not silently drop any of these.",
       "max_score": 7
+    },
+    {
+      "name": "Written via tracker-primitives to correct path",
+      "description": "A file exists at .scratch/prds/<id>-<slug>.md (where <id> is a numeric ID and <slug> is a kebab-case title). This asserts the skill used the `create PRD page` verb via tracker-primitives rather than writing to an arbitrary path, calling gh, or invoking a hardcoded Notion/GitHub API directly.",
+      "max_score": 10
     }
   ]
 }
