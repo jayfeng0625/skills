@@ -1,4 +1,4 @@
-Analyze the three TypeScript modules below for deepening opportunities. Write your analysis as plain text in this response — do NOT write to files or produce HTML.
+Analyze the three TypeScript modules below for deepening opportunities. Use the modules and domain glossary provided — no file reads required. Write your analysis as plain text in this response — do NOT write to files or produce HTML.
 
 ## Domain Glossary
 
@@ -48,12 +48,18 @@ export function validateLineItem(item: unknown): ValidationResult {
 
 ---
 
-For each module, answer: is it **Shallow** (interface nearly as complex as implementation — callers must know too much) or **Deep** (small interface hides meaningful complexity)?
+For EACH of the three modules, produce this exact compact format:
 
-Apply the **deletion test** to any Shallow candidate: if you deleted this module and inlined its logic in each caller, would complexity *concentrate* in the callers (confirming shallowness), or just *move* unchanged?
+```
+<module> — Shallow | Deep
+  why: <one line — is the Interface nearly as complex as the implementation, or does a small Interface hide meaningful complexity?>
+  deletion test: <if Shallow: would inlining concentrate complexity in callers (confirms shallow) or just move it?>
+  refactor: <if Shallow: concrete before/after, e.g. "8 methods → 2 (find/save)"; if Deep: "none — already deep">
+```
 
-For each genuine Shallow module: explain why it is shallow, apply the deletion test, and propose a specific refactor showing before/after method counts.
+Rules:
+- Use the vocabulary terms: **Module, Interface, Shallow, Deep, Seam, Leverage, Locality**.
+- Use domain glossary terms where relevant: Ledger, LineItem, Workspace.
+- Exactly one of the three modules is already Deep — mark it `Deep` and write `refactor: none — already deep`. Do not propose a refactor for it.
 
-For any module you judge as already Deep: say so explicitly and explain why.
-
-Use these vocabulary terms throughout: Module, Interface, Shallow, Deep, Seam, Leverage, Locality.
+End with: "Tackle first: `<module>` — <one-line reason>"
