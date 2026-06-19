@@ -1,1 +1,1 @@
-{ "description": "improve-codebase-architecture finds deepening opportunities, applies deletion test, avoids false positives on already-deep modules", "include": ["./inputs"] }
+{ "description": "improve-codebase-architecture finds deepening opportunities, applies deletion test, avoids false positives on already-deep modules" }

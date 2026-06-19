@@ -1,45 +1,45 @@
 {
-  "context": "Tests whether the agent produces an accurate architectural map of a module from provided source code. The agent must identify PaymentService as the anchor, list only public exports (not the private PaymentGateway interface), identify both callers (CartService and OrderService) from the provided source, summarize each neighbour's responsibility in one line, place the module in the architectural layer, name the single best next file to read, and follow the compact map output format. The domain glossary (Payment, PaymentMethod, Order, Cart) is provided inline in the task.",
+  "context": "Tests whether the agent can produce an accurate architectural map of a module when given the source code inline in the task. All code is embedded in the task — no file reads needed. The agent should identify exports, callers, architectural layer, and recommend a next file, using the compact map format and domain glossary provided.",
   "type": "weighted_checklist",
   "checklist": [
     {
-      "name": "Anchors on PaymentService as the target",
-      "description": "The agent treats PaymentService as the anchor module and structures its entire output around it — not around CartService, OrderService, or PaymentGateway. The compact map header names PaymentService as the subject.",
+      "name": "Identifies PaymentService as the subject",
+      "description": "The response is about PaymentService — it appears prominently as the subject of the analysis. Award full marks if PaymentService is clearly the anchor of the response. Award 0 if the response is about a different module or is entirely off-topic.",
       "max_score": 10
     },
     {
-      "name": "Lists public export surface only",
-      "description": "The exports section lists only the publicly exported names: PaymentResult (interface), PaymentMethod (interface), and PaymentService (class with processPayment, refundPayment, getPaymentStatus). The private PaymentGateway interface must NOT appear under exports. Deduct proportionally if PaymentGateway is listed as an export.",
+      "name": "Correctly identifies public exports",
+      "description": "The response names at least two of the three public exports: PaymentResult (interface), PaymentMethod (interface), PaymentService (class). Partial credit for naming one. The private PaymentGateway interface should NOT appear as an export — deduct points if it does.",
       "max_score": 16
     },
     {
-      "name": "Identifies both callers from the provided source",
-      "description": "The agent identifies at least two distinct callers of PaymentService with their file paths: CartService (inputs/src/cart/CartService.ts) and OrderService (inputs/src/orders/OrderService.ts). Both must appear in the 'called by' section. These callers explicitly import PaymentService in the source provided in the task.",
+      "name": "Identifies at least one caller",
+      "description": "The response names CartService or OrderService (or both) as modules that use PaymentService. Both callers explicitly import PaymentService in the source provided in the task. Award full marks for both, half marks for one. Award 0 only if neither is mentioned.",
       "max_score": 18
     },
     {
-      "name": "One-line responsibility per neighbour",
-      "description": "Every direct collaborator (each caller and each downstream dependency) receives a one-line summary of what it owns — not how it works internally. Vague summaries like 'handles payments stuff' or multi-sentence descriptions should score partial credit only.",
+      "name": "Gives a one-line or brief responsibility per caller",
+      "description": "For each caller mentioned, the response includes a brief description of what that caller does (e.g. CartService handles checkout, OrderService handles refunds). Any reasonable one-liner counts — strict phrasing is not required.",
       "max_score": 14
     },
     {
-      "name": "Places module in architectural layer",
-      "description": "The output explicitly names which layer or subsystem PaymentService belongs to (e.g. application service layer, domain service, infrastructure adapter) and describes the role it plays there — not just that it 'does payments'.",
+      "name": "Names an architectural layer or role",
+      "description": "The response states which architectural layer or subsystem PaymentService belongs to (e.g. service layer, application service, domain service, infrastructure adapter). Any reasonable layer name counts — exact terminology is not required.",
       "max_score": 14
     },
     {
-      "name": "Names single best next file to read",
-      "description": "The response ends by recommending exactly one file to read next to go one level deeper, with a brief reason why that file is the best choice. The most defensible answer is a PaymentGateway implementation or adapter, because that owns the external provider coupling.",
+      "name": "Recommends a next file or dependency to explore",
+      "description": "The response ends with a recommendation for what to read next to go deeper. Award full marks for naming a specific file or dependency with a reason (e.g. PaymentGateway interface, or an adapter implementation). Award partial marks for naming a next step without a clear reason.",
       "max_score": 10
     },
     {
-      "name": "Uses compact map output shape",
-      "description": "The output follows the structured format from the task: target with responsibility, then exports / called by / depends on / fits sections in scannable form. Prose-only or unstructured responses score 0 here even if the content is accurate.",
+      "name": "Uses a structured or map-like output",
+      "description": "The response uses a structured format — the compact map format from the task, or any clearly structured layout with sections for exports, callers, and layer. Award full marks for the compact map format. Award partial marks for a structured prose response with clear sections. Award 0 only for a completely unstructured prose response.",
       "max_score": 12
     },
     {
-      "name": "Uses domain glossary vocabulary",
-      "description": "The agent uses the domain vocabulary provided in the task (Payment, PaymentMethod, Order, Cart) when describing the module's responsibility and neighbour summaries. Generic terms like 'transaction' instead of 'Payment' are vocabulary drift.",
+      "name": "Uses domain vocabulary from the glossary",
+      "description": "The response uses at least one of the domain terms provided in the task: Payment, PaymentMethod, Order, Cart. Award full marks for using two or more. Award partial for one. Award 0 only if none are used.",
       "max_score": 6
     }
   ]
