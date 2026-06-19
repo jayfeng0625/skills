@@ -1,5 +1,5 @@
 {
-  "context": "Tests whether the agent correctly runs improve-codebase-architecture against a small TypeScript module cluster that contains two shallow modules (workspaceRepository.ts with 8 thin DB-wrapping methods, and ledgerFormatter.ts with 6 trivially-thin formatting functions) and one already-deep module (lineItemValidator.ts, which hides 6 validation rules behind a single validateLineItem call). The agent must read CONTEXT.md first and use the domain vocabulary (Ledger, LineItem, Workspace) when naming candidates, correctly identify both shallow modules, avoid flagging the deep module, propose concrete refactors for each candidate, and produce an HTML report with before/after comparisons.",
+  "context": "Tests whether the agent correctly runs improve-codebase-architecture against a small TypeScript module cluster that contains two shallow modules (workspaceRepository.ts with 8 thin DB-wrapping methods, and ledgerFormatter.ts with 6 trivially-thin formatting functions) and one already-deep module (lineItemValidator.ts, which hides 6 validation rules behind a single validateLineItem call). The agent must read CONTEXT.md first and use the domain vocabulary (Ledger, LineItem, Workspace) when naming candidates, correctly identify both shallow modules, avoid flagging the deep module, propose concrete refactors, use the skill's deep-module vocabulary (Module, Interface, Shallow, Deep, Seam, Leverage, Locality), and apply the deletion test to justify candidates.",
   "type": "weighted_checklist",
   "checklist": [
     {
@@ -33,13 +33,13 @@
       "max_score": 10
     },
     {
-      "name": "Produces an HTML report",
-      "description": "The output is an HTML file written to the OS temp directory (not a plain-text or Markdown response). The report path is printed or opened automatically. Award partial marks if the agent writes HTML but to the wrong location.",
+      "name": "Uses deep-module vocabulary",
+      "description": "The agent uses at least three of the skill's canonical terms — Module, Interface, Shallow, Deep, Seam, Leverage, Locality — when describing candidates and refactors. Using generic terms like 'component', 'service', 'API', or 'boundary' instead is a vocabulary drift and should reduce the score.",
       "max_score": 10
     },
     {
-      "name": "Each candidate has a before/after comparison",
-      "description": "The HTML report includes a before/after visualisation (diagram, code diff, or structural comparison) for each candidate that illustrates the reduction in interface complexity.",
+      "name": "Applies the deletion test",
+      "description": "For at least one candidate, the agent explicitly applies the deletion test: would deleting this module concentrate complexity in its callers, or just move it? The answer should be 'concentrates' — confirming the module is shallow and worth deepening. A passing mention without the logic does not satisfy this check.",
       "max_score": 5
     }
   ]

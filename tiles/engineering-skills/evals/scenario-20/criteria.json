@@ -1,41 +1,41 @@
 {
-  "context": "Tests whether /grill-with-docs correctly grounds a design proposal in the project's existing domain model. The proposal introduces 'Refund' and 'Dispute' — terms absent from the glossary — while referencing existing terms ('Customer', 'Payment', 'Order') that have precise definitions. A good grilling session reads CONTEXT.md before asking any questions, surfaces conflicts between proposal terminology and the glossary, asks one question at a time with a recommended answer, writes new glossary entries back to CONTEXT.md as terms crystallise, and offers an ADR only when a decision is genuinely hard to reverse, surprising without context, and the result of a real trade-off.",
+  "context": "Tests whether grill-with-docs correctly grounds a design proposal in the project's existing domain model, running autonomously without waiting for user input. The proposal introduces 'Refund' and 'Dispute' — terms absent from the glossary — while referencing existing terms ('Customer', 'Payment', 'Order') that have precise definitions. A good autonomous session reads CONTEXT.md first, surfaces all terminology conflicts and gaps, covers every major decision branch (what is a Refund entity vs a state on Payment? what is a Dispute?), writes new glossary entries back to CONTEXT.md as terms crystallise, and offers ADRs only for genuinely hard-to-reverse decisions.",
   "type": "weighted_checklist",
   "checklist": [
     {
       "name": "Reads CONTEXT.md before grilling",
-      "description": "The agent reads (or attempts to read) CONTEXT.md before asking any grilling questions. Reading it after the first question, or skipping it entirely, does not satisfy this check. Look for a Read tool call or explicit acknowledgement of the glossary contents before any questions are posed.",
+      "description": "The agent reads (or attempts to read) CONTEXT.md before raising any questions or making any decisions. Evidence: it references the existing glossary definitions of Order, Customer, Payment, or Fulfilment when framing its first question or decision. Reading the glossary after the first decision does not satisfy this check.",
       "max_score": 15
     },
     {
-      "name": "Identifies terminology conflicts or gaps",
-      "description": "The agent explicitly calls out at least one term in the proposal that conflicts with or is absent from the existing glossary — e.g. 'Refund' and 'Dispute' are not defined; 'customer disputes a charge' is ambiguous given that Payment is a separate entity from Order. Generic observation that 'new terms appear' is insufficient; the agent must name the specific conflict or gap.",
+      "name": "Identifies all major terminology gaps",
+      "description": "The agent explicitly names 'Refund' and 'Dispute' as absent from the glossary, AND notes at least one conflict or ambiguity with an existing term — e.g. 'customer disputes a charge' is ambiguous because Payment and Order are separate entities in the glossary. Simply noting 'new terms appear' without naming them does not satisfy this check.",
+      "max_score": 20
+    },
+    {
+      "name": "Covers all major decision branches",
+      "description": "The agent works through the key structural decisions: (1) Is a Refund a state on an existing Payment, or a separate entity? (2) What is a Dispute — a customer action, a process, or a state? (3) How does the refund connect back to the Order? The agent need not resolve all of these the same way, but must surface and decide each one rather than skipping them.",
       "max_score": 15
     },
     {
-      "name": "Questions one at a time",
-      "description": "The agent asks one question per turn rather than batching all questions upfront. A single opening question followed by waiting for a response satisfies this. A list of five questions in the first turn does not, even if the agent says it will wait.",
-      "max_score": 15
-    },
-    {
-      "name": "Provides a recommended answer per question",
-      "description": "For each question asked, the agent proposes its own recommended answer or preferred interpretation rather than leaving the question open-ended. 'Do you mean X or Y? I'd recommend X because...' satisfies this; 'Do you mean X or Y?' alone does not.",
+      "name": "Provides recommended answer per decision",
+      "description": "For each decision point raised, the agent proposes its own preferred interpretation rather than leaving it open-ended. 'I'd treat Refund as a separate entity rather than a state on Payment because...' satisfies this; 'Should Refund be a state or an entity?' alone does not.",
       "max_score": 12
     },
     {
       "name": "Writes new glossary entries to CONTEXT.md",
-      "description": "As terms are resolved (Refund, Dispute, or others surfaced during grilling), the agent writes new glossary entries to CONTEXT.md inline — not as a final batch at the end. At least one new entry must be appended to CONTEXT.md during or after a resolved question.",
+      "description": "As terms are resolved (at minimum: Refund and Dispute), the agent writes new glossary entries to CONTEXT.md. At least one new entry must actually be appended or written — a statement that it 'would write' an entry does not count. The entries follow the glossary's existing format (bold term, em dash, definition).",
       "max_score": 18
     },
     {
       "name": "ADR offered only for qualifying decisions",
-      "description": "If the agent offers an ADR, it is for a decision that is genuinely hard to reverse, surprising without context, and the result of a real trade-off (e.g. whether Refund is a state on Payment vs. a separate entity). ADRs must NOT be offered for trivial choices (e.g. naming conventions, field ordering). If no ADR is offered at all, check whether any qualifying decision was actually reached; award full marks if none was reached and none was offered, partial credit if one was reached and an ADR was offered but for the wrong reasons.",
+      "description": "If the agent offers an ADR, it is for a decision that is genuinely hard to reverse, surprising without context, and the result of a real trade-off (e.g. whether Refund is a state on Payment vs. a separate entity). ADRs must NOT be offered for trivial or reversible choices. If no qualifying decision is reached and no ADR is offered, award full marks.",
       "max_score": 15
     },
     {
       "name": "Does not write ADRs for reversible decisions",
-      "description": "No ADR is written for decisions that are easy to change later (e.g. which HTTP status code to return, what to name an internal variable, whether to add an optional display field). If the agent writes an ADR for a reversible decision, deduct points in proportion to how clearly reversible that decision is.",
-      "max_score": 10
+      "description": "No ADR is written for decisions that are easy to change later (field naming, HTTP status codes, optional display fields). If the agent writes an ADR for a reversible decision, deduct proportionally.",
+      "max_score": 5
     }
   ]
 }

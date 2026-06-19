@@ -1,7 +1,7 @@
-Use grill-with-docs to stress-test the following design proposal before we adopt it.
+Use grill-with-docs to analyse this design proposal. Run the session autonomously — for each question you raise, provide your own recommended answer based on the existing glossary and design constraints, accept it, and immediately proceed to the next question. Do not pause for user input at any point. Write new glossary entries to CONTEXT.md and create qualifying ADRs inline as decisions crystallise.
 
-## Design proposal: Refund and Dispute flow
+Design proposal:
 
-We want to add a refund flow to the platform. When a customer disputes a charge, we process a refund through the payment gateway and update the order status. The refund should be partial or full. If the dispute is resolved in the customer's favour, the refund is issued automatically; otherwise the dispute is closed with no refund. We also want to record why each refund happened so support can see the history.
+We want to add a refund flow to the payment system. When a customer disputes a charge, we process a refund through the payment gateway and update the order status. The refund should be traceable back to the original order and the customer should be notified.
 
-Start by loading CONTEXT.md (it is in the inputs/ directory provided with this scenario — treat it as the repo's domain glossary at the repo root). Then grill the proposal: challenge any terminology that conflicts with or extends the glossary, walk each branch of the decision tree one question at a time, and write new glossary entries back to CONTEXT.md as terms are resolved. Offer an ADR only when a decision is hard to reverse, surprising without context, and the result of a real trade-off.
+The existing glossary (CONTEXT.md) defines: Order, Customer, Payment, Fulfilment.
