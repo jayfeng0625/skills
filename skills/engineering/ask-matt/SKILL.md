@@ -39,13 +39,15 @@ A starting situation that generates work, then merges onto the main flow.
 
 ## Debugging a specific bug
 
-Not the queue — one concrete problem you need to understand and fix.
+Not the queue — one concrete problem you need to understand and fix. These are **standalone** — not part of the main idea-to-ship flow.
 
-Default to **`/triage-issue`**: it investigates the codebase, finds the root cause, and creates a fully-specified agent-ready issue with a TDD fix plan in the configured tracker. This is the right start when you have a theory or a repro and want a tracked, executable plan. After `/triage-issue`, the natural next step is **`/implement`**, which picks up the issue and ships the fix.
+**Have a theory or can reproduce the bug?**
+→ **`/triage-issue`** — investigates the codebase, finds root cause, writes a fully-specified agent-ready issue with a TDD fix plan. Natural follow-on: **`/implement`**.
 
-Use **`/diagnose`** instead _only_ if you cannot yet reproduce the bug or have no idea which code path is responsible — it runs a disciplined reproduce → hypothesise → instrument loop to establish a confirmed cause before you write the fix plan. After `/diagnose` you'll typically continue to `/triage-issue`.
+**Cannot yet reproduce or have no idea which code path is responsible?**
+→ **`/diagnose`** — disciplined reproduce → hypothesise → instrument loop to establish a confirmed cause. Natural follow-on: `/triage-issue`.
 
-These are **standalone** — they are not part of the main idea-to-ship flow (grill-with-docs → to-prd → to-issues → implement). Start here directly; don't route through grill-with-docs or to-prd for a bug.
+Name exactly one of these — the one that fits. Do not explain the other.
 
 ## Codebase health
 
