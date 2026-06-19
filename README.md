@@ -61,7 +61,7 @@ Skill bodies use only **abstract verbs** — never concrete tool calls. `skills/
 - [`tdd`](./skills/engineering/tdd/SKILL.md) — test-driven development loop
 - [`implement`](./skills/engineering/implement/SKILL.md) — implement a PRD or issue using /tdd at pre-agreed seams
 - [`diagnose`](./skills/engineering/diagnose/SKILL.md) — disciplined bug-diagnosis loop
-- [`triage-issue`](./skills/engineering/triage-issue/SKILL.md) — investigate a bug, find root cause, create a GitHub issue with a TDD fix plan
+- [`triage-issue`](./skills/engineering/triage-issue/SKILL.md) — investigate a bug, find root cause, create an issue with a TDD fix plan in the configured tracker
 - [`domain-modeling`](./skills/engineering/domain-modeling/SKILL.md) — build and sharpen the project's domain model; updates CONTEXT.md / ADRs inline (model-invoked)
 - [`codebase-design`](./skills/engineering/codebase-design/SKILL.md) — shared deep-module vocabulary; model-invoked reference for designing interfaces and seams
 - [`grill-with-docs`](./skills/engineering/grill-with-docs/SKILL.md) — grilling that writes glossary / ADRs inline
@@ -74,13 +74,12 @@ Skill bodies use only **abstract verbs** — never concrete tool calls. `skills/
 - [`zoom-out`](./skills/engineering/zoom-out/SKILL.md) — higher-level perspective on unfamiliar code
 - [`thermo-nuclear-code-quality-review`](./skills/engineering/thermo-nuclear-code-quality-review/SKILL.md) — extremely strict maintainability review hunting code-judo simplifications
 
-### Productivity (6)
+### Productivity (5)
 
 - [`caveman`](./skills/productivity/caveman/SKILL.md) — ultra-compressed communication mode
 - [`grill-me`](./skills/productivity/grill-me/SKILL.md) — non-code interrogation about a plan / design / talk
 - [`teach`](./skills/productivity/teach/SKILL.md) — teach a skill or concept over multiple sessions in a stateful workspace
 - [`handoff`](./skills/productivity/handoff/SKILL.md) — cross-session handoff documents, written to the Handoffs store with an Epic tag (uses engineering's `tracker-primitives`; needs `/setup-bonai-skills`)
-- [`write-a-skill`](./skills/productivity/write-a-skill/SKILL.md) — produce a new skill folder (tile-agnostic)
 - [`writing-great-skills`](./skills/productivity/writing-great-skills/SKILL.md) — reference for writing and editing skills well; the vocabulary and principles that make a skill predictable
 
 ## Development & publishing
