@@ -1,20 +1,20 @@
 {
-  "context": "Tests whether the agent follows the zoom-out process to produce an accurate architectural map of an unfamiliar module. The agent must fix the target first, list only public exports (not internals), trace actual callers via search, summarize each neighbour's responsibility in one line, place the module in the architectural layer, and name the single best next file to read. The output must follow the compact map format from the skill. This scenario also checks that the agent grounds names in the domain glossary when CONTEXT.md is present, and degrades gracefully when it is absent.",
+  "context": "Tests whether the agent produces an accurate architectural map of a module from provided source code. The agent must identify PaymentService as the anchor, list only public exports (not the private PaymentGateway interface), identify both callers (CartService and OrderService) from the provided source, summarize each neighbour's responsibility in one line, place the module in the architectural layer, name the single best next file to read, and follow the compact map output format. The domain glossary (Payment, PaymentMethod, Order, Cart) is provided inline in the task.",
   "type": "weighted_checklist",
   "checklist": [
     {
-      "name": "Fixes the target module first",
-      "description": "The agent establishes PaymentService as the anchor before exploring anything else — it does not begin by reading callers, related services, or the database layer before locating and reading the target module itself.",
+      "name": "Anchors on PaymentService as the target",
+      "description": "The agent treats PaymentService as the anchor module and structures its entire output around it — not around CartService, OrderService, or PaymentGateway. The compact map header names PaymentService as the subject.",
       "max_score": 10
     },
     {
       "name": "Lists public export surface only",
-      "description": "The exports section lists only publicly exported functions, types, or entry points — not private helpers, internal utilities, or implementation details. If the agent lists private symbols under 'exports', deduct proportionally.",
+      "description": "The exports section lists only the publicly exported names: PaymentResult (interface), PaymentMethod (interface), and PaymentService (class with processPayment, refundPayment, getPaymentStatus). The private PaymentGateway interface must NOT appear under exports. Deduct proportionally if PaymentGateway is listed as an export.",
       "max_score": 16
     },
     {
-      "name": "Traces actual callers via search or file reads",
-      "description": "The agent identifies at least two distinct callers of PaymentService with their file paths — by reading the source files in the codebase (inputs/src/cart/CartService.ts, inputs/src/orders/OrderService.ts) or by using grep/rg. The callers must be confirmed from actual files, not guessed. At minimum: CartService (inputs/src/cart/CartService.ts) and OrderService (inputs/src/orders/OrderService.ts) should be identified.",
+      "name": "Identifies both callers from the provided source",
+      "description": "The agent identifies at least two distinct callers of PaymentService with their file paths: CartService (inputs/src/cart/CartService.ts) and OrderService (inputs/src/orders/OrderService.ts). Both must appear in the 'called by' section. These callers explicitly import PaymentService in the source provided in the task.",
       "max_score": 18
     },
     {
@@ -29,17 +29,17 @@
     },
     {
       "name": "Names single best next file to read",
-      "description": "The response ends by recommending exactly one file to read next to go one level deeper, with a brief reason why that file is the best choice (e.g. 'the PaymentGateway adapter, because it owns the external provider coupling').",
+      "description": "The response ends by recommending exactly one file to read next to go one level deeper, with a brief reason why that file is the best choice. The most defensible answer is a PaymentGateway implementation or adapter, because that owns the external provider coupling.",
       "max_score": 10
     },
     {
       "name": "Uses compact map output shape",
-      "description": "The output follows the structured format from the skill: target with responsibility, then exports / called by / depends on / fits sections in scannable form. Prose-only or unstructured responses score 0 here even if the content is accurate.",
+      "description": "The output follows the structured format from the task: target with responsibility, then exports / called by / depends on / fits sections in scannable form. Prose-only or unstructured responses score 0 here even if the content is accurate.",
       "max_score": 12
     },
     {
-      "name": "Grounds names in domain glossary or degrades gracefully",
-      "description": "If CONTEXT.md is present in the project, the agent reads it and uses its domain vocabulary when naming things (e.g. uses 'Charge' not 'Transaction' if the glossary defines 'Charge'). If CONTEXT.md is absent, the agent uses the codebase's own naming rather than inventing terms, and does not error or refuse to proceed.",
+      "name": "Uses domain glossary vocabulary",
+      "description": "The agent uses the domain vocabulary provided in the task (Payment, PaymentMethod, Order, Cart) when describing the module's responsibility and neighbour summaries. Generic terms like 'transaction' instead of 'Payment' are vocabulary drift.",
       "max_score": 6
     }
   ]

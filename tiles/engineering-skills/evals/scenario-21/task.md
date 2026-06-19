@@ -1,10 +1,59 @@
-Survey the codebase in the `inputs/` directory for deepening opportunities — shallow modules whose interface is nearly as complex as their implementation.
+Analyze the three TypeScript modules below for deepening opportunities. Write your analysis as plain text in this response — do NOT write to files or produce HTML.
 
-1. Read `inputs/CONTEXT.md` first to load the project's domain vocabulary (Ledger, LineItem, Workspace). Use these canonical names when describing candidates.
-2. Check `inputs/docs/adr/` for documented decisions (degrade gracefully if absent).
-3. Walk each TypeScript file in `inputs/` and decide: is the module Shallow (many small methods each wrap one implementation step, caller must know which to call) or Deep (one or two methods hide meaningful complexity)?
-4. Apply the **deletion test** to each candidate you suspect is shallow: if you deleted this module and put its logic inline in each caller, would complexity concentrate in the callers, or just move there unchanged? A "concentrates" answer confirms shallowness.
-5. For each genuine deepening opportunity: explain what makes it shallow, apply the deletion test, propose a specific refactor that reduces the public interface (show before/after method counts), and explain how the refactor reduces caller burden.
-6. Explicitly avoid flagging modules that already hide meaningful complexity behind a small interface — call them out as already deep if you evaluated them and passed.
+## Domain Glossary
 
-Write your entire analysis as structured text **in this conversation** — do not write to files. Use these vocabulary terms throughout: Module, Interface, Shallow, Deep, Seam, Leverage, Locality.
+**Ledger** — the append-only store of all financial transactions for a workspace. Immutable once written.
+**LineItem** — a single charge or credit within a transaction: amount (integer minor units), description, category code.
+**Workspace** — the top-level billing tenant. One workspace maps to one Stripe customer.
+
+## Module 1: workspaceRepository.ts
+
+```ts
+import { db } from "./db";
+
+export function findWorkspaceById(id: string): Promise<Workspace | null> { ... }
+export function findWorkspaceByStripeCustomerId(stripeCustomerId: string): Promise<Workspace | null> { ... }
+export function findWorkspaceByName(name: string): Promise<Workspace | null> { ... }
+export function createWorkspace(name: string, stripeCustomerId: string, plan: string): Promise<Workspace> { ... }
+export function updateWorkspacePlan(id: string, plan: string): Promise<Workspace> { ... }
+export function updateWorkspaceName(id: string, name: string): Promise<Workspace> { ... }
+export function updateWorkspaceTrialEndsAt(id: string, trialEndsAt: Date | null): Promise<Workspace> { ... }
+export function deleteWorkspace(id: string): Promise<void> { ... }
+// 8 exported functions — each wraps a single DB call. Callers must know and call each one individually.
+```
+
+## Module 2: ledgerFormatter.ts
+
+```ts
+export function formatAmount(amountMinorUnits: number, currencyCode: string): string { ... }
+export function formatCategoryCode(code: string): string { ... }
+export function formatDate(date: Date): string { ... }
+export function formatLineItemSummary(item: LineItem, currencyCode: string): string { ... }
+export function formatEntryTotal(entry: LedgerEntry, currencyCode: string): string { ... }
+export function formatEntryDescription(entry: LedgerEntry): string { ... }
+// 6 exported functions — each is a trivial 1-2 line formatter. Callers import and call each one individually.
+```
+
+## Module 3: lineItemValidator.ts
+
+```ts
+export function validateLineItem(item: unknown): ValidationResult {
+  // Runs 6 validation rules: amount must be positive integer within bounds,
+  // description non-empty within length limit, categoryCode in allowed set.
+  // Aggregates all errors into a typed result.
+  // Callers call ONE function and get a typed ValidationResult back.
+}
+// 1 exported function hiding 6 validation rules + error aggregation.
+```
+
+---
+
+For each module, answer: is it **Shallow** (interface nearly as complex as implementation — callers must know too much) or **Deep** (small interface hides meaningful complexity)?
+
+Apply the **deletion test** to any Shallow candidate: if you deleted this module and inlined its logic in each caller, would complexity *concentrate* in the callers (confirming shallowness), or just *move* unchanged?
+
+For each genuine Shallow module: explain why it is shallow, apply the deletion test, and propose a specific refactor showing before/after method counts.
+
+For any module you judge as already Deep: say so explicitly and explain why.
+
+Use these vocabulary terms throughout: Module, Interface, Shallow, Deep, Seam, Leverage, Locality.
