@@ -1,0 +1,46 @@
+{
+  "context": "Tests whether the agent follows the zoom-out process to produce an accurate architectural map of an unfamiliar module. The agent must fix the target first, list only public exports (not internals), trace actual callers via search, summarize each neighbour's responsibility in one line, place the module in the architectural layer, and name the single best next file to read. The output must follow the compact map format from the skill. This scenario also checks that the agent grounds names in the domain glossary when CONTEXT.md is present, and degrades gracefully when it is absent.",
+  "type": "weighted_checklist",
+  "checklist": [
+    {
+      "name": "Fixes the target module first",
+      "description": "The agent establishes PaymentService as the anchor before exploring anything else — it does not begin by reading callers, related services, or the database layer before locating and reading the target module itself.",
+      "max_score": 10
+    },
+    {
+      "name": "Lists public export surface only",
+      "description": "The exports section lists only publicly exported functions, types, or entry points — not private helpers, internal utilities, or implementation details. If the agent lists private symbols under 'exports', deduct proportionally.",
+      "max_score": 16
+    },
+    {
+      "name": "Traces actual callers via search",
+      "description": "The agent uses grep, rg, or equivalent to search the codebase for importers and call sites of PaymentService — it does not guess callers from context or list plausible callers without evidence. At least two distinct callers are identified with their file paths.",
+      "max_score": 18
+    },
+    {
+      "name": "One-line responsibility per neighbour",
+      "description": "Every direct collaborator (each caller and each downstream dependency) receives a one-line summary of what it owns — not how it works internally. Vague summaries like 'handles payments stuff' or multi-sentence descriptions should score partial credit only.",
+      "max_score": 14
+    },
+    {
+      "name": "Places module in architectural layer",
+      "description": "The output explicitly names which layer or subsystem PaymentService belongs to (e.g. application service layer, domain service, infrastructure adapter) and describes the role it plays there — not just that it 'does payments'.",
+      "max_score": 14
+    },
+    {
+      "name": "Names single best next file to read",
+      "description": "The response ends by recommending exactly one file to read next to go one level deeper, with a brief reason why that file is the best choice (e.g. 'the PaymentGateway adapter, because it owns the external provider coupling').",
+      "max_score": 10
+    },
+    {
+      "name": "Uses compact map output shape",
+      "description": "The output follows the structured format from the skill: target with responsibility, then exports / called by / depends on / fits sections in scannable form. Prose-only or unstructured responses score 0 here even if the content is accurate.",
+      "max_score": 12
+    },
+    {
+      "name": "Grounds names in domain glossary or degrades gracefully",
+      "description": "If CONTEXT.md is present in the project, the agent reads it and uses its domain vocabulary when naming things (e.g. uses 'Charge' not 'Transaction' if the glossary defines 'Charge'). If CONTEXT.md is absent, the agent uses the codebase's own naming rather than inventing terms, and does not error or refuse to proceed.",
+      "max_score": 6
+    }
+  ]
+}
