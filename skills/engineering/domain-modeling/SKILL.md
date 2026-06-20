@@ -9,8 +9,6 @@ Actively build and sharpen the project's domain model as you design. This is the
 
 ## File structure
 
-### File structure
-
 Most repos have a single context:
 
 ```

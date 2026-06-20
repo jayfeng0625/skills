@@ -44,11 +44,11 @@ Terseness governs **prose and Implementation Decisions** — it does **not** thi
 
 ## Problem Statement
 
-The problem that the user is facing, from the user's perspective.
+1–3 sentences. User-facing pain only — no mechanism, no solution preview.
 
 ## Solution
 
-The solution to the problem, from the user's perspective.
+1–3 sentences. Outcome from the user's perspective — not layer-by-layer mechanism.
 
 ## User Stories
 
@@ -76,13 +76,25 @@ Terse vs bloated — same decision:
 >
 > ❌ _"We have decided that subscriptions should be stored in the primary datastore because our primary datastore is already our source of truth for other entities, and co-locating subscriptions there allows us to leverage existing backup and replication infrastructure rather than spinning up an additional database..."_
 
+The one-line rule still governs the *intro line* of a spec block — only the block itself is exempt:
+
+> ✅
+> 7. Delivery state machine — inlined from prototype:
+>    ```
+>    pending → delivering → delivered
+>    delivering → failed → retrying → delivering   (attempts < 5)
+>    delivering → failed → dead                     (attempts = 5)
+>    ```
+>
+> ❌ _(the prose introducing the block is still one line — don't write a paragraph)_ "The delivery state machine was designed during a prototyping session where we explored several alternative transition sequences before arriving at the current design, which handles the retry and dead states by..."
+
 ## Testing Decisions
 
-A list of testing decisions that were made. Include:
+Bullets only — concrete decisions, no general principles.
 
-- A description of what makes a good test (only test external behavior, not implementation details)
-- Which modules will be tested
-- Prior art for the tests (i.e. similar types of tests in the codebase)
+- Which modules get tests and why (if non-obvious)
+- Any prior-art test patterns to follow (e.g. "same pattern as X")
+- Any testing constraints (e.g. inject the clock, use in-memory store)
 
 ## Out of Scope
 
