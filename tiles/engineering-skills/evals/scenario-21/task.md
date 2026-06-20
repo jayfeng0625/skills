@@ -1,21 +1,27 @@
-Look at the three TypeScript modules below and answer the three questions at the end. Write your answers in plain text — do not run any commands or write any files.
+Analyze the three TypeScript modules below for deepening opportunities. Write your analysis as plain text in this response — do NOT write to files or produce HTML.
 
-## Module A: workspaceRepository.ts
+## Domain Glossary
 
-```typescript
+**Ledger** — the append-only store of all financial transactions for a workspace. Immutable once written.
+**LineItem** — a single charge or credit within a transaction: amount (integer minor units), description, category code.
+**Workspace** — the top-level billing tenant. One workspace maps to one Stripe customer.
+
+## Module 1: workspaceRepository.ts
+
+```ts
 import { db } from "./db";
 
 export function findWorkspaceById(id: string): Promise<Workspace | null> {
   return db.query("SELECT * FROM workspaces WHERE id = $1", [id]).then(r => r.rows[0] ?? null);
 }
-export function findWorkspaceByStripeCustomerId(stripeId: string): Promise<Workspace | null> {
-  return db.query("SELECT * FROM workspaces WHERE stripe_customer_id = $1", [stripeId]).then(r => r.rows[0] ?? null);
+export function findWorkspaceByStripeCustomerId(stripeCustomerId: string): Promise<Workspace | null> {
+  return db.query("SELECT * FROM workspaces WHERE stripe_customer_id = $1", [stripeCustomerId]).then(r => r.rows[0] ?? null);
 }
 export function findWorkspaceByName(name: string): Promise<Workspace | null> {
   return db.query("SELECT * FROM workspaces WHERE name = $1", [name]).then(r => r.rows[0] ?? null);
 }
-export function createWorkspace(name: string, stripeId: string, plan: string): Promise<Workspace> {
-  return db.query("INSERT INTO workspaces (name, stripe_customer_id, plan) VALUES ($1,$2,$3) RETURNING *", [name, stripeId, plan]).then(r => r.rows[0]);
+export function createWorkspace(name: string, stripeCustomerId: string, plan: string): Promise<Workspace> {
+  return db.query("INSERT INTO workspaces (name, stripe_customer_id, plan) VALUES ($1,$2,$3) RETURNING *", [name, stripeCustomerId, plan]).then(r => r.rows[0]);
 }
 export function updateWorkspacePlan(id: string, plan: string): Promise<Workspace> {
   return db.query("UPDATE workspaces SET plan = $2 WHERE id = $1 RETURNING *", [id, plan]).then(r => r.rows[0]);
@@ -29,13 +35,14 @@ export function updateWorkspaceTrialEndsAt(id: string, trialEndsAt: Date | null)
 export function deleteWorkspace(id: string): Promise<void> {
   return db.query("DELETE FROM workspaces WHERE id = $1", [id]).then(() => undefined);
 }
+// 8 exported functions — each wraps a single DB call. Callers must know and call each one individually.
 ```
 
-## Module B: ledgerFormatter.ts
+## Module 2: ledgerFormatter.ts
 
-```typescript
-export function formatAmount(minorUnits: number, currency: string): string {
-  return new Intl.NumberFormat("en", { style: "currency", currency }).format(minorUnits / 100);
+```ts
+export function formatAmount(amountMinorUnits: number, currencyCode: string): string {
+  return new Intl.NumberFormat("en", { style: "currency", currency: currencyCode }).format(amountMinorUnits / 100);
 }
 export function formatCategoryCode(code: string): string {
   return code.replace(/_/g, " ").toLowerCase();
@@ -43,39 +50,51 @@ export function formatCategoryCode(code: string): string {
 export function formatDate(date: Date): string {
   return date.toISOString().slice(0, 10);
 }
-export function formatLineItemSummary(item: LineItem, currency: string): string {
-  return `${item.description}: ${formatAmount(item.amount, currency)}`;
+export function formatLineItemSummary(item: LineItem, currencyCode: string): string {
+  return `${item.description}: ${formatAmount(item.amount, currencyCode)}`;
 }
-export function formatEntryTotal(entry: LedgerEntry, currency: string): string {
-  return formatAmount(entry.total, currency);
+export function formatEntryTotal(entry: LedgerEntry, currencyCode: string): string {
+  return formatAmount(entry.total, currencyCode);
 }
 export function formatEntryDescription(entry: LedgerEntry): string {
   return entry.description ?? "(no description)";
 }
+// 6 exported functions — each is a trivial 1-2 line formatter. Callers import and call each one individually.
 ```
 
-## Module C: lineItemValidator.ts
+## Module 3: lineItemValidator.ts
 
-```typescript
+```ts
 export function validateLineItem(item: unknown): ValidationResult {
   const errors: string[] = [];
-  const li = item as any;
-  if (!Number.isInteger(li.amount) || li.amount <= 0) errors.push("amount must be a positive integer");
-  if (li.amount > 100_000_000) errors.push("amount exceeds maximum");
-  if (!li.description?.trim()) errors.push("description is required");
-  if (li.description?.length > 280) errors.push("description too long");
+  const li = item as Partial<LineItem>;
+  if (!Number.isInteger(li.amount) || (li.amount ?? 0) <= 0) errors.push("amount must be a positive integer");
+  if ((li.amount ?? 0) > 1_000_000_00) errors.push("amount exceeds maximum");
+  if (!li.description || li.description.trim() === "") errors.push("description is required");
+  if ((li.description?.length ?? 0) > 280) errors.push("description too long");
   if (!li.categoryCode) errors.push("categoryCode is required");
-  if (!ALLOWED_CATEGORIES.has(li.categoryCode)) errors.push("categoryCode not in allowed set");
+  if (li.categoryCode && !ALLOWED_CATEGORIES.has(li.categoryCode)) errors.push("categoryCode not allowed");
   return { valid: errors.length === 0, errors };
 }
+// 1 exported function hiding 6 validation rules + error aggregation.
+// Callers call ONE function and get a typed ValidationResult back.
 ```
 
 ---
 
-Answer these three questions in order. Write your complete answer here in this chat response.
+This is a read-only written assessment. Do not edit or rewrite any code — write your entire answer as plain text in this response.
 
-**Q1.** For Module A (workspaceRepository), does the module's public API hide complexity from its callers, or do callers need to know about each individual operation? Explain in 2-3 sentences.
+For EACH of the three modules, write this exact compact report block:
 
-**Q2.** For Module B (ledgerFormatter), same question: does it hide complexity, or do callers need to understand each individual formatting operation? Explain in 2-3 sentences.
+```
+<module> — Shallow | Deep
+  why: <one line — is the Interface nearly as complex as the implementation?>
+  deletion test: <if Shallow: would inlining concentrate complexity in callers?>
+  what a deepening would look like: <if Shallow: smaller interface in words, e.g. "8 methods collapse to 2"; if Deep: "none — already deep">
+```
 
-**Q3.** For Module C (lineItemValidator), same question: does it hide complexity, or do callers need to understand the validation logic? Explain in 2-3 sentences, and note how it differs from Modules A and B.
+Use the vocabulary terms: **Module, Interface, Shallow, Deep, Seam, Leverage, Locality**.
+Use domain glossary terms where relevant: Ledger, LineItem, Workspace.
+Exactly one module is already Deep — mark it `Deep` and write `what a deepening would look like: none — already deep`.
+
+End with: "Tackle first: `<module>` — <one-line reason>"
