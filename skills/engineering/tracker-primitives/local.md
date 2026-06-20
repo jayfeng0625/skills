@@ -39,6 +39,14 @@ Create `.scratch/prds/<next-id>-<slug>.md` with the PRD body.
 
 Create `.scratch/handoffs/<YYYY-MM-DD>-<slug>.md` with the handoff sections.
 
+### `list property options`
+
+Not applicable to the local backend. Skip the Epic-selection step; use free-text for the Epic name instead.
+
+### `add property option`
+
+Not applicable to the local backend. No-op.
+
 ## Notes
 
 Reference backend; not the Stage 1 default. Useful for solo repos with no Notion workspace.

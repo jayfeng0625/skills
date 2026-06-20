@@ -1,0 +1,46 @@
+{
+  "context": "Tests whether the agent can produce an accurate architectural map of a module when given the source code inline in the task. All code is embedded in the task — no file reads needed. The agent should identify exports, callers, architectural layer, and recommend a next file, using the compact map format and domain glossary provided.",
+  "type": "weighted_checklist",
+  "checklist": [
+    {
+      "name": "Identifies PaymentService as the subject",
+      "description": "The response is about PaymentService — it appears prominently as the subject of the analysis. Award full marks if PaymentService is clearly the anchor of the response. Award 0 if the response is about a different module or is entirely off-topic.",
+      "max_score": 10
+    },
+    {
+      "name": "Correctly identifies public exports",
+      "description": "The response names at least two of the three public exports: PaymentResult (interface), PaymentMethod (interface), PaymentService (class). Partial credit for naming one. The private PaymentGateway interface should NOT appear as an export — deduct points if it does.",
+      "max_score": 16
+    },
+    {
+      "name": "Identifies at least one caller",
+      "description": "The response names CartService or OrderService (or both) as modules that use PaymentService. Both callers explicitly import PaymentService in the source provided in the task. Award full marks for both, half marks for one. Award 0 only if neither is mentioned.",
+      "max_score": 18
+    },
+    {
+      "name": "Gives a one-line or brief responsibility per caller",
+      "description": "For each caller mentioned, the response includes a brief description of what that caller does (e.g. CartService handles checkout, OrderService handles refunds). Any reasonable one-liner counts — strict phrasing is not required.",
+      "max_score": 14
+    },
+    {
+      "name": "Names an architectural layer or role",
+      "description": "The response states which architectural layer or subsystem PaymentService belongs to (e.g. service layer, application service, domain service, infrastructure adapter). Any reasonable layer name counts — exact terminology is not required.",
+      "max_score": 14
+    },
+    {
+      "name": "Recommends a next file or dependency to explore",
+      "description": "The response ends with a recommendation for what to read next to go deeper. Award full marks for naming a specific file or dependency with a reason (e.g. PaymentGateway interface, or an adapter implementation). Award partial marks for naming a next step without a clear reason.",
+      "max_score": 10
+    },
+    {
+      "name": "Uses a structured or map-like output",
+      "description": "The response uses a structured format — the compact map format from the task, or any clearly structured layout with sections for exports, callers, and layer. Award full marks for the compact map format. Award partial marks for a structured prose response with clear sections. Award 0 only for a completely unstructured prose response.",
+      "max_score": 12
+    },
+    {
+      "name": "Uses domain vocabulary from the glossary",
+      "description": "The response uses at least one of the domain terms provided in the task: Payment, PaymentMethod, Order, Cart. Award full marks for using two or more. Award partial for one. Award 0 only if none are used.",
+      "max_score": 6
+    }
+  ]
+}

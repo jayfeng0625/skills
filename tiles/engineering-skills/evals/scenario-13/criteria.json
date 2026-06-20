@@ -41,6 +41,11 @@
       "name": "Published as ready-for-agent",
       "description": "Each published issue file's frontmatter status is 'ready-for-agent' (transitioned from the needs-triage seed default).",
       "max_score": 8
+    },
+    {
+      "name": "Issues written via tracker-primitives to correct paths",
+      "description": "All issue files exist under .scratch/issues/<id>-<slug>.md (numeric ID, kebab-case slug). This asserts the skill used the `create issue page` verb via tracker-primitives rather than calling gh issue create, writing to arbitrary paths, or invoking a hardcoded Notion API.",
+      "max_score": 10
     }
   ]
 }

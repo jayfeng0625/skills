@@ -1,0 +1,41 @@
+{
+  "context": "Tests whether /prototype correctly handles a logic/state question by building throwaway code to answer a specific design question. The user wants to understand the behavioural difference between sliding window and token bucket rate limiting at a 10x burst boundary. A good prototype is explicitly scoped as disposable, focused on answering the question rather than building a usable library, runnable in one command, implements both variants for direct comparison, demonstrates the burst boundary behaviour concretely, avoids production clutter that obscures the answer, and closes with a clear recommendation grounded in what the code revealed.",
+  "type": "weighted_checklist",
+  "checklist": [
+    {
+      "name": "Explicitly throwaway",
+      "description": "The prototype is marked as disposable — either via a comment in the code (e.g. 'PROTOTYPE — delete when done'), a README note, or a file/directory name that makes it obvious this is not production code. Partial credit if it is clearly separated from production code but not explicitly labelled.",
+      "max_score": 12
+    },
+    {
+      "name": "Focused on the design question",
+      "description": "The code is scoped to answering 'sliding window vs token bucket at 10x burst' — not building a reusable rate-limiter library. There are no abstractions, interfaces, or configuration knobs beyond what is needed to demonstrate the two strategies side by side.",
+      "max_score": 18
+    },
+    {
+      "name": "Runnable in one command",
+      "description": "The prototype can be executed with a single command (e.g. 'python prototype.py', 'node prototype.js', 'bun run prototype.ts'). No multi-step setup, no missing dependencies that prevent running, no pseudocode-only output.",
+      "max_score": 15
+    },
+    {
+      "name": "Both variants implemented",
+      "description": "Sliding window and token bucket are both implemented and runnable within the same prototype — not described in prose, not left as stubs. Each implementation is self-contained enough to be compared directly.",
+      "max_score": 20
+    },
+    {
+      "name": "Burst boundary demonstrated",
+      "description": "The prototype exercises the burst scenario (traffic up to 10x the sustained rate) and shows the observable difference in behaviour at that boundary — e.g. by printing accepted/rejected counts or a timeline for the same burst sequence through both algorithms.",
+      "max_score": 20
+    },
+    {
+      "name": "No production clutter",
+      "description": "The prototype omits production concerns that obscure the answer: no logging frameworks, no config files, no error handling beyond keeping the script runnable, no persistence, no test harnesses. Simple print statements or minimal output are fine.",
+      "max_score": 8
+    },
+    {
+      "name": "Concludes with a recommendation",
+      "description": "After running or describing the prototype output, the agent states a clear recommendation (e.g. 'use token bucket because...') grounded in what the prototype revealed about the burst behaviour — not a generic 'it depends' without a conclusion.",
+      "max_score": 7
+    }
+  ]
+}

@@ -1,0 +1,1 @@
+{ "description": "triage-issue writes to the configured tracker via tracker-primitives, not gh or hardcoded APIs", "include": ["./inputs"] }

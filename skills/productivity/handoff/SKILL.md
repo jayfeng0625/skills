@@ -11,6 +11,8 @@ Write a handoff document so a fresh agent can resume this work in a later sessio
 ## Verbs used
 
 - `create handoff page` — writes the handoff to the Handoffs DB
+- `list property options` — fetches existing Epic options from the Handoffs DB
+- `add property option` — appends a new Epic option without overwriting existing ones
 
 Backend-specific MCP / CLI mappings live in `../tracker-primitives/<backend>.md`.
 
@@ -22,9 +24,9 @@ Optionally read the glossary (`CONTEXT.md`) directly if a term used in the hando
 
 Before composing the body, ask which **Epic** this handoff belongs to:
 
-- Read the Handoffs DB's `Epic` property options (via `mcp__notion__notion-fetch` on the Handoffs DB ID from the workflow config named in the `## Agent skills` block).
+- Invoke `list property options` on the Handoffs DB's `Epic` column (DB ID from `workflow-config.md` in the `## Agent skills` block). If the backend doesn't support enumerated properties (e.g. local), skip to free-text.
 - Present the existing options as a single AskUserQuestion. Default to the most recently used option if context suggests it (e.g. an in-progress Epic that's been written to today).
-- If no existing option fits, offer "Add a new Epic" — when picked, ask for the new Epic name. Read the current option list, append the new option, and call `mcp__notion__notion-update-data-source` with `ALTER COLUMN "Epic" SET SELECT(...)` listing all existing options **plus** the new one. (ALTER COLUMN replaces the option list wholesale; do not use ADD COLUMN — that adds a new property, not a new option.)
+- If no existing option fits, offer "Add a new Epic" — when picked, ask for the new Epic name. Invoke `add property option` to append it.
 
 ### 2. Compose the body
 
@@ -48,7 +50,7 @@ Show the drafted body to the user before invoking `create handoff page`. If they
 - Properties: `Name` (title), `Date` (today), `Epic` (the value chosen in step 1)
 - Body: the composed sections from step 2
 
-If the Notion MCP call fails (auth, missing DB, schema mismatch), stop and tell the user — do not fall back to writing a file. (Stage 1's `/grill-with-docs` failure mode is the same.)
+If the tracker backend fails (auth error, missing DB, schema mismatch), stop and tell the user — do not fall back to writing a file.
 
 ### 4. Confirm
 

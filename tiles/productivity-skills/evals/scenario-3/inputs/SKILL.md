@@ -1,31 +1,53 @@
 ---
 name: meeting-notes
-description: Helps with meeting notes. Good for meetings.
+description: This skill helps capture and organize meeting notes. It will ensure that meetings are documented properly and that action items are tracked.
 ---
 
-# Meeting Notes Helper
+# Meeting Notes
 
-This skill will help you create and organize meeting notes. As of Q1 2026, we use Notion for all meeting notes (this will change to Confluence in Q3 2026). Currently the team is using template version 2.3 which was updated on January 15th 2026.
+This skill helps you capture and organize meeting notes. Good notes are important for team alignment.
 
-## How to Use
+## Preparation
 
-You can use this skill when you need to write meeting notes. I will help you structure your notes properly.
+Before the meeting starts:
+- Review the agenda
+- Set up your note-taking environment
+- Be ready to capture everything
+- Make sure you understand the meeting context
+- Prepare yourself to take notes
 
-I'll capture:
-- Action items
-- Decisions made  
-- Discussion topics
+The key is to be prepared and organized.
 
-The meeting notes should be clear and concise. Make sure the notes are good and useful for the team.
+## During the Meeting
 
-## Templates
+Capture notes as the meeting progresses. Be thorough and accurate.
 
-Use the standard template. The template was last reviewed by Sarah on March 3rd 2026 and will be updated again in Q2 2026.
+- Record action items
+- Note decisions made
+- Capture key discussion points
+- Record decisions made
+- Track who said what
 
-Action item format: [OWNER] [TASK] by [DATE]
+Make sure your notes are clear and concise and organized and useful for the team.
 
-Example: The quarterly planning meeting happened on April 2nd 2026. John presented slides. We decided to launch in Q3. Sarah will write the PRD by next Friday.
+## After the Meeting
 
-## Notes
+After taking notes, organize them. Then share them.
 
-Remember to send notes within 24 hours. Currently we send via Slack in the #meetings channel (moving to Teams in Q2 2026). Things can change so check the team wiki at wiki.internal/meeting-process for the latest procedure (requires VPN).
+- Organize the notes
+- Review for accuracy
+- Share with the team
+- Follow up on action items
+- Make sure everything is captured
+
+The notes should be shared within 24 hours. Also, the notes should be accurate. And the notes should be useful.
+
+## Format
+
+Use a structured format:
+- **Attendees**: List who attended
+- **Decisions**: Key decisions made
+- **Action Items**: Owner + task + deadline
+- **Discussion**: Key points covered
+
+Make the notes professional and easy to read.

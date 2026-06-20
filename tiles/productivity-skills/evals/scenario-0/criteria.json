@@ -1,65 +1,50 @@
 {
-  "context": "Tests whether the agent creates a well-structured skill following the write-a-skill conventions: correct directory layout, a SKILL.md with frontmatter and required sections, a properly-formatted description, and a review checklist that is actually applied.",
+  "context": "Tests whether the agent creates a skill following writing-great-skills principles: correct invocation type declared, description written for its audience, steps with checkable completion criteria, no no-ops, and progressive disclosure applied if warranted.",
   "type": "weighted_checklist",
   "checklist": [
     {
-      "name": "Third-person description",
-      "description": "The SKILL.md frontmatter description is written in third person (does NOT use 'I', 'me', 'my', 'we')",
-      "max_score": 8
+      "name": "Invocation type declared",
+      "description": "The skill explicitly declares its invocation type: either (a) disable-model-invocation: true in frontmatter (user-invoked), OR (b) omits it and has a model-facing description with specific trigger phrasing (model-invoked). Not left as accidental default with a vague description.",
+      "max_score": 14
     },
     {
-      "name": "Use when triggers",
-      "description": "The description includes a 'Use when' clause listing specific triggers (keywords, contexts, or situations)",
+      "name": "Description written for its audience",
+      "description": "If model-invoked: description front-loads the leading word and lists specific trigger phrasings ('Use when the user says...', 'mentions...', 'wants...'). If user-invoked: description is a concise human-facing summary without trigger lists.",
+      "max_score": 12
+    },
+    {
+      "name": "Steps have checkable completion criteria",
+      "description": "Steps that describe actions end with a condition the agent can verify as done-vs-not-done. Not just 'draft X' or 'gather Y' but a criterion: e.g. 'confirmed sent' or 'user approves the draft'.",
+      "max_score": 14
+    },
+    {
+      "name": "No no-ops present",
+      "description": "No line tells the model to do something it already does by default ('be clear and concise', 'make sure it's good', 'be thorough', 'write useful content'). Every line changes behaviour versus the default.",
+      "max_score": 14
+    },
+    {
+      "name": "Progressive disclosure applied if warranted",
+      "description": "If the skill's content is genuinely complex (multiple distinct branches or large reference tables), edge-case material is pushed behind a context pointer into a sibling file. If the content is simple, a single SKILL.md is correct — this check passes either way as long as the decision is justified.",
       "max_score": 10
     },
     {
-      "name": "Description length",
-      "description": "The description field is 1024 characters or fewer",
-      "max_score": 5
-    },
-    {
-      "name": "SKILL.md frontmatter",
-      "description": "SKILL.md has YAML frontmatter with both 'name' and 'description' fields",
+      "name": "Description does not duplicate body",
+      "description": "The frontmatter description does not restate content already in the body — it is not a prose summary of the steps but a trigger-oriented or audience-oriented label.",
       "max_score": 8
     },
     {
-      "name": "Quick start section",
-      "description": "SKILL.md contains a 'Quick start' section (or equivalent minimal-example section)",
-      "max_score": 8
-    },
-    {
-      "name": "Workflows section",
-      "description": "SKILL.md contains a 'Workflows' section with step-by-step processes",
-      "max_score": 8
-    },
-    {
-      "name": "SKILL.md line count",
-      "description": "SKILL.md is 100 lines or fewer",
+      "name": "SKILL.md has valid frontmatter",
+      "description": "SKILL.md has YAML frontmatter with at minimum name and description fields.",
       "max_score": 10
     },
     {
-      "name": "No time-sensitive info",
-      "description": "SKILL.md does NOT contain time-sensitive information (specific dates, version numbers that change, current pricing, etc.)",
+      "name": "Skill directory name is kebab-case",
+      "description": "The directory is named social-media-scheduler (or a kebab-case variant), matching the skill name in frontmatter.",
       "max_score": 8
     },
     {
-      "name": "Concrete examples",
-      "description": "SKILL.md includes at least one concrete example (a sample post, a worked scenario, or an example output)",
-      "max_score": 10
-    },
-    {
-      "name": "Consistent terminology",
-      "description": "SKILL.md uses consistent terminology throughout (does not alternate between different names for the same concept)",
-      "max_score": 8
-    },
-    {
-      "name": "Correct directory name",
-      "description": "The skill directory is named 'social-media-scheduler' (or a kebab-case variant)",
-      "max_score": 7
-    },
-    {
-      "name": "SKILL.md is only required file",
-      "description": "The directory contains SKILL.md; any additional files (REFERENCE.md, EXAMPLES.md, scripts/) are optional and only present if the content genuinely warrants them",
+      "name": "No time-sensitive content",
+      "description": "SKILL.md does not contain dates, specific version numbers, or references that go stale.",
       "max_score": 10
     }
   ]
