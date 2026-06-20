@@ -4,8 +4,8 @@ A personal set of agent skills I use every day. Packaged as two private tessl ti
 
 | Tile | Skills | Latest |
 |---|---|---|
-| [`bonai-dev/engineering-skills`](./skills/engineering/) | Daily code-work skills (setup, TDD, implement, diagnosis, grilling, prototyping, triage, domain modeling, codebase design, PRD/issue conversion, architecture review, zoom-out, thermo-nuclear quality review) | `2026.6.2` |
-| [`bonai-dev/productivity-skills`](./skills/productivity/) | General workflow skills (caveman compression, non-code grilling, teaching, cross-session handoffs, skill authoring, skill quality reference) | `2026.6.2` |
+| [`bonai-dev/engineering-skills`](./skills/engineering/) | Daily code-work skills (setup, TDD, implement, diagnosis, grilling, prototyping, triage, domain modeling, codebase design, PRD/issue conversion, architecture review, zoom-out, thermo-nuclear quality review) | `2026.6.4` |
+| [`bonai-dev/productivity-skills`](./skills/productivity/) | General workflow skills (caveman compression, non-code grilling, teaching, cross-session handoffs, skill authoring, skill quality reference) | `2026.6.4` |
 
 Versions follow `YYYY.M.patch` calver and are published automatically on merge to `main` (see [Development & publishing](#development--publishing)).
 
@@ -81,6 +81,15 @@ Skill bodies use only **abstract verbs** — never concrete tool calls. `skills/
 - [`teach`](./skills/productivity/teach/SKILL.md) — teach a skill or concept over multiple sessions in a stateful workspace
 - [`handoff`](./skills/productivity/handoff/SKILL.md) — cross-session handoff documents, written to the Handoffs store with an Epic tag (uses engineering's `tracker-primitives`; needs `/setup-bonai-skills`)
 - [`writing-great-skills`](./skills/productivity/writing-great-skills/SKILL.md) — reference for writing and editing skills well; the vocabulary and principles that make a skill predictable
+
+### Misc (4)
+
+Kept around but rarely used — not part of either published tile.
+
+- [`git-guardrails-claude-code`](./skills/misc/git-guardrails-claude-code/SKILL.md) — Claude Code hooks that block dangerous git commands (push, reset --hard, clean, etc.) before they execute
+- [`migrate-to-shoehorn`](./skills/misc/migrate-to-shoehorn/SKILL.md) — migrate test files from `as` type assertions to @total-typescript/shoehorn
+- [`scaffold-exercises`](./skills/misc/scaffold-exercises/SKILL.md) — create exercise directory structures with sections, problems, solutions, and explainers
+- [`setup-pre-commit`](./skills/misc/setup-pre-commit/SKILL.md) — set up Husky pre-commit hooks with lint-staged, Prettier, type checking, and tests
 
 ## Development & publishing
 
