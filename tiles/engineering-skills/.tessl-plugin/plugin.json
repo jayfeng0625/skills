@@ -1,0 +1,19 @@
+{
+  "name": "bonai-dev/engineering-skills",
+  "version": "2026.6.2",
+  "description": "Engineering skills for daily code work — Notion-first, language-agnostic",
+  "private": true,
+  "skills": [
+    "skills/setup-bonai-skills",
+    "skills/tdd",
+    "skills/diagnose",
+    "skills/grill-with-docs",
+    "skills/prototype",
+    "skills/triage",
+    "skills/to-issues",
+    "skills/to-prd",
+    "skills/improve-codebase-architecture",
+    "skills/zoom-out",
+    "skills/thermo-nuclear-code-quality-review"
+  ]
+}

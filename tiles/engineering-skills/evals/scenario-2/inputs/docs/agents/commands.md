@@ -8,11 +8,6 @@ typecheck_command: npm run typecheck
 
 build_command: npm run build
 
-## Domain language
-
-glossary: docs/glossary.md
-adrs: docs/adrs/
-
 ## Notes
 
 - Always run typecheck before committing

@@ -15,14 +15,18 @@ Each bucket folder has a `README.md` that lists every skill in the bucket with a
 
 ## Agent skills
 
+Per-repo agent config for this repo (consumer-state — distinct from what the published tile ships).
+
+**Config dir:** `docs/agents/` — holds the relocatable config below. `workflow-config.md` is gitignored (it carries private Notion IDs); re-run `/setup-bonai-skills` after a fresh clone to regenerate it.
+
 ### Commands
 
-Repo-wide commands for testing, linting, type-checking, and building. See `docs/agents/commands.md`.
+Repo-wide commands for testing, linting, type-checking, and building. See `commands.md` in the Config dir.
 
-### Notion
+### Workflow backend
 
-Workspace, database IDs, and property mappings used by tracker-primitives. See `docs/agents/notion.md`.
+**Backend:** notion — selects the `tracker-primitives/notion.md` recipe. The Issues / PRDs / Handoffs database IDs and property mappings live in `workflow-config.md` in the Config dir.
 
 ### Domain language
 
-Domain glossary and ADRs live in the Notion workspace — see `docs/agents/notion.md` for the Domain Glossary DB ID and ADRs DB ID. To consult them, use `mcp__notion__notion-fetch` on the respective DB ID. This is the read path for skills that ground in domain language without otherwise needing `tracker-primitives/` (e.g. `/tdd`, `/diagnose`).
+Glossary: `CONTEXT.md` (repo root). ADRs: `docs/adr/` (repo root). Read these files **directly** — they are fixed filesystem conventions, not block-resolved and not under the Config dir. Skills that only read (e.g. `/tdd`, `/diagnose`) ground from them and degrade gracefully when absent.

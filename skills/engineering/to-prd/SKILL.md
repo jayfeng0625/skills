@@ -8,10 +8,10 @@ This skill takes the current conversation context and codebase understanding and
 ## Verbs used
 
 - `create PRD page` — to write the PRD into the PRDs DB
-- `read glossary` — to align the PRD's vocabulary with the project's domain language
-- `read ADRs in area` — to respect documented architectural decisions
 
 Backend-specific MCP / CLI mappings live in `../tracker-primitives/<backend>.md`.
+
+To align vocabulary and respect documented decisions, also read the project's glossary (`CONTEXT.md`) and ADRs (`docs/adr/`) directly — these are filesystem conventions, not backend verbs.
 
 The issue tracker and triage label vocabulary should have been provided to you — run `/setup-bonai-skills` if not.
 
@@ -21,11 +21,11 @@ The issue tracker and triage label vocabulary should have been provided to you �
 
 2. Sketch the major modules you will need to build or modify. Look for opportunities to extract **deep modules** (see `/improve-codebase-architecture` for the deep/shallow vocabulary). Check with the user that the module sketch matches their expectations, and ask which modules they want tests written for.
 
-3. Write the PRD using the template below, then invoke `create PRD page` (PRDs DB) — for the Notion backend this is `mcp__notion__notion-create-pages` with `parent={ database_id: <PRDs DB ID from docs/agents/notion.md> }`, `properties={ Name: <short PRD title> }`, and the rendered template as `content`. Other backends are wired in `../tracker-primitives/<backend>.md`. The PRDs DB does not carry a triage state — the PRD itself is the deliverable. (When `/to-prd` is invoked alongside `/to-issues`, the downstream issues are transitioned to `ready-for-agent` by `/to-issues`; this skill does no state transitions of its own.)
+3. Write the PRD using the template below, then invoke `create PRD page` (PRDs DB) — for the Notion backend this is `mcp__notion__notion-create-pages` with `parent={ database_id: <PRDs DB ID from the workflow config named in the `## Agent skills` block> }`, `properties={ Name: <short PRD title> }`, and the rendered template as `content`. Other backends are wired in `../tracker-primitives/<backend>.md`. The PRDs DB does not carry a triage state — the PRD itself is the deliverable. (When `/to-prd` is invoked alongside `/to-issues`, the downstream issues are transitioned to `ready-for-agent` by `/to-issues`; this skill does no state transitions of its own.)
 
 4. After the page is written, confirm with the user: tell them the PRD page URL, surface a one-line summary of the PRD body, and ask whether they want corrections before downstream tools (`/to-issues`) consume it.
 
-**Fallbacks.** If `read glossary` returns empty (no Domain Glossary DB yet, or DB has zero entries), write the PRD using terms extracted from the conversation itself and note in the PRD's *Further Notes* section: _"No project glossary found — terms used in this PRD are conversation-local; consider running `/grill-with-docs` to crystallise the vocabulary."_ Same pattern if `read ADRs in area` returns empty: skip the ADR alignment step, no note required.
+**Fallbacks.** If `CONTEXT.md` is missing or has no relevant terms, write the PRD using terms extracted from the conversation itself and note in the PRD's *Further Notes* section: _"No project glossary found — terms used in this PRD are conversation-local; consider running `/grill-with-docs` to crystallise the vocabulary."_ Same pattern if `docs/adr/` has no ADRs in the area: skip the ADR alignment step, no note required.
 
 <prd-template>
 

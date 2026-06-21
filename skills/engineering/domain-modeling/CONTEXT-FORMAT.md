@@ -1,6 +1,6 @@
-# Glossary entry page-body template
+# Glossary entry template
 
-A single Domain Glossary DB page = one canonical term. The **page title** is the term; the **page body** uses this shape:
+Each glossary entry in `CONTEXT.md` (under the `## Language` section) is one canonical term. The **bold term label** is the term; the entry body uses this shape:
 
 ```md
 {One or two sentence description of what the term IS. Define it, do not describe what it does.}
@@ -26,4 +26,4 @@ A single Domain Glossary DB page = one canonical term. The **page title** is the
 
 ## Why this shape
 
-Notion's Domain Glossary DB is flat — one page per term, no branching by domain. If a monorepo needs to separate ordering-domain terms from billing-domain terms, do it with a `Domain` select property on the DB schema (not by spawning multiple glossary DBs).
+`CONTEXT.md` is a flat list of terms under `## Language` — no branching by domain. If a monorepo needs to separate ordering-domain terms from billing-domain terms, group them under sub-headings within `CONTEXT.md` (not by spawning multiple glossary files).

@@ -37,11 +37,11 @@ Then run the setup skill once per repo:
 /setup-bonai-skills
 ```
 
-This writes `docs/agents/commands.md` (canonical test/lint/typecheck/build commands) and `docs/agents/notion.md` (the 5 Notion database IDs and property mappings, including the Handoffs DB's `Epic` select column). Engineering skills read these to stay language-agnostic and tracker-agnostic. The productivity tile is zero-config — no per-repo setup required.
+This writes `commands.md` and `workflow-config.md` into a config dir chosen at setup (default `docs/agents/`): `commands.md` holds the canonical test/lint/typecheck/build commands, and `workflow-config.md` holds the three workflow database IDs (Issues, PRDs, Handoffs) and property mappings, including the Handoffs DB's `Epic` select column. The domain glossary and ADRs live on the filesystem (`CONTEXT.md` + `docs/adr/`). Engineering skills read these to stay language-agnostic and tracker-agnostic. The productivity tile is zero-config — no per-repo setup required.
 
 ## The abstract-verb contract
 
-Skill bodies use only **abstract verbs** — never concrete tool calls. `skills/engineering/tracker-primitives/` translates each verb to the chosen backend (Notion, GitHub, or local markdown). Per-repo IDs live in `docs/agents/notion.md` (or equivalent). See [`tracker-primitives/README.md`](./skills/engineering/tracker-primitives/README.md) for the controlled vocabulary (10 verbs).
+Skill bodies use only **abstract verbs** — never concrete tool calls. `skills/engineering/tracker-primitives/` translates each verb to the chosen backend (Notion, GitHub, or local markdown). Per-repo IDs live in `workflow-config.md`, resolved via the `Config dir:` named in the `## Agent skills` block. See [`tracker-primitives/README.md`](./skills/engineering/tracker-primitives/README.md) for the controlled vocabulary (6 workflow verbs; the glossary/ADR verbs are now filesystem conventions — `CONTEXT.md` + `docs/adr/`).
 
 ## Skills
 
