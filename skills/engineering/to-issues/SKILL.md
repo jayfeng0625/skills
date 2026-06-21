@@ -65,22 +65,34 @@ For each approved slice, invoke `create issue page` (Issues DB) with the body re
 
 Publish issues in **dependency order** (blockers first) so the `Blocked by` relation can reference real, already-created issue page IDs. The Notion `Blocked by` property is a relation to the Issues DB (self) — set its value to the array of blocking issue page IDs at creation time. For non-Notion backends, see `../tracker-primitives/<backend>.md` for the equivalent expression.
 
-After each issue is created, immediately invoke `transition state` to move it from `needs-triage` (the seed default) to `ready-for-agent`. These slices are already specified enough to ship — no additional triage step is needed. (This preserves Matt's "publish with the correct triage label" pattern from the original `/to-issues`.)
+Each issue must land with `status: ready-for-agent`. For backends that support it at creation time (e.g. the local markdown backend — set `status: ready-for-agent` directly in the frontmatter), do so at creation. For backends that require a separate step, immediately invoke `transition state` after creation to move it from `needs-triage` to `ready-for-agent`. These slices are already specified enough to ship — no additional triage step is needed.
 
-**Write tersely, and don't duplicate the PRD.** Each issue is read by the implementing agent — carry only what *this slice* needs: its delta and its acceptance criteria. For shared spec that lives in the linked PRD (full registries, cross-slice tables), reference the PRD rather than re-embedding it; but inline, **verbatim**, any load-bearing detail the agent can't build the slice without (the slice's own patterns, schema, ordering). Cut articles, hedging, and restated context; bullets over paragraphs.
+**Write tersely, and don't duplicate the PRD.** Each issue is read by the implementing agent — carry only what *this slice* needs: its delta and its acceptance criteria. Cut articles, hedging, and restated context; bullets over paragraphs.
+
+Two rules govern spec:
+
+1. **Shared spec** (a table/catalog that spans all slices, e.g. an event-type registry) → reference the PRD, do NOT re-embed the full table in every issue.
+2. **Slice-owned spec** (the exact format/protocol/schedule that IS the core contract of *this particular slice*) → inline it **verbatim**. Do not say "per the PRD" for the spec this slice implements. Examples: a signing slice inlines the exact header format and HMAC recipe; a retry slice inlines the exact backoff schedule and dead-after-N rule; a state machine slice inlines the transition table. The agent building this slice cannot rely on reading the PRD — give them the spec right here.
 
 <issue-template>
+---
+title: <short descriptive title>
+status: ready-for-agent
+---
+
 ## Parent
 
 A reference to the parent issue on the issue tracker (if the source was an existing issue, otherwise omit this section).
 
 ## What to build
 
-The end-to-end behavior of this slice in a few lines — not layer-by-layer implementation, and not a restatement of the whole PRD. Lead with the slice's delta. Reference the linked PRD for shared spec; inline only the load-bearing detail this slice can't be built without (its own patterns, schema, ordering) — verbatim, not paraphrased.
+The end-to-end behavior of this slice in a few lines — not layer-by-layer implementation, and not a restatement of the whole PRD. Lead with the slice's delta. Reference the linked PRD for shared spec; inline verbatim any load-bearing spec this slice owns (its own format, protocol, schedule, or state transitions) — the agent building this slice must not need to read the PRD to find its core contract.
 
 Avoid specific file paths or code snippets — they go stale fast. Exception: if a prototype produced a snippet that encodes a decision more precisely than prose can (state machine, reducer, schema, type shape), inline it and note briefly that it came from a prototype — the decision-rich parts only, not a working demo.
 
 ## Acceptance criteria
+
+Observable behavior only — what a caller, user, or test can DO or VERIFY from outside the implementation. Not implementation steps, not "we should build X", not internal assertions.
 
 - [ ] Criterion 1
 - [ ] Criterion 2

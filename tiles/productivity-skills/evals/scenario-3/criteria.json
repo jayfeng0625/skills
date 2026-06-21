@@ -1,56 +1,46 @@
 {
-  "context": "Tests whether the agent applies the write-a-skill review checklist to identify and fix problems in an existing SKILL.md: missing 'Use when' triggers, time-sensitive information, poor description quality, and lack of concrete examples. The fixture SKILL.md has all four problems deliberately embedded.",
+  "context": "Tests whether the agent applies writing-great-skills failure-mode diagnosis to improve a poorly-written SKILL.md. The fixture has embedded no-ops ('be thorough', 'make sure everything is captured'), duplication ('record decisions made' twice, 'the notes should be...' three times), missing completion criteria on key steps, and a vague description that declares no invocation type. A good improvement names and fixes each issue using writing-great-skills vocabulary.",
   "type": "weighted_checklist",
   "checklist": [
     {
-      "name": "Use when added to description",
-      "description": "The improved description includes a 'Use when' clause with specific triggers (keywords or contexts that should cause the skill to load)",
-      "max_score": 15
+      "name": "No-ops removed",
+      "description": "Lines that tell the model to do what it already does by default ('be thorough and accurate', 'make sure your notes are clear', 'be prepared', 'make the notes professional') are deleted — not paraphrased or softened, but gone.",
+      "max_score": 18
     },
     {
-      "name": "Time-sensitive info removed",
-      "description": "The improved SKILL.md does NOT contain any time-sensitive information (no specific dates, no 'as of Q1 2026', no 'moving to Teams in Q2', no date-stamped template versions)",
-      "max_score": 15
+      "name": "Duplication collapsed",
+      "description": "Repeated content is collapsed to a single source of truth: 'record decisions made' appearing twice is one entry; 'the notes should be shared/accurate/useful' restated three times becomes one.",
+      "max_score": 14
     },
     {
-      "name": "Third-person description",
-      "description": "The improved frontmatter description is written in third person (no 'I will', 'I'll', 'we use')",
-      "max_score": 10
+      "name": "Completion criteria added",
+      "description": "At least one step that previously ended without a done-condition now ends with a checkable criterion — e.g. 'share within 24 hours: confirmed sent to all attendees' rather than just 'share with the team'.",
+      "max_score": 14
     },
     {
-      "name": "Concrete example included",
-      "description": "The improved SKILL.md includes at least one concrete, realistic example (a sample meeting note excerpt, a worked action item, or a filled-in template)",
-      "max_score": 12
+      "name": "Invocation type declared and description fixed",
+      "description": "The improved skill explicitly declares invocation type: either disable-model-invocation: true with a concise human-facing description, OR a model-invoked description with specific trigger phrasing. The vague current description ('helps capture and organize meeting notes') is replaced.",
+      "max_score": 16
     },
     {
-      "name": "SKILL.md under 100 lines",
-      "description": "The improved SKILL.md is 100 lines or fewer",
-      "max_score": 8
-    },
-    {
-      "name": "Internal-only references removed",
-      "description": "The improved SKILL.md does NOT reference internal-only resources (no wiki.internal links, no VPN references, no internal tool names that would be inaccessible to an external agent)",
-      "max_score": 10
-    },
-    {
-      "name": "Description specificity improved",
-      "description": "The improved description is more specific than 'Helps with meeting notes. Good for meetings.' — it explains the capability and when to use it meaningfully",
-      "max_score": 10
-    },
-    {
-      "name": "Review report created",
-      "description": "A review-report.md file exists and lists at least two specific problems found in the original",
-      "max_score": 10
+      "name": "Review report uses writing-great-skills vocabulary",
+      "description": "review-report.md names at least two failure modes using writing-great-skills vocabulary (no-op, duplication, sediment, premature completion, sprawl, missing completion criterion) and explains how each was fixed.",
+      "max_score": 16
     },
     {
       "name": "Core purpose preserved",
-      "description": "The improved skill is still about meeting notes (not rewritten for a completely different domain)",
+      "description": "The improved skill is still about meeting notes — not rewritten for a different domain.",
       "max_score": 8
     },
     {
-      "name": "Consistent terminology",
-      "description": "The improved SKILL.md uses consistent terminology throughout — the same word for the same concept each time it appears",
-      "max_score": 2
+      "name": "Improved skill is more legible",
+      "description": "The improved SKILL.md is noticeably shorter and easier to scan than the original — removal of no-ops and duplication reduces bulk.",
+      "max_score": 8
+    },
+    {
+      "name": "No new no-ops introduced",
+      "description": "The improved version does not add new no-ops while removing old ones.",
+      "max_score": 6
     }
   ]
 }

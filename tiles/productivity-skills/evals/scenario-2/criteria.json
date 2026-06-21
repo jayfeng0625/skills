@@ -1,56 +1,41 @@
 {
-  "context": "Tests whether the agent adds a utility script for deterministic validation logic rather than relying on generated code each run. Validation of environment variables is deterministic and would otherwise be regenerated identically on each invocation — exactly the case that warrants a bundled script.",
+  "context": "Tests whether the agent makes the correct invocation-type decision and captures validation logic as stable reference rather than something to be re-derived each run. The env validation task is explicitly deterministic — same rules every time — which determines the invocation type (user-invoked: the developer explicitly runs it before deployment) and the information structure (validation rules as fixed, enumerable reference).",
   "type": "weighted_checklist",
   "checklist": [
     {
-      "name": "scripts/ directory created",
-      "description": "The skill directory contains a scripts/ subdirectory",
-      "max_score": 15
+      "name": "User-invoked correctly chosen",
+      "description": "The skill has disable-model-invocation: true. An env-validation tool is explicitly run by the developer (not auto-triggered by context), so it is user-invoked. A model-invoked skill that auto-fires on any env-var mention would be the wrong choice.",
+      "max_score": 20
     },
     {
-      "name": "Validation script exists",
-      "description": "At least one script file exists inside scripts/ that performs the env validation logic",
-      "max_score": 15
+      "name": "Description is human-facing",
+      "description": "Because the skill is user-invoked, the description is a concise human-facing summary — not a trigger-phrase list aimed at the model ('Use when the user mentions env vars...').",
+      "max_score": 10
     },
     {
-      "name": "Script is deterministic",
-      "description": "The script implements fixed validation rules (presence checks, format checks, or placeholder detection) rather than being a template or stub that generates different code each time",
+      "name": "Validation rules captured as stable reference",
+      "description": "The specific validation rules (required keys, format patterns, placeholder detection) are captured in the skill as fixed reference material — not described vaguely in a way that requires the agent to re-derive or invent them on each run.",
+      "max_score": 20
+    },
+    {
+      "name": "Completion criterion present",
+      "description": "The validation step ends on a checkable criterion: what constitutes 'done' — e.g. 'all checks pass: zero errors reported' — not just 'run validation'.",
+      "max_score": 14
+    },
+    {
+      "name": "No no-ops present",
+      "description": "No line says something the model already does by default ('check carefully', 'be thorough', 'report errors clearly', 'ensure it is correct').",
       "max_score": 12
     },
     {
-      "name": "SKILL.md references scripts",
-      "description": "SKILL.md explicitly mentions or links to the script(s) in scripts/",
+      "name": "Single source of truth for rules",
+      "description": "Each validation rule appears exactly once. No rule is restated or paraphrased in multiple sections.",
       "max_score": 10
     },
     {
-      "name": "SKILL.md line count",
-      "description": "SKILL.md is 100 lines or fewer",
-      "max_score": 10
-    },
-    {
-      "name": "Description has Use when",
-      "description": "The frontmatter description includes 'Use when' with specific trigger conditions for the skill",
-      "max_score": 10
-    },
-    {
-      "name": "Third-person description",
-      "description": "The frontmatter description is written in third person",
-      "max_score": 8
-    },
-    {
-      "name": "Quick start section",
-      "description": "SKILL.md contains a Quick start section showing minimal usage",
-      "max_score": 10
-    },
-    {
-      "name": "Concrete example",
-      "description": "SKILL.md or the script includes at least one example showing sample input and expected output or error",
-      "max_score": 8
-    },
-    {
-      "name": "Script not a stub",
-      "description": "The script in scripts/ contains real implementation logic — NOT just TODO comments, placeholder functions, or empty shells that require the agent to generate code on each run",
-      "max_score": 2
+      "name": "Approach documented",
+      "description": "approach.md exists and explains the invocation-type choice and information structure decisions.",
+      "max_score": 14
     }
   ]
 }
