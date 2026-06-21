@@ -11,6 +11,18 @@ Every skill in `engineering/`, `productivity/`, or `misc/` must have a reference
 
 Each skill entry in the top-level `README.md` must link the skill name to its `SKILL.md`.
 
-Each bucket folder has a `README.md` that lists every skill in the bucket with a one-line description, with the skill name linked to its `SKILL.md`. Bucket `README.md`s and the top-level `README.md` group entries into **User-invoked** and **Model-invoked**.
+Each bucket folder has a `README.md` that lists every skill in the bucket with a one-line description, with the skill name linked to its `SKILL.md`.
 
-Every `SKILL.md` is either user-invoked (`disable-model-invocation: true`, reachable only by the human) or model-invoked (model- or user-reachable). For the full definitions, description conventions, and why a user-invoked skill can invoke model-invoked skills but never another user-invoked one, see [docs/invocation.md](./docs/invocation.md).
+## Agent skills
+
+### Commands
+
+Repo-wide commands for testing, linting, type-checking, and building. See `docs/agents/commands.md`.
+
+### Notion
+
+Workspace, database IDs, and property mappings used by tracker-primitives. See `docs/agents/notion.md`.
+
+### Domain language
+
+Domain glossary and ADRs live in the Notion workspace — see `docs/agents/notion.md` for the Domain Glossary DB ID and ADRs DB ID. To consult them, use `mcp__notion__notion-fetch` on the respective DB ID. This is the read path for skills that ground in domain language without otherwise needing `tracker-primitives/` (e.g. `/tdd`, `/diagnose`).

@@ -1,0 +1,56 @@
+{
+  "context": "Tests the caveman auto-clarity exception: when describing a dangerous/irreversible database operation, the agent must temporarily drop caveman compression to give a clear, unambiguous warning, then resume caveman mode afterwards. Also tests that code blocks remain intact and caveman compression rules apply in non-exception sections.",
+  "type": "weighted_checklist",
+  "checklist": [
+    {
+      "name": "Warning is verbose/clear",
+      "description": "The section describing the risk of running DELETE without a WHERE clause is written in clear, full English — NOT in compressed caveman fragments",
+      "max_score": 18
+    },
+    {
+      "name": "Warning is explicit",
+      "description": "The warning explicitly states the consequence (all rows deleted / data loss / irreversible) in plain, unambiguous language",
+      "max_score": 12
+    },
+    {
+      "name": "Caveman resumes after warning",
+      "description": "After the warning section, the response returns to caveman compression style (e.g. 'Caveman resume.' or subsequent text is terse/abbreviated)",
+      "max_score": 12
+    },
+    {
+      "name": "Overall caveman compression",
+      "description": "The majority of db-help.md (outside the warning section) uses caveman-style compression: no filler, abbreviations, fragments, arrows",
+      "max_score": 12
+    },
+    {
+      "name": "No filler/pleasantries in caveman sections",
+      "description": "The caveman sections do NOT contain pleasantries or filler words (sure/certainly/basically/really/actually/just)",
+      "max_score": 8
+    },
+    {
+      "name": "SQL code block unchanged",
+      "description": "The SQL provided appears in a fenced code block and the SQL syntax itself is correct and unabbreviated (SQL keywords, table names, column names are not shortened)",
+      "max_score": 10
+    },
+    {
+      "name": "Abbreviations in caveman sections",
+      "description": "At least one standard abbreviation (DB, config, req, conn, fn, impl) is used in the non-warning caveman sections",
+      "max_score": 8
+    },
+    {
+      "name": "Arrows used for causality",
+      "description": "db-help.md uses arrow notation (-> or →) at least once in the caveman sections",
+      "max_score": 8
+    },
+    {
+      "name": "Both topics addressed",
+      "description": "db-help.md addresses both topics: auto_increment gaps and the sessions table cleanup with its risk",
+      "max_score": 7
+    },
+    {
+      "name": "Fragments in caveman sections",
+      "description": "The caveman sections contain at least one sentence fragment (intentional brevity, not a full grammatical sentence)",
+      "max_score": 5
+    }
+  ]
+}

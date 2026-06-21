@@ -1,0 +1,56 @@
+{
+  "context": "Tests whether the agent designs an SDK-style API client with specific functions per operation (not a generic fetcher), making each operation independently mockable with no conditional logic in mocks.",
+  "type": "weighted_checklist",
+  "checklist": [
+    {
+      "name": "Specific functions per operation",
+      "description": "weatherClient.js exports specific named functions for each endpoint (e.g. getCurrentConditions, getForecast, getHistoricalData) — NOT a single generic fetch(endpoint, options) or request(path) function",
+      "max_score": 18
+    },
+    {
+      "name": "No generic fetch wrapper",
+      "description": "The public interface does NOT expose a generic HTTP wrapper that callers parameterize with the endpoint path/method",
+      "max_score": 12
+    },
+    {
+      "name": "Independently mockable",
+      "description": "Each operation can be mocked independently — weatherClient.test.js shows different tests mocking different operations separately without shared mock state",
+      "max_score": 12
+    },
+    {
+      "name": "No conditional mock logic",
+      "description": "Mock implementations in weatherClient.test.js contain no if/switch logic to handle different endpoints — each mock returns a single, specific response shape",
+      "max_score": 12
+    },
+    {
+      "name": "Each mock returns one shape",
+      "description": "Each mocked function returns exactly one specific response shape — not a conditional or polymorphic response",
+      "max_score": 10
+    },
+    {
+      "name": "Design notes explain SDK choice",
+      "description": "design-notes.md explains why specific functions were chosen over a generic wrapper, specifically mentioning testability or mockability",
+      "max_score": 10
+    },
+    {
+      "name": "Dependency injection for HTTP",
+      "description": "The HTTP client or fetch function is accepted as a parameter (or configurable), not hardcoded inside the client functions",
+      "max_score": 10
+    },
+    {
+      "name": "Type safety per endpoint",
+      "description": "Each operation function has a documented or typed return shape specific to that endpoint — not a generic object/any",
+      "max_score": 8
+    },
+    {
+      "name": "Operations match requirements",
+      "description": "Client covers all three required operations: current conditions by city, forecast by coordinates, historical data by date range",
+      "max_score": 7
+    },
+    {
+      "name": "Authentication injectable",
+      "description": "design-notes.md or implementation shows API credentials/authentication injected as a parameter rather than hardcoded",
+      "max_score": 1
+    }
+  ]
+}

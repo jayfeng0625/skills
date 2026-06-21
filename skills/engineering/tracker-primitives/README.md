@@ -15,12 +15,13 @@ Skills may only use these verbs. Adding a new verb requires a recipe in every ba
 |---|---|
 | `transition state` | `/triage` |
 | `post triage note` | `/triage` |
+| `post agent brief` | `/triage` |
 | `create issue page` | `/to-issues`, `/triage` |
 | `create PRD page` | `/to-prd` |
 | `create handoff page` | `/handoff` |
-| `read glossary` | `/tdd`, `/diagnose`, `/grill-with-docs`, `/triage`, `/to-issues`, `/to-prd`, `/improve-codebase-architecture` |
+| `read glossary` | `/grill-with-docs`, `/triage`, `/to-issues`, `/to-prd`, `/improve-codebase-architecture` |
 | `write glossary entry` | `/grill-with-docs`, `/improve-codebase-architecture` |
-| `read ADRs in area` | `/tdd`, `/diagnose`, `/grill-with-docs`, `/triage`, `/improve-codebase-architecture` |
+| `read ADRs in area` | `/grill-with-docs`, `/triage`, `/improve-codebase-architecture` |
 | `create ADR` | `/grill-with-docs`, `/improve-codebase-architecture` |
 
 ## Backends

@@ -1,0 +1,56 @@
+{
+  "context": "Tests comprehensive branch-walking in grill-me: the agent must address every major section of the talk outline, resolve dependencies between decisions (e.g. timing before content), and provide a recommended answer for each question — going beyond the concerns explicitly flagged by the author.",
+  "type": "weighted_checklist",
+  "checklist": [
+    {
+      "name": "Recommended answer per question",
+      "description": "Every numbered question in talk-grill.md is immediately followed by a specific recommendation from the agent (not just a list of questions)",
+      "max_score": 18
+    },
+    {
+      "name": "Hook design questioned",
+      "description": "talk-grill.md contains at least one question about the hook approach (the provocative claim, the story choice, or audience reaction risk)",
+      "max_score": 8
+    },
+    {
+      "name": "Timing/pacing questioned",
+      "description": "talk-grill.md contains at least one question about whether the section timings are realistic or well-proportioned",
+      "max_score": 8
+    },
+    {
+      "name": "Framework vagueness addressed",
+      "description": "talk-grill.md addresses the vague framework section — asks what the decision rubric will actually look like and recommends a concrete structure",
+      "max_score": 10
+    },
+    {
+      "name": "Audience calibration questioned",
+      "description": "talk-grill.md contains at least one question about audience assumptions (what the mid-level engineers / team leads already know, what they need)",
+      "max_score": 8
+    },
+    {
+      "name": "Beyond flagged concerns",
+      "description": "talk-grill.md raises at least two questions on topics the author did NOT flag as concerns (discovering new weak spots)",
+      "max_score": 12
+    },
+    {
+      "name": "Minimum 7 questions",
+      "description": "talk-grill.md contains at least 7 distinct numbered questions",
+      "max_score": 12
+    },
+    {
+      "name": "Dependency resolution visible",
+      "description": "Questions that depend on each other's answers are ordered so earlier questions resolve dependencies for later ones (e.g. audience analysis before content decisions)",
+      "max_score": 10
+    },
+    {
+      "name": "No code/codebase references",
+      "description": "talk-grill.md does NOT reference any codebase or suggest reading code to answer questions — stays in the non-code design domain",
+      "max_score": 7
+    },
+    {
+      "name": "Takeaway section examined",
+      "description": "talk-grill.md contains at least one question about the takeaways / closing section of the talk",
+      "max_score": 7
+    }
+  ]
+}

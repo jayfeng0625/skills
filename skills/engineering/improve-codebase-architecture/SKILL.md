@@ -1,23 +1,32 @@
 ---
 name: improve-codebase-architecture
-description: Scan a codebase for deepening opportunities, present them as a visual HTML report, then grill through whichever one you pick.
-disable-model-invocation: true
+description: Surveys a codebase for **deepening opportunities** — shallow modules whose interface is nearly as complex as their implementation — and proposes refactors that move complexity behind smaller interfaces, producing an HTML report with before/after diagrams per candidate. Grounded in the project's domain glossary and ADRs so suggestions use canonical names and don't re-litigate documented decisions. Use when the user says "improve the architecture", "find refactoring opportunities", "clean up the code structure", "reduce technical debt", "find code smells", "simplify dependencies", "make this more testable", "consolidate tightly-coupled modules", "find deepening opportunities", or wants a high-level architectural review of a codebase.
 ---
 
 # Improve Codebase Architecture
 
 Surface architectural friction and propose **deepening opportunities** — refactors that turn shallow modules into deep ones. The aim is testability and AI-navigability.
 
-This command is _informed_ by the project's domain model and built on a shared design vocabulary:
+## Verbs used
 
-- Run the `/codebase-design` skill for the architecture vocabulary (**module**, **interface**, **depth**, **seam**, **adapter**, **leverage**, **locality**) and its principles (the deletion test, "the interface is the test surface", "one adapter = hypothetical seam, two = real"). Use these terms exactly in every suggestion — don't drift into "component," "service," "API," or "boundary."
-- The domain language in `CONTEXT.md` gives names to good seams; ADRs in `docs/adr/` record decisions this command should not re-litigate.
+- `read glossary` — to learn the canonical names for modules, seams, and concepts before proposing renames
+- `read ADRs in area` — to avoid suggesting refactors that an ADR forbids
+- `write glossary entry` — when a deepened module needs a new canonical name
+- `create ADR` — when the user rejects a candidate for a non-obvious, durable reason
+
+Backend-specific MCP / CLI mappings live in `../tracker-primitives/<backend>.md`.
+
+## Glossary
+
+Use these terms exactly: **Module**, **Interface**, **Implementation**, **Depth** (Deep / Shallow), **Seam**, **Adapter**, **Leverage**, **Locality**. Don't drift into "component," "service," "API," or "boundary." Full definitions and key principles (deletion test, the-interface-is-the-test-surface, two-adapters-make-a-seam) in [LANGUAGE.md](LANGUAGE.md).
+
+This skill is _informed_ by the project's domain model — the domain language gives names to good seams; ADRs record decisions the skill should not re-litigate.
 
 ## Process
 
 ### 1. Explore
 
-Read the project's domain glossary (`CONTEXT.md`) and any ADRs in the area you're touching first.
+Before exploring, invoke `read glossary` and `read ADRs in area` to load the canonical vocabulary and respect documented decisions.
 
 Then use the Agent tool with `subagent_type=Explore` to walk the codebase. Don't follow rigid heuristics — explore organically and note where you experience friction:
 
@@ -31,11 +40,24 @@ Apply the **deletion test** to anything you suspect is shallow: would deleting i
 
 ### 2. Present candidates as an HTML report
 
-Write a self-contained HTML file to the OS temp directory so nothing lands in the repo. Resolve the temp dir from `$TMPDIR`, falling back to `/tmp` (or `%TEMP%` on Windows), and write to `<tmpdir>/architecture-review-<timestamp>.html` so each run gets a fresh file. Open it for the user — `xdg-open <path>` on Linux, `open <path>` on macOS, `start <path>` on Windows — and tell them the absolute path.
+Write a self-contained HTML file to the OS temp directory so nothing lands in the repo. Concrete pattern (POSIX shells):
+
+```bash
+tmp="${TMPDIR:-/tmp}"
+ts=$(date +%Y%m%d-%H%M%S)
+report="$tmp/architecture-review-$ts.html"
+# … write HTML to "$report" …
+case "$(uname -s)" in
+  Darwin) open "$report" ;;
+  Linux)  xdg-open "$report" ;;
+  *)      echo "Open manually: $report" ;;
+esac
+echo "Report written to: $report"
+```
 
 The report uses **Tailwind via CDN** for layout and styling, and **Mermaid via CDN** for diagrams where a graph/flow/sequence reliably communicates the structure. Mix Mermaid with hand-crafted CSS/SVG visuals — use Mermaid when relationships are graph-shaped (call graphs, dependencies, sequences), and hand-built divs/SVG when you want something more editorial (mass diagrams, cross-sections, collapse animations). Each candidate gets a **before/after visualisation**. Be visual.
 
-For each candidate, render a card with:
+For each candidate, the same template as before, but rendered as a card:
 
 - **Files** — which files/modules are involved
 - **Problem** — why the current architecture is causing friction
@@ -46,9 +68,26 @@ For each candidate, render a card with:
 
 End the report with a **Top recommendation** section: which candidate you'd tackle first and why.
 
-**Use CONTEXT.md vocabulary for the domain, and the `/codebase-design` vocabulary for the architecture.** If `CONTEXT.md` defines "Order," talk about "the Order intake module" — not "the FooBarHandler," and not "the Order service."
+**Use the project's domain glossary vocabulary for the domain, and [LANGUAGE.md](LANGUAGE.md) vocabulary for the architecture.** If the glossary defines "Order," talk about "the Order intake module" — not "the FooBarHandler," and not "the Order service."
 
 **ADR conflicts**: if a candidate contradicts an existing ADR, only surface it when the friction is real enough to warrant revisiting the ADR. Mark it clearly in the card (e.g. a warning callout: _"contradicts ADR-0007 — but worth reopening because…"_). Don't list every theoretical refactor an ADR forbids.
+
+Minimal candidate-card sketch (one per opportunity, dropped into the report body):
+
+```html
+<article class="rounded-lg border p-4 mb-4">
+  <header class="flex justify-between">
+    <h2 class="font-bold">OrderIntake — collapse 4 shallow handlers</h2>
+    <span class="rounded bg-green-200 px-2 text-sm">Strong</span>
+  </header>
+  <p><strong>Problem:</strong> the 4 handlers share state and ordering rules; callers must know all 4.</p>
+  <p><strong>Solution:</strong> single OrderIntake adapter behind one method; handlers become private impl.</p>
+  <div class="grid grid-cols-2 gap-2 mt-2">
+    <pre class="mermaid">graph LR; A-->H1; A-->H2; A-->H3; A-->H4</pre>
+    <pre class="mermaid">graph LR; A-->OrderIntake</pre>
+  </div>
+</article>
+```
 
 See [HTML-REPORT.md](HTML-REPORT.md) for the full HTML scaffold, diagram patterns, and styling guidance.
 
@@ -56,11 +95,11 @@ Do NOT propose interfaces yet. After the file is written, ask the user: "Which o
 
 ### 3. Grilling loop
 
-Once the user picks a candidate, run the `/grilling` skill to walk the design tree with them — constraints, dependencies, the shape of the deepened module, what sits behind the seam, what tests survive.
+Once the user picks a candidate, drop into a grilling conversation. Walk the design tree with them — constraints, dependencies, the shape of the deepened module, what sits behind the seam, what tests survive.
 
-Side effects happen inline as decisions crystallize — run the `/domain-modeling` skill to keep the domain model current as you go:
+Side effects happen inline as decisions crystallize:
 
-- **Naming a deepened module after a concept not in `CONTEXT.md`?** Add the term to `CONTEXT.md`. Create the file lazily if it doesn't exist.
-- **Sharpening a fuzzy term during the conversation?** Update `CONTEXT.md` right there.
-- **User rejects the candidate with a load-bearing reason?** Offer an ADR, framed as: _"Want me to record this as an ADR so future architecture reviews don't re-suggest it?"_ Only offer when the reason would actually be needed by a future explorer to avoid re-suggesting the same thing — skip ephemeral reasons ("not worth it right now") and self-evident ones.
-- **Want to explore alternative interfaces for the deepened module?** Run the `/codebase-design` skill and use its design-it-twice parallel sub-agent pattern.
+- **Naming a deepened module after a concept not in the glossary?** Invoke `write glossary entry` for the new term — same discipline as `/grill-with-docs` (see [CONTEXT-FORMAT.md](../grill-with-docs/CONTEXT-FORMAT.md) for the page-body shape).
+- **Sharpening a fuzzy term during the conversation?** Invoke `write glossary entry` right there (use `mcp__notion__notion-update-page` for the matching page if one already exists).
+- **User rejects the candidate with a load-bearing reason?** Offer an ADR via `create ADR`, framed as: _"Want me to record this as an ADR so future architecture reviews don't re-suggest it?"_ Only offer when the reason would actually be needed by a future explorer to avoid re-suggesting the same thing — skip ephemeral reasons ("not worth it right now") and self-evident ones. See [ADR-FORMAT.md](../grill-with-docs/ADR-FORMAT.md) for the page-body shape.
+- **Want to explore alternative interfaces for the deepened module?** See [INTERFACE-DESIGN.md](INTERFACE-DESIGN.md).

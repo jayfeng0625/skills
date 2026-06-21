@@ -1,0 +1,56 @@
+{
+  "context": "Tests whether the agent avoids verifying behavior through external means (direct DB queries in tests), uses the module's own public interface to assert outcomes, and designs the interface to accept dependencies for testability.",
+  "type": "weighted_checklist",
+  "checklist": [
+    {
+      "name": "Interface-only verification",
+      "description": "Tests verify outcomes using only the repository's public methods (e.g. getUser, listUsers) — NOT by querying the database directly (no raw SQL queries or direct DB object access in test assertions)",
+      "max_score": 18
+    },
+    {
+      "name": "No direct DB access in tests",
+      "description": "Test file does NOT import or use the database connection directly for assertions (no db.query(), db.get(), db.run() calls in test assertion blocks)",
+      "max_score": 15
+    },
+    {
+      "name": "Dependency injection",
+      "description": "UserRepository accepts the database/storage as a constructor parameter or function parameter, rather than creating it internally",
+      "max_score": 12
+    },
+    {
+      "name": "Tests describe retrievability",
+      "description": "Tests verify that saved records are retrievable through the interface (e.g. 'user created with createUser is returned by getUser') not that data was persisted to a table",
+      "max_score": 12
+    },
+    {
+      "name": "Behavior-named tests",
+      "description": "Test names describe behaviors observable to callers (e.g. 'newly created user is retrievable by ID') not storage operations (e.g. 'createUser inserts row into users table')",
+      "max_score": 10
+    },
+    {
+      "name": "Public interface small",
+      "description": "Repository exposes a small number of public methods covering the core operations — no internal helpers exposed in the public API",
+      "max_score": 10
+    },
+    {
+      "name": "Returns results",
+      "description": "Repository methods return values (e.g. the created user, a list of users) rather than only producing side effects with void returns",
+      "max_score": 10
+    },
+    {
+      "name": "Design notes explain interface testing",
+      "description": "design-notes.md explicitly contrasts verifying through the interface vs. bypassing it with direct DB queries",
+      "max_score": 8
+    },
+    {
+      "name": "In-memory storage for tests",
+      "description": "Tests use an in-memory or lightweight store — no connection to a real external database server required",
+      "max_score": 4
+    },
+    {
+      "name": "One assertion per test",
+      "description": "Each test has one logical assertion — verifying one observable outcome per test case",
+      "max_score": 1
+    }
+  ]
+}

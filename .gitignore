@@ -6,3 +6,9 @@ node_modules
 
 # macOS
 .DS_Store
+
+# Agent / tooling scratch
+.agents/
+.claude/
+.github/
+.tessl/

@@ -17,7 +17,7 @@ Tailor the 14 engineering and productivity skills inherited from `mattpocock/ski
 |---|---|---|
 | Workspace | `bonai-dev` | Matches existing `tessl.json` |
 | Packaging | Two tiles: `bonai-dev/engineering-skills`, `bonai-dev/productivity-skills` | Coarser versioning, simpler manifests than 14 per-skill tiles |
-| Versioning | Calver (`2026.05.0`), private | Continuously-evolving personal set; no public commitment yet |
+| Versioning | Calver (`YYYY.M.D` — year.month.day of publish; no zero-padding), private | Continuously-evolving personal set; no public commitment yet. Stage 1 used the earlier `YYYY.M.PATCH` shape and shipped at `2026.5.0`; from Stage 2 onward, the patch slot encodes day-of-month. |
 | Customization depth | Medium — keep Matt's names, rewrite ambiguous sections | Lowest churn; names are already outcome-shaped |
 | Skill posture | Outcome-driven — skills lean on agent-led interrogation (AskUserQuestion patterns) to extract requirements and remove ambiguity rather than rigid checklists | Maximizes use of the agent to decompose problems with the user instead of prescribing flows |
 | Tech stack posture | Language-agnostic | User works across TS/Node + Kotlin/JVM; skills should not assume |
@@ -65,6 +65,7 @@ Skills only know **abstract verbs**. The tile-shipped `tracker-primitives/notion
 | `create issue page` | `/to-issues`, `/triage` |
 | `create PRD page` | `/to-prd` |
 | `create handoff page` | `/handoff` |
+| `post agent brief` | `/triage` |
 | `read glossary` | `/grill-with-docs`, `/triage`, `/to-issues`, `/to-prd`, `/improve-codebase-architecture` |
 | `write glossary entry` | `/grill-with-docs`, `/improve-codebase-architecture` |
 | `read ADRs in area` | `/grill-with-docs`, `/triage`, `/improve-codebase-architecture` |
@@ -78,7 +79,7 @@ Skills must not introduce new verbs without updating this list and the primitive
 
 1. **Issues DB** — work items
 2. **PRDs DB** — product requirements documents
-3. **Handoffs DB** — cross-session handoff pages
+3. **Handoffs DB** — cross-session handoff pages; carries an `Epic` select column to subdivide handoffs by workstream within a project (see §4.4 and `/handoff`)
 4. **Domain Glossary DB** — replaces repo `CONTEXT.md`
 5. **ADRs DB** — replaces repo `docs/adr/`
 
@@ -116,6 +117,10 @@ Category (select):
   bug              → "bug"
   enhancement      → "enhancement"
 Blocked by: relation → Issues DB
+
+## Handoffs DB properties
+
+Epic (select): per-project workstream values (e.g. `Stage 2 design`); add options as new workstreams begin.
 ```
 
 ### 4.5 .out-of-scope/ — stays in repo
@@ -232,14 +237,14 @@ The `.out-of-scope/*.md` knowledge base (used by `/triage` to avoid re-suggestin
 
 #### `zoom-out`
 
-- Start as a 1-liner skill that loads supporting refs (modules map, callers index) when invoked. Stays close to today's terse shape.
-- Evolution path toward a full workflow: use Agent(Explore) to walk the codebase, map modules + callers, render the result as a tree, and name unfamiliar terms against the Notion Domain Glossary DB. Progress from 1-liner → full workflow as friction emerges, not on a fixed schedule.
+- Stays as today's terse 1-liner. Domain language grounding flows through the existing CLAUDE.md `## Agent skills` → **Domain language** entry; no supporting-refs (modules map / callers index) loading is wired up. Evolution toward a structured workflow is a future-work item, not a Stage 2 deliverable.
 
 #### `handoff` (moved to engineering)
 
-- Fixed-template Notion page in Handoffs DB.
-- Sections: **Goal / What's done / Open questions / Suggested skills / Key files / Sensitive-info note**.
-- Abstract verb: `create handoff page`.
+- Fixed-template Notion page in the per-repo Handoffs DB.
+- Skill body asks **which Epic** this handoff belongs to at invocation, before composing the body. The Epic value is one of the options on the Handoffs DB `Epic` select property; the skill may also offer to add a new option if no existing value fits.
+- Sections (in this order): **Goal / What's done / Open questions / Suggested skills / Key files / Sensitive-info note**.
+- Abstract verb: `create handoff page` (sets `Epic` and the Date property; Date defaults to today).
 
 #### `caveman` (productivity)
 

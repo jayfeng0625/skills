@@ -1,0 +1,56 @@
+{
+  "context": "Tests whether the agent applies caveman compression rules correctly: dropping articles, filler words, and pleasantries; using abbreviations for common terms; using arrows for causality; writing in the caveman pattern; while keeping technical substance intact.",
+  "type": "weighted_checklist",
+  "checklist": [
+    {
+      "name": "No opening pleasantries",
+      "description": "explanations.md does NOT start with or contain pleasantries such as 'Sure', 'Certainly', 'Of course', 'Happy to', 'Great question'",
+      "max_score": 10
+    },
+    {
+      "name": "No filler words",
+      "description": "explanations.md does NOT contain filler words: 'basically', 'essentially', 'simply', 'really', 'actually', 'just' used as filler",
+      "max_score": 10
+    },
+    {
+      "name": "Abbreviations used",
+      "description": "explanations.md uses at least TWO abbreviations from: DB, auth, config, req, res, fn, impl, conn (instead of spelling out the full words)",
+      "max_score": 10
+    },
+    {
+      "name": "Arrows for causality",
+      "description": "explanations.md uses the arrow notation (X -> Y or X → Y) at least once to express a cause-and-effect or sequence relationship",
+      "max_score": 12
+    },
+    {
+      "name": "Fragments used",
+      "description": "explanations.md contains at least two sentence fragments (incomplete sentences, no subject or verb omitted intentionally for brevity)",
+      "max_score": 10
+    },
+    {
+      "name": "No articles",
+      "description": "explanations.md has minimal use of articles — fewer than 5 instances of 'a ', 'an ', or 'the ' per explanation section",
+      "max_score": 10
+    },
+    {
+      "name": "Technical accuracy maintained",
+      "description": "All three concepts are explained with correct technical substance (connection pooling, JWT revocation, index vs full scan are all accurately described)",
+      "max_score": 15
+    },
+    {
+      "name": "Short synonyms",
+      "description": "explanations.md uses short synonyms: e.g. 'big' not 'extensive', 'fix' not 'implement a solution for', 'fast' not 'performant' — does NOT use verbose alternatives where short ones exist",
+      "max_score": 10
+    },
+    {
+      "name": "No hedging language",
+      "description": "explanations.md does NOT contain hedging language such as 'might', 'could perhaps', 'it is possible that', 'generally speaking'",
+      "max_score": 8
+    },
+    {
+      "name": "All three topics covered",
+      "description": "explanations.md addresses all three topics: connection pooling, JWT revocation, and index vs table scan",
+      "max_score": 5
+    }
+  ]
+}

@@ -1,6 +1,6 @@
 ---
 name: setup-bonai-skills
-description: Sets up an `## Agent skills` block in AGENTS.md/CLAUDE.md and `docs/agents/` so the engineering skills know this repo's per-language commands and Notion database IDs. Run before first use of `tdd`, `diagnose`, `grill-with-docs`, `prototype`, or any other engineering skill that reads from `docs/agents/`.
+description: Scaffolds an `## Agent skills` block in AGENTS.md/CLAUDE.md plus the `docs/agents/commands.md` and `docs/agents/notion.md` files that bonai-dev engineering skills read for per-language test/lint/build commands and per-repo Notion database IDs. Interactive — asks for tracker backend, language, and DB IDs. Use when the user says "setup bonai", "initialize bonai skills", "configure agent skills", "set up this repo for the engineering skills", or before first use of `tdd`, `diagnose`, `grill-with-docs`, `prototype`, `triage`, `to-issues`, `to-prd`, `improve-codebase-architecture`, or `handoff` in a new repo.
 disable-model-invocation: true
 ---
 
@@ -42,6 +42,7 @@ For Notion users, ask in sequence:
 1. **Workspace ID.** "Paste the workspace ID for the Notion workspace you'll use for this repo."
 2. **The 5 database IDs.** One question per DB: Issues DB, PRDs DB, Handoffs DB, Domain Glossary DB, ADRs DB. For each, ask: "Paste the database ID, or say 'create' and I will create it from a seed schema." If the user says 'create', call `mcp__notion__notion-create-database` against the workspace using the matching DB's property schema from the **`## DB seed schemas`** section of [`notion.template.md`](./notion.template.md). If the create call fails (no MCP write permission, auth error), stop and tell the user — they need to grant Notion MCP write access or create the DB manually and re-run, in which case prompt for the ID instead.
 3. **Property mappings for the Issues DB.** Ask the user to confirm or override the canonical Status mappings: `needs-triage`, `needs-info`, `ready-for-agent`, `ready-for-human`, `wontfix`. Default: each role's string equals its name. Ask the user to confirm or override the Category mappings: `bug`, `enhancement`. Default: each maps to its own name. Ask whether the DB has a `Blocked by` relation property; if so, capture its exact name.
+4. **Property mappings for the Handoffs DB.** The Handoffs DB has an `Epic` select property — used by `/handoff` to subdivide handoffs by workstream within this project. If the DB was just created from the seed schema, the option list is empty; tell the user they will add Epic options on first use of `/handoff`. If the DB already exists, capture the property name (default `Epic`) so `/handoff` can match it.
 
 ### 4. Confirm and write
 
