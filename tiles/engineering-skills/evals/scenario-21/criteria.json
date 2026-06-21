@@ -1,0 +1,46 @@
+{
+  "context": "Tests whether the agent correctly analyzes three TypeScript modules (all embedded inline in the task) for deepening opportunities. The agent should identify both shallow modules (workspaceRepository with 8 thin DB-wrapping methods, and ledgerFormatter with 6 trivially-thin formatting functions), avoid flagging the already-deep module (lineItemValidator, which hides 6 validation rules behind a single call), propose concrete refactors, use the domain vocabulary from the embedded glossary (Ledger, LineItem, Workspace), and apply the deep-module vocabulary (Module, Interface, Shallow, Deep, Seam, Leverage, Locality).",
+  "type": "weighted_checklist",
+  "checklist": [
+    {
+      "name": "Identifies workspaceRepository as a shallow module",
+      "description": "The agent flags workspaceRepository (or describes it using the canonical Workspace term) as a shallow module. Any mention that its 8 methods each wrap a single DB call, or that callers must know which method to call, counts. Partial credit for identifying it as a candidate without explaining why.",
+      "max_score": 18
+    },
+    {
+      "name": "Identifies ledgerFormatter as a shallow module",
+      "description": "The agent flags ledgerFormatter (or names it using the Ledger / LineItem terms) as a shallow module. Any mention that its 6 functions are trivial one-liners, or that callers import and call each one individually, counts. Partial credit for identifying it as a candidate without explaining why.",
+      "max_score": 15
+    },
+    {
+      "name": "Does NOT flag lineItemValidator as a candidate",
+      "description": "The agent correctly avoids flagging lineItemValidator as a shallow module. lineItemValidator exposes one method that hides six distinct validation rules and error aggregation — it is already deep. Award full marks if lineItemValidator is absent from candidates or explicitly called out as already deep. Award 0 if it is listed as a candidate for deepening.",
+      "max_score": 18
+    },
+    {
+      "name": "Proposes a specific refactor for at least one candidate",
+      "description": "For at least one candidate the agent names a concrete change — not vague advice like 'consolidate this module'. Examples: collapsing workspaceRepository's 8 methods into find/save, or collapsing ledgerFormatter's 6 functions into one formatter call. Award full marks for concrete before/after method counts for both candidates. Award partial marks for a concrete refactor for one candidate.",
+      "max_score": 18
+    },
+    {
+      "name": "Proposed refactors reduce interface complexity",
+      "description": "Each proposed refactor results in a smaller public interface (fewer exported names or fewer required call sites). The agent articulates the reduction: e.g. '8 methods → 2' or '6 exports → 1 formatter call'. Partial credit for naming a reduction without quantifying it.",
+      "max_score": 10
+    },
+    {
+      "name": "Uses deep-module vocabulary",
+      "description": "The agent uses at least two of the skill's canonical terms — Module, Interface, Shallow, Deep, Seam, Leverage, Locality — when describing candidates and refactors. Award full marks for three or more terms. Award partial marks for one or two. Award 0 only if none are used.",
+      "max_score": 11
+    },
+    {
+      "name": "Applies the deletion test",
+      "description": "For at least one candidate, the agent explicitly applies the deletion test: would deleting this module concentrate complexity in its callers, or just move it? The answer should be 'concentrates' — confirming the module is shallow. Award full marks for clear deletion-test reasoning. Award partial marks for mentioning the concept without fully applying the logic.",
+      "max_score": 4
+    },
+    {
+      "name": "Uses domain vocabulary from the embedded glossary",
+      "description": "The response uses at least one of the domain terms from the embedded glossary: Ledger, LineItem, Workspace. Award full marks for using two or more. Award partial for one. Award 0 only if none are used.",
+      "max_score": 6
+    }
+  ]
+}

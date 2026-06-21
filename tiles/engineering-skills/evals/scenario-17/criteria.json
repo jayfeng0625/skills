@@ -1,0 +1,41 @@
+{
+  "context": "Tests whether the agent applies the thermo-nuclear review skill rigorously: it must identify all four seeded structural problems (misleading name, shallow interface with passthrough methods, multi-concern god-function, and the coupon conditional chain), propose concrete code-judo simplifications that delete complexity rather than rearrange it, and avoid false-positive nits on cosmetic details.",
+  "type": "weighted_checklist",
+  "checklist": [
+    {
+      "name": "Identifies all meaningful issues",
+      "description": "The agent flags all four seeded problems: (1) class name contradicts its behavior, (2) passthrough getters expose internals, (3) validateAndSubmit does validation + pricing + persistence + notification, (4) the coupon/tax/shipping conditional chain. Award partial credit if 3 of 4 are caught.",
+      "max_score": 25
+    },
+    {
+      "name": "Code-judo on the conditional chain",
+      "description": "For the coupon/tax/shipping conditionals, the agent proposes replacing the if-else chain with a data-driven approach (e.g. a map or array of adjustment functions) that deletes the branching entirely — not just extracting it into a helper with the same structure.",
+      "max_score": 20
+    },
+    {
+      "name": "Names anti-patterns correctly",
+      "description": "The agent uses the skill's vocabulary: at minimum calls out 'thin wrapper', 'identity pass-through', or 'shallow interface' for the passthrough getters, 'spaghetti growth' or equivalent for the conditional chain, and 'wrong-layer logic' or 'mixed concerns' for the god-function.",
+      "max_score": 15
+    },
+    {
+      "name": "Proposes specific, minimal refactors",
+      "description": "Each proposed fix is concrete — e.g. shows a renamed class, a specific interface change, or a skeleton of the adjustment-map pattern — rather than vague advice like 'split this up' or 'consider a better name'.",
+      "max_score": 15
+    },
+    {
+      "name": "Distinguishes shallow from deep interfaces",
+      "description": "The agent explicitly distinguishes the passthrough getDb/getMailer/getAuditLog methods as a shallow-interface smell (callers must still know internal structure) and proposes a deeper interface where those concerns are hidden.",
+      "max_score": 10
+    },
+    {
+      "name": "No false-positive cosmetic issues",
+      "description": "The agent does not spend significant review weight on cosmetic or naming-only problems (e.g. parameter order, minor variable naming, comment style). The review is focused on structural and abstraction issues.",
+      "max_score": 8
+    },
+    {
+      "name": "Produces a structured report",
+      "description": "The output is organized — not a wall of prose. Issues are separated and prioritized (structural regressions first, then missed simplifications, then boundary/abstraction problems), matching the skill's output ordering.",
+      "max_score": 7
+    }
+  ]
+}

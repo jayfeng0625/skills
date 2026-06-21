@@ -1,0 +1,36 @@
+{
+  "context": "Tests whether /teach produces a high-quality first lesson when MISSION.md and RESOURCES.md are already populated. The agent should read MISSION.md to understand what level to pitch the lesson at (JavaScript-fluent but weak on async edge cases), create a self-contained HTML lesson in ./lessons/, cite specific sources from RESOURCES.md for every factual claim (never from parametric memory alone), update reference material in ./reference/, and write a learning record capturing the non-obvious insight from the lesson.",
+  "type": "weighted_checklist",
+  "checklist": [
+    {
+      "name": "Reads MISSION.md before creating lesson",
+      "description": "The agent reads MISSION.md before producing any lesson content. Evidence: the lesson is pitched at a JavaScript-fluent learner (not a beginner who needs 'what is a function'), and targets the specific gaps stated in the mission (error propagation, parallel execution) rather than a generic intro to async/await.",
+      "max_score": 18
+    },
+    {
+      "name": "Creates a self-contained HTML lesson",
+      "description": "The agent creates an HTML file in ./lessons/ (not plain text or Markdown). The file is self-contained — it can be opened in a browser without additional dependencies that aren't CDN-linked. Award zero marks if the lesson is Markdown or plain text.",
+      "max_score": 20
+    },
+    {
+      "name": "Every factual claim cites a source from RESOURCES.md",
+      "description": "Each factual statement in the lesson (how await works, what async returns, how Promise.all short-circuits) is backed by a citation to one of the three MDN sources in RESOURCES.md. Statements from parametric memory with no citation do not count. Award proportionally: full marks if all major claims are cited, partial if most are, zero if citations are absent.",
+      "max_score": 20
+    },
+    {
+      "name": "Lesson pitched at zone of proximal development",
+      "description": "The lesson does not explain basic JavaScript (variables, functions, callbacks). It starts from the learner's stated prior knowledge (Promise basics) and extends into async/await semantics, error handling, or parallel execution — the stated gaps in MISSION.md. Award zero marks if the lesson starts from 'what is a function' or 'what is a callback'.",
+      "max_score": 18
+    },
+    {
+      "name": "Writes a learning record after the lesson",
+      "description": "The agent creates a file in ./learning-records/ capturing the non-obvious insight from this lesson. A learning record is not a lesson summary — it captures the insight that would help choose what to teach next. Award partial marks for a summary; full marks for a forward-looking insight.",
+      "max_score": 14
+    },
+    {
+      "name": "Does not teach from parametric knowledge alone",
+      "description": "The agent does not produce a lesson that is entirely from its training data with no source citations. At minimum, key claims must reference RESOURCES.md. If the lesson reads as a generic LLM explanation with no citations at all, award zero marks for this check.",
+      "max_score": 10
+    }
+  ]
+}

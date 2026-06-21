@@ -1,0 +1,36 @@
+{
+  "context": "Tests whether the agent resolves a non-trivial merge conflict by understanding the intent of both branches rather than picking a side. One branch added structured error handling with a PaymentResult type (retryable flag, errorCode), the other added multi-currency support with a ChargeReceipt type (settledAmountCents, currency). A correct resolution merges both concerns into a single return type and preserves the try/catch error handling while also surfacing settled amount and currency.",
+  "type": "weighted_checklist",
+  "checklist": [
+    {
+      "name": "Reads and explains both sides before resolving",
+      "description": "The agent explicitly describes what each branch was trying to accomplish — not just what the code says, but the intent (error handling for callers vs. settled-amount transparency for FX). This must appear before the resolution, not as a post-hoc summary.",
+      "max_score": 20
+    },
+    {
+      "name": "Preserves error handling from HEAD branch",
+      "description": "The merged result retains the try/catch block, the retryable flag, and the distinction between network failures and hard declines. It must not revert to a version that lets Stripe errors propagate uncaught.",
+      "max_score": 20
+    },
+    {
+      "name": "Preserves settled-amount fields from incoming branch",
+      "description": "The merged return type includes settledAmountCents and currency sourced from the Stripe response (charge.amount_captured, charge.currency), not just echoing back the input amountCents and currency.",
+      "max_score": 20
+    },
+    {
+      "name": "No leftover conflict markers",
+      "description": "The output file contains no git conflict markers (<<<<<<<, =======, >>>>>>>). The file is valid TypeScript syntax.",
+      "max_score": 15
+    },
+    {
+      "name": "Merged return type is coherent",
+      "description": "The final return type (whether named PaymentResult, ChargeReceipt, or something new) includes all necessary fields from both branches: success/errorCode/retryable AND chargeId/settledAmountCents/currency. It does not duplicate or contradict itself.",
+      "max_score": 15
+    },
+    {
+      "name": "Does not invent new behavior",
+      "description": "The resolution only merges what both branches intended — it does not add new fields, change error codes, alter the function signature beyond what was necessary to unify the two return types, or introduce retry logic.",
+      "max_score": 10
+    }
+  ]
+}

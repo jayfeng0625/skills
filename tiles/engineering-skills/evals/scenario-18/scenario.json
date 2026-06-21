@@ -1,0 +1,1 @@
+{ "description": "Resolves a non-trivial merge conflict by preserving intent from both branches", "include": ["./inputs"] }

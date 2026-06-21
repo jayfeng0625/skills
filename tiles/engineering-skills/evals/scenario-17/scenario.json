@@ -1,0 +1,1 @@
+{ "description": "Thermo-nuclear review — finds all abstraction quality issues and proposes code-judo simplifications", "include": ["./inputs"] }

@@ -74,6 +74,8 @@ Two rules govern spec:
 1. **Shared spec** (a table/catalog that spans all slices, e.g. an event-type registry) → reference the PRD, do NOT re-embed the full table in every issue.
 2. **Slice-owned spec** (the exact format/protocol/schedule that IS the core contract of *this particular slice*) → inline it **verbatim**. Do not say "per the PRD" for the spec this slice implements. Examples: a signing slice inlines the exact header format and HMAC recipe; a retry slice inlines the exact backoff schedule and dead-after-N rule; a state machine slice inlines the transition table. The agent building this slice cannot rely on reading the PRD — give them the spec right here.
 
+Anti-pattern: writing "per the PRD, the signature format is `X-Signature: sha256=...`" on the signing slice — that IS the signing slice's spec; copy it here. "Per the PRD" is for shared context this slice doesn't own (e.g. the event-type registry on the retry slice).
+
 <issue-template>
 ---
 title: <short descriptive title>

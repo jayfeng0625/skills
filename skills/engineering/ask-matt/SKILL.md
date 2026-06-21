@@ -37,6 +37,18 @@ A starting situation that generates work, then merges onto the main flow.
 
   Triage is only for issues **you didn't create** — bug reports, incoming feature requests, anything that arrives raw. Issues that `/to-issues` produced are already agent-ready, so **don't triage them**.
 
+## Debugging a specific bug
+
+Not the queue — one concrete problem you need to understand and fix. These are **standalone** — not part of the main idea-to-ship flow.
+
+**Have a theory or can reproduce the bug?**
+→ **`/triage-issue`** — investigates the codebase, finds root cause, writes a fully-specified agent-ready issue with a TDD fix plan. Natural follow-on: **`/implement`**.
+
+**Cannot yet reproduce or have no idea which code path is responsible?**
+→ **`/diagnose`** — disciplined reproduce → hypothesise → instrument loop to establish a confirmed cause. Natural follow-on: `/triage-issue`.
+
+Name exactly one of these — the one that fits. Do not explain the other.
+
 ## Codebase health
 
 Not feature work — upkeep.
