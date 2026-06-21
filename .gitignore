@@ -10,7 +10,8 @@ node_modules
 # Agent / tooling scratch
 .agents/
 .claude/
-.github/
+.github/*
+!.github/workflows/
 .tessl/
 .scratch/
 

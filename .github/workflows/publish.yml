@@ -1,0 +1,111 @@
+name: Publish skills
+
+# On every merge to main: bump all tiles to a calver version (yyyy.M.patch),
+# commit that bump back, then build + publish them to the Tessl registry.
+#
+# Order matters: the version bump is committed to main *before* publishing, so a
+# partial publish (e.g. tile 2 fails after tile 1 succeeded) can never leave the
+# registry ahead of main. The next run then computes a fresh version and
+# republishes — the benign direction. Publishing reads each tile's version from
+# its .tessl-plugin/plugin.json and runs Tessl's publish-time eval over evals/.
+#
+# All tiles share one version (bumped in lockstep). Requires a repo secret
+# TESSL_TOKEN — a Tessl API key with publish permission in the bonai-dev
+# workspace (`tessl api-key create --workspace bonai-dev --role publisher`).
+
+on:
+  push:
+    branches: [main]
+
+# Serialize publish runs so two never race on the version bump / git push.
+concurrency:
+  group: publish-main
+  cancel-in-progress: false
+
+permissions:
+  contents: write
+
+jobs:
+  publish:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Install tessl CLI
+        run: |
+          curl -fsSL https://get.tessl.io | sh
+          echo "$HOME/.local/bin" >> "$GITHUB_PATH"
+
+      - name: Verify tessl is installed and authenticated
+        env:
+          TESSL_TOKEN: ${{ secrets.TESSL_TOKEN }}
+        run: |
+          command -v tessl >/dev/null || { echo "tessl not on PATH after install"; exit 1; }
+          tessl whoami
+
+      - name: Compute calver version (yyyy.M.patch)
+        id: ver
+        run: |
+          prefix="$(date -u +%Y).$(date -u +%-m)"
+          # Highest patch already used this month across tiles; -1 -> first is .0.
+          # All tiles share one version, so max-across-tiles == the shared patch.
+          maxpatch=-1
+          for f in tiles/*/.tessl-plugin/plugin.json; do
+            v="$(jq -r '.version' "$f")"
+            case "$v" in
+              "$prefix".*)
+                p="${v##*.}"
+                if [ "$p" -gt "$maxpatch" ]; then maxpatch="$p"; fi
+                ;;
+            esac
+          done
+          version="$prefix.$((maxpatch + 1))"
+          echo "version=$version" >> "$GITHUB_OUTPUT"
+          echo "Next version: $version"
+
+      - name: Bump tile manifests and commit back to main
+        env:
+          VERSION: ${{ steps.ver.outputs.version }}
+        run: |
+          for f in tiles/*/.tessl-plugin/plugin.json; do
+            tmp="$(mktemp)"
+            jq --arg v "$VERSION" '.version = $v' "$f" > "$tmp"
+            mv "$tmp" "$f"
+            echo "bumped $f -> $VERSION"
+          done
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add tiles/*/.tessl-plugin/plugin.json
+          if git diff --cached --quiet; then
+            echo "No version changes to commit"
+            exit 0
+          fi
+          # [skip ci] is load-bearing: it prevents this push from re-triggering
+          # the workflow into an infinite publish->commit->publish loop. Do not
+          # remove. Rebase-retry guards against a human pushing to main between
+          # checkout and push.
+          git commit -m "chore: publish tiles @$VERSION [skip ci]"
+          for i in 1 2 3; do
+            if git pull --rebase origin main && git push origin HEAD:main; then
+              exit 0
+            fi
+            sleep $((RANDOM % 5 + 2))
+          done
+          echo "failed to push version bump after retries"; exit 1
+
+      - name: Build + publish tiles
+        env:
+          TESSL_TOKEN: ${{ secrets.TESSL_TOKEN }}
+        run: |
+          for tile in tiles/*/; do
+            tile="${tile%/}"
+            echo "::group::publish $tile"
+            # Wrapper materializes the skill symlinks so Tessl sees real files,
+            # then restores them. Version is read from the bumped manifest.
+            # publish runs a publish-time eval over the tile's evals/, which
+            # refreshes the registry Impact score — no separate eval run needed.
+            scripts/tessl-with-tiles.sh plugin publish "$tile"
+            echo "::endgroup::"
+          done
