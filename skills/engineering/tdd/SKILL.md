@@ -1,6 +1,6 @@
 ---
 name: tdd
-description: Test-driven development. Use when the user wants to build features or fix bugs test-first, mentions "red-green-refactor", or wants integration tests.
+description: Test-driven development with red-green-refactor loop. Use when user wants to build features or fix bugs using TDD, mentions "red-green-refactor", wants integration tests, or asks for test-first development.
 ---
 
 # Test-Driven Development
@@ -14,6 +14,15 @@ description: Test-driven development. Use when the user wants to build features 
 **Bad tests** are coupled to implementation. They mock internal collaborators, test private methods, or verify through external means (like querying a database directly instead of using the interface). The warning sign: your test breaks when you refactor, but behavior hasn't changed. If you rename an internal function and tests fail, those tests were testing implementation, not behavior.
 
 See [tests.md](tests.md) for examples and [mocking.md](mocking.md) for mocking guidelines.
+
+## Commands
+
+This skill never names a test runner directly. The canonical commands live in `docs/agents/commands.md`, written by `/setup-bonai-skills`:
+
+- Run the test suite with `test_command`.
+- Run the type-checker with `typecheck_command` (if set).
+
+If `docs/agents/commands.md` is missing, stop and ask the user to run `/setup-bonai-skills` — do not invent a command from `package.json`.
 
 ## Anti-Pattern: Horizontal Slices
 
@@ -44,13 +53,14 @@ RIGHT (vertical):
 
 ### 1. Planning
 
-When exploring the codebase, read `CONTEXT.md` (if it exists) so that test names and interface vocabulary match the project's domain language, and respect ADRs in the area you're touching.
+When exploring the codebase, ground test names and interface vocabulary in the project's domain language, and respect documented architectural decisions. The pointers to the glossary and ADR sources live in CLAUDE.md / AGENTS.md under the `## Agent skills` section's **Domain language** entry, written by `/setup-bonai-skills`. If that entry is missing, the project hasn't been set up — proceed without grounding rather than guessing where the sources live.
 
 Before writing any code:
 
 - [ ] Confirm with user what interface changes are needed
 - [ ] Confirm with user which behaviors to test (prioritize)
-- [ ] Identify opportunities for deep modules (small interface, deep implementation) — run the `/codebase-design` skill for the vocabulary and the testability checks
+- [ ] Identify opportunities for [deep modules](deep-modules.md) (small interface, deep implementation)
+- [ ] Design interfaces for [testability](interface-design.md)
 - [ ] List the behaviors to test (not implementation steps)
 - [ ] Get user approval on the plan
 
