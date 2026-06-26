@@ -2,8 +2,8 @@
 
 General workflow tools, not code-specific.
 
-- **[caveman](./caveman/SKILL.md)** — Ultra-compressed communication mode. Cuts token usage ~75% by dropping filler while keeping full technical accuracy.
 - **[grill-me](./grill-me/SKILL.md)** — Get relentlessly interviewed about a plan or design until every branch of the decision tree is resolved.
+- **[grilling](./grilling/SKILL.md)** — The reusable interview loop behind the grill skills: interrogate a plan or design one question at a time, each with a recommended answer. Model-invoked so other skills can reach it.
 - **[teach](./teach/SKILL.md)** — Teach the user a new skill or concept over multiple sessions, using the current directory as a stateful teaching workspace.
 - **[handoff](./handoff/SKILL.md)** — Compact the current conversation into a handoff document, written to the per-repo Handoffs DB with an Epic tag.
 - **[writing-great-skills](./writing-great-skills/SKILL.md)** — Reference for writing and editing skills well — the vocabulary and principles that make a skill predictable.

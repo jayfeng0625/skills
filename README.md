@@ -4,8 +4,8 @@ A personal set of agent skills I use every day. Packaged as two private tessl ti
 
 | Tile | Skills | Latest |
 |---|---|---|
-| [`bonai-dev/engineering-skills`](./skills/engineering/) | Daily code-work skills (setup, TDD, implement, diagnosis, grilling, prototyping, triage, domain modeling, codebase design, PRD/issue conversion, architecture review, zoom-out, thermo-nuclear quality review) | `2026.6.4` |
-| [`bonai-dev/productivity-skills`](./skills/productivity/) | General workflow skills (caveman compression, non-code grilling, teaching, cross-session handoffs, skill authoring, skill quality reference) | `2026.6.4` |
+| [`bonai-dev/engineering-skills`](./skills/engineering/) | Daily code-work skills (setup, TDD, implement, bug diagnosis, grilling, prototyping, triage, domain modeling, codebase design, PRD/issue conversion, architecture review) | `2026.6.5` |
+| [`bonai-dev/productivity-skills`](./skills/productivity/) | General workflow skills (non-code grilling, the reusable interview loop, teaching, cross-session handoffs, skill authoring, skill quality reference) | `2026.6.5` |
 
 Versions follow `YYYY.M.patch` calver and are published automatically on merge to `main` (see [Development & publishing](#development--publishing)).
 
@@ -54,14 +54,13 @@ Skill bodies use only **abstract verbs** — never concrete tool calls. `skills/
 
 ## Skills
 
-### Engineering (17)
+### Engineering (14)
 
 - [`ask-matt`](./skills/engineering/ask-matt/SKILL.md) — router over the entire skill system; maps idea→ship flow, on-ramps, and standalone skills
 - [`setup-bonai-skills`](./skills/engineering/setup-bonai-skills/SKILL.md) — per-repo config scaffolding
 - [`tdd`](./skills/engineering/tdd/SKILL.md) — test-driven development loop
 - [`implement`](./skills/engineering/implement/SKILL.md) — implement a PRD or issue using /tdd at pre-agreed seams
-- [`diagnose`](./skills/engineering/diagnose/SKILL.md) — disciplined bug-diagnosis loop
-- [`triage-issue`](./skills/engineering/triage-issue/SKILL.md) — investigate a bug, find root cause, create an issue with a TDD fix plan in the configured tracker
+- [`diagnosing-bugs`](./skills/engineering/diagnosing-bugs/SKILL.md) — disciplined bug-diagnosis loop
 - [`domain-modeling`](./skills/engineering/domain-modeling/SKILL.md) — build and sharpen the project's domain model; updates CONTEXT.md / ADRs inline (model-invoked)
 - [`codebase-design`](./skills/engineering/codebase-design/SKILL.md) — shared deep-module vocabulary; model-invoked reference for designing interfaces and seams
 - [`grill-with-docs`](./skills/engineering/grill-with-docs/SKILL.md) — grilling that writes glossary / ADRs inline
@@ -71,13 +70,11 @@ Skill bodies use only **abstract verbs** — never concrete tool calls. `skills/
 - [`to-issues`](./skills/engineering/to-issues/SKILL.md) — break a plan into independently-grabbable issues
 - [`to-prd`](./skills/engineering/to-prd/SKILL.md) — synthesize current context into a PRD
 - [`improve-codebase-architecture`](./skills/engineering/improve-codebase-architecture/SKILL.md) — find deepening opportunities, HTML-report-driven
-- [`zoom-out`](./skills/engineering/zoom-out/SKILL.md) — higher-level perspective on unfamiliar code
-- [`thermo-nuclear-code-quality-review`](./skills/engineering/thermo-nuclear-code-quality-review/SKILL.md) — extremely strict maintainability review hunting code-judo simplifications
 
 ### Productivity (5)
 
-- [`caveman`](./skills/productivity/caveman/SKILL.md) — ultra-compressed communication mode
 - [`grill-me`](./skills/productivity/grill-me/SKILL.md) — non-code interrogation about a plan / design / talk
+- [`grilling`](./skills/productivity/grilling/SKILL.md) — the reusable interview loop behind the grill skills (model-invoked)
 - [`teach`](./skills/productivity/teach/SKILL.md) — teach a skill or concept over multiple sessions in a stateful workspace
 - [`handoff`](./skills/productivity/handoff/SKILL.md) — cross-session handoff documents, written to the Handoffs store with an Epic tag (uses engineering's `tracker-primitives`; needs `/setup-bonai-skills`)
 - [`writing-great-skills`](./skills/productivity/writing-great-skills/SKILL.md) — reference for writing and editing skills well; the vocabulary and principles that make a skill predictable

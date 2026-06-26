@@ -1,5 +1,5 @@
 {
-  "context": "Tests whether the agent follows the full diagnose discipline when faced with a flaky concurrency bug. The scenario involves a test that passes locally but fails under parallel execution — a classic shared-state / fixture-scope issue. The agent must build a reliable feedback loop (not just retry), minimise the reproducer, form ranked falsifiable hypotheses, instrument to confirm one, apply a minimal fix, and lock it down with a regression test. Skipping phases or jumping straight to a guess-and-check fix should score poorly.",
+  "context": "Tests whether the agent follows the full diagnosing-bugs discipline when faced with a flaky concurrency bug. The scenario involves a test that passes locally but fails under parallel execution — a classic shared-state / fixture-scope issue. The agent must build a reliable feedback loop (not just retry), minimise the reproducer, form ranked falsifiable hypotheses, instrument to confirm one, apply a minimal fix, and lock it down with a regression test. Skipping phases or jumping straight to a guess-and-check fix should score poorly.",
   "type": "weighted_checklist",
   "checklist": [
     {
@@ -38,7 +38,7 @@
       "max_score": 6
     },
     {
-      "name": "Uses diagnose vocabulary correctly",
+      "name": "Uses diagnosing-bugs vocabulary correctly",
       "description": "The agent uses domain-specific terms from the skill: 'feedback loop', 'falsifiable hypothesis', 'correct seam', 'non-deterministic bug', 'reproduction rate'. Usage must be accurate, not decorative — e.g. does not call a retry loop a 'feedback loop' if it lacks a deterministic pass/fail signal.",
       "max_score": 6
     }
