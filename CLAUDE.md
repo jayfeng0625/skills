@@ -17,7 +17,7 @@ Each bucket folder has a `README.md` that lists every skill in the bucket with a
 
 Per-repo agent config for this repo (consumer-state — distinct from what the published tile ships).
 
-**Config dir:** `docs/agents/` — holds the relocatable config below. `workflow-config.md` is gitignored (it carries private Notion IDs); re-run `/setup-bonai-skills` after a fresh clone to regenerate it.
+**Config dir:** `docs/agents/` — holds the relocatable config below. `workflow-config.md` is gitignored (it carries private Notion IDs) and is maintained by hand; see `docs/agents/issue-tracker.md` for the database IDs and property mappings it must contain. Per-repo setup uses upstream's `/setup-matt-pocock-skills`.
 
 ### Commands
 
@@ -25,7 +25,7 @@ Repo-wide commands for testing, linting, type-checking, and building. See `comma
 
 ### Workflow backend
 
-**Backend:** notion — selects the `tracker-primitives/notion.md` recipe. The Issues / PRDs / Handoffs database IDs and property mappings live in `workflow-config.md` in the Config dir.
+**Backend:** notion — the Notion recipe (each tracker verb → its Notion MCP call) lives in `docs/agents/issue-tracker.md`. The Issues / PRDs / Handoffs database IDs and property mappings live in `workflow-config.md` in the Config dir.
 
 ### Domain language
 
