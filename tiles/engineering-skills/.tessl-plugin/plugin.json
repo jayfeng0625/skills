@@ -8,8 +8,7 @@
     "skills/setup-bonai-skills",
     "skills/tdd",
     "skills/implement",
-    "skills/diagnose",
-    "skills/triage-issue",
+    "skills/diagnosing-bugs",
     "skills/domain-modeling",
     "skills/codebase-design",
     "skills/grill-with-docs",
@@ -18,8 +17,6 @@
     "skills/resolving-merge-conflicts",
     "skills/to-issues",
     "skills/to-prd",
-    "skills/improve-codebase-architecture",
-    "skills/zoom-out",
-    "skills/thermo-nuclear-code-quality-review"
+    "skills/improve-codebase-architecture"
   ]
 }

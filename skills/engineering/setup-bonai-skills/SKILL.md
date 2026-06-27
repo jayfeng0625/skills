@@ -1,6 +1,6 @@
 ---
 name: setup-bonai-skills
-description: Scaffolds an `## Agent skills` block in AGENTS.md/CLAUDE.md plus the `commands.md` and `workflow-config.md` files (written into a config dir chosen at setup, default `docs/agents/`) that bonai-dev engineering skills read for per-language test/lint/build commands and per-repo workflow database IDs. Interactive — asks for the config dir, the tracker backend, language commands, and DB IDs. Use when the user says "setup bonai", "initialize bonai skills", "configure agent skills", "set up this repo for the engineering skills", or before first use of `tdd`, `diagnose`, `grill-with-docs`, `prototype`, `triage`, `to-issues`, `to-prd`, `improve-codebase-architecture`, or `handoff` in a new repo.
+description: Scaffolds an `## Agent skills` block in AGENTS.md/CLAUDE.md plus the `commands.md` and `workflow-config.md` files (written into a config dir chosen at setup, default `docs/agents/`) that bonai-dev engineering skills read for per-language test/lint/build commands and per-repo workflow database IDs. Interactive — asks for the config dir, the tracker backend, language commands, and DB IDs. Use when the user says "setup bonai", "initialize bonai skills", "configure agent skills", "set up this repo for the engineering skills", or before first use of `tdd`, `diagnosing-bugs`, `grill-with-docs`, `prototype`, `triage`, `to-issues`, `to-prd`, `improve-codebase-architecture`, or `handoff` in a new repo.
 disable-model-invocation: true
 ---
 
@@ -36,7 +36,7 @@ Use `AskUserQuestion` to ask about each of the four canonical commands in sequen
 
 For each command, ask one question. Example for `test_command`:
 
-> What command runs the test suite for this repo? Skills like `/tdd` and `/diagnose` will use this verbatim — it should be the single command that runs all tests from a clean shell.
+> What command runs the test suite for this repo? Skills like `/tdd` and `/diagnosing-bugs` will use this verbatim — it should be the single command that runs all tests from a clean shell.
 
 Repeat for `lint_command`, `typecheck_command`, `build_command`. If any of the four doesn't apply (e.g. a TS-only repo with no separate build step), accept "n/a" — skills will skip that command when it's blank.
 
@@ -57,7 +57,7 @@ For Notion users, ask in sequence:
 
 Show the user a draft of:
 
-- The `## Agent skills` block to add to whichever of `CLAUDE.md` / `AGENTS.md` is being edited (see step 6 for selection rules). The block records the chosen config dir once as a single `Config dir:` value, carries the `Backend:` token in the Workflow-backend entry, and includes a **Domain language** entry pointing read-only consumers (`/tdd`, `/diagnose`) directly at `CONTEXT.md` + `docs/adr/`.
+- The `## Agent skills` block to add to whichever of `CLAUDE.md` / `AGENTS.md` is being edited (see step 6 for selection rules). The block records the chosen config dir once as a single `Config dir:` value, carries the `Backend:` token in the Workflow-backend entry, and includes a **Domain language** entry pointing read-only consumers (`/tdd`, `/diagnosing-bugs`) directly at `CONTEXT.md` + `docs/adr/`.
 - The contents of `commands.md` (use [`commands.template.md`](./commands.template.md) as the seed)
 - The contents of `workflow-config.md` (use [`workflow-config.template.md`](./workflow-config.template.md) as the seed)
 
@@ -92,7 +92,7 @@ Repo-wide commands for testing, linting, type-checking, and building. See `comma
 
 ### Domain language
 
-Glossary: `CONTEXT.md` (repo root). ADRs: `docs/adr/` (repo root). Read these files **directly** — they are fixed filesystem conventions, not block-resolved and not under the Config dir. Skills that only read (e.g. `/tdd`, `/diagnose`) ground from them and degrade gracefully when absent.
+Glossary: `CONTEXT.md` (repo root). ADRs: `docs/adr/` (repo root). Read these files **directly** — they are fixed filesystem conventions, not block-resolved and not under the Config dir. Skills that only read (e.g. `/tdd`, `/diagnosing-bugs`) ground from them and degrade gracefully when absent.
 ```
 
 The `Config dir:` value is the single place the relocatable config location is recorded — never repeat it per file. The `Backend:` token is what a skill reads to load `tracker-primitives/<backend>.md`. The Domain-language entry is the same for every backend — glossary and ADRs are always filesystem conventions, never Notion DBs.

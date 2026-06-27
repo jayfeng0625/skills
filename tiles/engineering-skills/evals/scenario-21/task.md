@@ -1,4 +1,4 @@
-Analyze the three TypeScript modules below for deepening opportunities. Write your analysis as plain text in this response — do NOT write to files or produce HTML.
+Analyze the three TypeScript modules below for deepening opportunities. Write your analysis to a file named `architecture-review.md` in your working directory — plain Markdown, not HTML.
 
 ## Domain Glossary
 
@@ -82,7 +82,7 @@ export function validateLineItem(item: unknown): ValidationResult {
 
 ---
 
-This is a read-only written assessment. Do not edit or rewrite any code — write your entire answer as plain text in this response.
+This is a read-only written assessment. Do not edit or rewrite any code — write your entire answer to `architecture-review.md`.
 
 For EACH of the three modules, write this exact compact report block:
 
