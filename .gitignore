@@ -1,1 +1,20 @@
+# IDE
+.idea/
+.vscode/
+
+# macOS
+.DS_Store
+
+# Agent / tooling scratch
+.agents/
+.claude/
+.github/*
+!.github/workflows/
+.tessl/
+.scratch/
+
+# Dependencies
 node_modules
+
+# Per-repo agent config (consumer-state; carries private Notion IDs)
+docs/agents/workflow-config.md
