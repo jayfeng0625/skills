@@ -1,35 +1,35 @@
 {
-  "context": "Tests whether /triage reads an existing issue, assigns canonical category and state roles, uses the tracker-primitives abstract verbs (transition state, post triage note, post agent brief) rather than hardcoded API calls, and correctly withholds ready-for-agent when the issue is underspecified. The local backend writes to .scratch/issues/<id>-<slug>.md with frontmatter status field updates.",
+  "context": "Tests whether /triage reads an existing issue, assigns canonical category and state roles, and records the outcome by following the per-repo local issue-tracker recipe (update the Status: line in the issue file, append a triage note under a ## Comments heading) rather than calling a hardcoded gh or Notion API. The local backend stores issues at .scratch/<feature-slug>/issues/<NN>-<slug>.md; triage state is a Status: line near the top and comments append under ## Comments. The agent must also correctly withhold ready-for-agent when the issue is underspecified.",
   "type": "weighted_checklist",
   "checklist": [
     {
       "name": "Reads the issue file before acting",
-      "description": "The agent reads .scratch/issues/1-slow-checkout.md before forming a recommendation. A triage performed without reading the issue body would miss the mobile-only detail. Check transcript for a file read of that path.",
+      "description": "The agent reads .scratch/slow-checkout/issues/01-slow-checkout.md before forming a recommendation. A triage performed without reading the issue body would miss the mobile-only detail. Check transcript for a file read of that path.",
       "max_score": 14
     },
     {
       "name": "Assigns exactly one canonical category role",
-      "description": "The issue's frontmatter or the agent's decision uses exactly one category role — either 'bug' or 'enhancement' — and it is the correct choice (bug, since something is broken). The canonical role names must be used, not ad-hoc synonyms.",
+      "description": "The agent's decision uses exactly one category role — either 'bug' or 'enhancement' — and it is the correct choice (bug, since something is broken). The canonical role names must be used, not ad-hoc synonyms.",
       "max_score": 14
     },
     {
-      "name": "Transitions to an appropriate state via tracker-primitives",
-      "description": "The agent invokes the 'transition state' abstract verb (updating the frontmatter status: field in the issue file), not a direct gh or Notion API call. The resulting status must be either 'needs-info' (if underspecified) or 'ready-for-agent' (if sufficient context). The issue file at .scratch/issues/1-slow-checkout.md must reflect the new status.",
+      "name": "Updates the Status: line to an appropriate state per the local recipe",
+      "description": "The agent records the new triage state by updating the Status: line near the top of the issue file at .scratch/slow-checkout/issues/01-slow-checkout.md, following the local issue-tracker recipe — not via a direct gh or Notion API call. The resulting Status: must be either 'needs-info' (if underspecified) or 'ready-for-agent' (if sufficient context), using the canonical label strings from triage-labels.md. The issue file must reflect the new status.",
       "max_score": 20
     },
     {
-      "name": "Posts a triage note explaining the decision",
-      "description": "A triage note is appended to the issue file (via the 'post triage note' verb) explaining what was established and what decision was made. For needs-info, it lists specific actionable questions, not vague 'provide more info' requests. For ready-for-agent, it summarizes the reasoning.",
+      "name": "Appends a triage note under ## Comments explaining the decision",
+      "description": "A triage note is appended to the bottom of the issue file under a '## Comments' heading (per the local recipe) explaining what was established and what decision was made. For needs-info, it lists specific actionable questions, not vague 'provide more info' requests. For ready-for-agent, it summarizes the reasoning and an agent brief is written.",
       "max_score": 18
     },
     {
-      "name": "Does NOT transition to ready-for-agent without sufficient information",
-      "description": "Given the minimal context (only 'mobile takes 8s, desktop is fine'), the agent should recognize this is underspecified — no reproduction steps, no device/browser info, no network conditions, no profiling data — and move to needs-info rather than ready-for-agent. Transitioning to ready-for-agent without requesting more detail is a failure.",
+      "name": "Does NOT move to ready-for-agent without sufficient information",
+      "description": "Given the minimal context (only 'mobile takes 8s, desktop is fine'), the agent should recognize this is underspecified — no reproduction steps, no device/browser info, no network conditions, no profiling data — and set Status to needs-info rather than ready-for-agent. Moving to ready-for-agent without requesting more detail is a failure.",
       "max_score": 20
     },
     {
       "name": "Triage note includes specific actionable questions",
-      "description": "If the issue moves to needs-info, the triage note includes at least two specific, actionable questions (e.g. 'which mobile browsers show this?', 'does the slowness appear on 4G or only on 3G?', 'is it slow on first load or every load?') rather than generic requests. Questions must be specific enough that the reporter knows exactly what to provide.",
+      "description": "If the issue moves to needs-info, the triage note appended under ## Comments includes at least two specific, actionable questions (e.g. 'which mobile browsers show this?', 'does the slowness appear on 4G or only on 3G?', 'is it slow on first load or every load?') rather than generic requests. Questions must be specific enough that the reporter knows exactly what to provide.",
       "max_score": 14
     }
   ]

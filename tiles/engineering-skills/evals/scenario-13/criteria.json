@@ -1,50 +1,40 @@
 {
-  "context": "Tests whether /to-issues produces TERSE, NON-DUPLICATING issues from a PRD. The PRD at .scratch/prds/1-webhook-delivery-subscriptions.md carries shared spec (an event-catalog table) plus slice-specific spec (HMAC signature format, fixed backoff schedule). Good issues reference the PRD for shared spec rather than re-embedding the whole table into every issue, while still inlining VERBATIM the load-bearing detail a given slice cannot be built without. They are tracer-bullet vertical slices with dependency ordering. Score the published issue files under .scratch/issues/.",
+  "context": "Tests whether /to-issues breaks a PRD into independently-grabbable tracer-bullet vertical-slice issues. The PRD at .scratch/webhook-delivery-subscriptions/PRD.md carries shared spec (an event-catalog table) plus slice-specific spec (HMAC signature format, fixed backoff schedule). Good issues reference the PRD for shared spec rather than re-embedding the whole table into every issue. They are tracer-bullet vertical slices with dependency ordering. Per the seeded docs/agents/issue-tracker.md, issues are created as local markdown files under .scratch/webhook-delivery-subscriptions/issues/<NN>-<slug>.md (numbered from 01). Score the published issue files.",
   "type": "weighted_checklist",
   "checklist": [
     {
-      "name": "No wholesale PRD-table duplication",
-      "description": "No issue's 'What to build' re-embeds the entire event-catalog table from the PRD. Shared spec is referenced (e.g. 'per the PRD event catalog') rather than copied in full into every issue.",
-      "max_score": 18
-    },
-    {
-      "name": "Terse, delta-first bodies",
-      "description": "Each issue's 'What to build' leads with that slice's delta and is terse — a few lines or bullets describing end-to-end behavior, not a restatement of the whole PRD.",
-      "max_score": 14
-    },
-    {
-      "name": "Slice-specific load-bearing spec inlined verbatim",
-      "description": "The signing slice inlines the exact signature format (X-Signature: sha256=<hex>, HMAC-SHA256 of the raw body keyed by the subscription secret) verbatim; the retry slice inlines the exact backoff schedule (1 min, 5 min, 30 min, 2 hr, 6 hr). Each slice inlines the spec it can't be built without even while referencing the PRD for the rest.",
-      "max_score": 16
+      "name": "References PRD for shared spec, no wholesale duplication",
+      "description": "Issues reference the PRD for shared spec rather than duplicating it. No issue's 'What to build' re-embeds the entire event-catalog table from the PRD; shared spec is referenced (e.g. 'per the PRD event catalog') instead of copied in full into every issue.",
+      "max_score": 24
     },
     {
       "name": "Tracer-bullet vertical slices",
       "description": "Each issue is a thin vertical slice delivering end-to-end behavior, demoable on its own — not a horizontal layer (e.g. NOT a standalone 'build the database schema' or 'write the data model' issue).",
-      "max_score": 14
-    },
-    {
-      "name": "Dependency ordering declared",
-      "description": "Issues that depend on earlier slices declare them under 'Blocked by'; an issue with no blockers states 'None'. A foundational slice (register/subscribe an endpoint) is not blocked by a feature slice.",
-      "max_score": 10
-    },
-    {
-      "name": "Behavioral acceptance criteria",
-      "description": "Each issue has an Acceptance criteria checklist describing observable behavior, not implementation internals.",
-      "max_score": 10
+      "max_score": 22
     },
     {
       "name": "PRD coverage",
       "description": "Across the issues, the PRD's distinct capabilities are covered: subscribe to events, signed delivery, retry/backoff with dead state, replay a failed delivery, secret rotation with overlap, and subscription health/validation. No major capability dropped.",
+      "max_score": 16
+    },
+    {
+      "name": "Dependency ordering declared",
+      "description": "Issues that depend on earlier slices declare them under 'Blocked by'; an issue with no blockers states 'None'. A foundational slice (register/subscribe an endpoint) is not blocked by a feature slice.",
+      "max_score": 14
+    },
+    {
+      "name": "Behavioral acceptance criteria",
+      "description": "Each issue has an Acceptance criteria checklist describing observable behavior, not implementation internals.",
+      "max_score": 14
+    },
+    {
+      "name": "Published with ready-for-agent label",
+      "description": "Each published issue file records the ready-for-agent triage label (per docs/agents/triage-labels.md), reflecting that these issues are ready for AFK agents.",
       "max_score": 10
     },
     {
-      "name": "Published as ready-for-agent",
-      "description": "Each published issue file's frontmatter status is 'ready-for-agent' (transitioned from the needs-triage seed default).",
-      "max_score": 8
-    },
-    {
-      "name": "Issues written via tracker-primitives to correct paths",
-      "description": "All issue files exist under .scratch/issues/<id>-<slug>.md (numeric ID, kebab-case slug). This asserts the skill used the `create issue page` verb via tracker-primitives rather than calling gh issue create, writing to arbitrary paths, or invoking a hardcoded Notion API.",
+      "name": "Issues created as local markdown files at correct paths",
+      "description": "All issue files exist at .scratch/webhook-delivery-subscriptions/issues/<NN>-<slug>.md (zero-padded number from 01, kebab-case slug), per the seeded docs/agents/issue-tracker.md conventions — not written to arbitrary paths, and not created via gh issue create or a hardcoded remote tracker API.",
       "max_score": 10
     }
   ]

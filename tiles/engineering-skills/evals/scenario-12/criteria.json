@@ -1,10 +1,10 @@
 {
-  "context": "Tests whether /to-prd produces a TERSE but FAITHFUL PRD. The agreed design notes in task.md are deliberately wordy and contain load-bearing spec (an event-type table, a fixed backoff schedule, an HMAC signature format, and a prototype-sourced state machine). A good PRD compresses the PROSE and Implementation Decisions — one line per decision, no restated context — WITHOUT dropping or paraphrasing any load-bearing spec, and WITHOUT thinning the User Stories (upstream intent: an extensive list covering all aspects). The sides are scored together so terseness cannot be achieved by deleting substance or breadth. The PRD is written to the local tracker at .scratch/prds/<id>-<slug>.md; score that file.",
+  "context": "Tests whether /to-prd synthesizes a FAITHFUL PRD from agreed design notes without re-interviewing. The notes in task.md contain load-bearing spec (an event-type table, a fixed backoff schedule, an HMAC signature format, and a prototype-sourced state machine) that must be reproduced verbatim — not summarized or paraphrased. A good PRD fills the upstream template sections (Problem / Solution / User Stories / Implementation Decisions / Testing Decisions / Out of Scope / Further Notes), keeps the User Stories extensive (upstream intent: cover all aspects), preserves every distinct decision, and is published to the local markdown issue tracker with the ready-for-agent label. The PRD is published as a file at .scratch/<feature-slug>/PRD.md per docs/agents/issue-tracker.md; score that file.",
   "type": "weighted_checklist",
   "checklist": [
     {
-      "name": "One-line implementation decisions",
-      "description": "In the PRD's Implementation Decisions section, each decision is a single line — a claim plus at most one short 'why' clause. No decision is a multi-sentence paragraph that restates the Problem or Solution. Inlined spec (tables, code blocks) is exempt from the one-line rule.",
+      "name": "PRD template sections present",
+      "description": "The PRD fills the upstream template: Problem Statement, Solution, User Stories, Implementation Decisions, Testing Decisions, Out of Scope, and Further Notes. The Problem and Solution are written from the user's perspective; Out of Scope lists the deferred items (inbound webhooks, hosted UI dashboard, per-event-type rate limiting, delivery ordering guarantees).",
       "max_score": 18
     },
     {
@@ -13,14 +13,9 @@
       "max_score": 14
     },
     {
-      "name": "No restatement or filler sections",
-      "description": "No section merely restates the Problem or Solution. Further Notes is either absent or contains only links/follow-up bullets (no prose paragraphs), and does not repeat Out of Scope.",
+      "name": "Implementation Decisions captured",
+      "description": "The Implementation Decisions section records the architectural and schema decisions from the notes (datastore for subscriptions + delivery log, signing, retry policy, validation, rotation, seed catalog) without inventing decisions absent from the notes and without specific file paths or code snippets — except spec inlined per the section rules below.",
       "max_score": 10
-    },
-    {
-      "name": "Overall terse prose",
-      "description": "PRD prose is terse throughout — short clauses and bullets, minimal hedging/preamble/filler. (Tables, code blocks, and patterns are exempt and may be as long as needed.)",
-      "max_score": 8
     },
     {
       "name": "Event-type table verbatim",
@@ -44,13 +39,18 @@
     },
     {
       "name": "No distinct decision dropped",
-      "description": "Every distinct decision from the notes is present: secret rotation with 24h overlap, committed-seed-merged-ahead-of-overrides storage, HTTPS-only + reachability-ping validation, disabled-subscriptions-retain-log. Terseness did not silently drop any of these.",
+      "description": "Every distinct decision from the notes is present: secret rotation with 24h overlap, committed-seed-merged-ahead-of-overrides storage, HTTPS-only + reachability-ping validation, disabled-subscriptions-retain-log. No decision is silently dropped.",
       "max_score": 7
     },
     {
-      "name": "Written via tracker-primitives to correct path",
-      "description": "A file exists at .scratch/prds/<id>-<slug>.md (where <id> is a numeric ID and <slug> is a kebab-case title). This asserts the skill used the `create PRD page` verb via tracker-primitives rather than writing to an arbitrary path, calling gh, or invoking a hardcoded Notion/GitHub API directly.",
+      "name": "Published to local tracker at correct path",
+      "description": "The PRD is published as a file at .scratch/<feature-slug>/PRD.md (kebab-case feature directory) per docs/agents/issue-tracker.md — not written to an arbitrary path, and not created by calling gh or a hardcoded Notion/GitHub API. The agent followed the seeded local-markdown tracker conventions.",
       "max_score": 10
+    },
+    {
+      "name": "ready-for-agent label applied",
+      "description": "The PRD is marked ready-for-agent — the skill applies the ready-for-agent triage label (using the default label string from docs/agents/triage-labels.md), e.g. a Status: ready-for-agent line in the file, rather than leaving it untriaged.",
+      "max_score": 8
     }
   ]
 }

@@ -1,19 +1,13 @@
 # Project
 
-A TypeScript platform service.
+A TypeScript platform service that delivers outbound webhooks to customer endpoints.
 
-## Agent skills
+The delivery pipeline lives in `src/delivery/`:
 
-**Config dir:** `.agent-config/` — holds the relocatable config below (`commands.md` + `workflow-config.md`).
+- `src/delivery/pipeline.ts` — orchestrates a delivery attempt end to end.
+- `src/delivery/state-machine.ts` — the delivery state machine (pending → sending → delivered/failed) and the retry counter.
+- `src/delivery/retry.ts` — backoff schedule and retry-eligibility checks.
 
-### Commands
+Persistence is Postgres via the repositories in `src/db/`. Delivery rows are stored by `src/db/deliveries.ts`.
 
-Repo-wide commands for testing, linting, type-checking, and building. See `commands.md` in the Config dir.
-
-### Workflow backend
-
-**Backend:** local — selects the `tracker-primitives/local.md` recipe. All tracker state lives in the repo as markdown under `.scratch/`; folder layout is recorded in `workflow-config.md` in the Config dir.
-
-### Domain language
-
-Glossary: `CONTEXT.md` (repo root). ADRs: `docs/adr/` (repo root). Read these files **directly** — they are fixed filesystem conventions, not block-resolved and not under the Config dir. They may be absent; degrade gracefully.
+Run the service locally with `npm run dev`; tests are under `test/delivery/`.

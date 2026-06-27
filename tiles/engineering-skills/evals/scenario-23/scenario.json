@@ -1,1 +1,1 @@
-{ "description": "triage moves an issue through the state machine via tracker-primitives — transitions state, posts triage note, writes agent brief when ready", "include": ["./inputs"] }
+{ "description": "triage moves an issue through the state machine following the per-repo local issue-tracker recipe — updates the Status: line, appends a triage note under ## Comments, writes an agent brief when ready", "include": ["./inputs"] }

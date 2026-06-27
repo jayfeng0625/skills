@@ -1,8 +1,8 @@
 # Webhook Delivery Subscriptions — write the PRD
 
-A platform team has finished designing **webhook delivery subscriptions** and needs the design captured as a PRD. The design is already agreed — do **not** re-interview or wait for confirmation. Synthesize the notes below into a PRD and write it to the project's configured workflow tracker.
+A platform team has finished designing **webhook delivery subscriptions** and needs the design captured as a PRD. The design is already agreed — do **not** re-interview or wait for confirmation. Synthesize the notes below into a PRD and publish it to the project's issue tracker.
 
-This repository has its agent configuration checked in (see the `## Agent skills` block in `CLAUDE.md`). Use the configured workflow backend to create the PRD.
+This repository has its agent configuration checked in (see the `## Agent skills` block in `CLAUDE.md`). The issue tracker is local markdown under `.scratch/` — see `docs/agents/issue-tracker.md` for the layout. Publish the PRD there and apply the `ready-for-agent` triage label.
 
 ## Agreed design notes
 
@@ -44,4 +44,4 @@ pending ──▶ delivering ──▶ delivered
 
 ## Output
 
-Write the PRD to the configured tracker. Do not produce code.
+Publish the PRD to the issue tracker per `docs/agents/issue-tracker.md`. Do not produce code.

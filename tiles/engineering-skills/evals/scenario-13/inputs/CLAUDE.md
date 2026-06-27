@@ -4,16 +4,14 @@ A TypeScript platform service.
 
 ## Agent skills
 
-**Config dir:** `.agent-config/` — holds the relocatable config below (`commands.md` + `workflow-config.md`).
+### Issue tracker
 
-### Commands
+Issues and PRDs live as local markdown files under `.scratch/`. See `docs/agents/issue-tracker.md`.
 
-Repo-wide commands for testing, linting, type-checking, and building. See `commands.md` in the Config dir.
+### Triage labels
 
-### Workflow backend
+The five canonical triage roles use their default label strings. See `docs/agents/triage-labels.md`.
 
-**Backend:** local — selects the `tracker-primitives/local.md` recipe. All tracker state lives in the repo as markdown under `.scratch/`; folder layout is recorded in `workflow-config.md` in the Config dir.
+### Domain docs
 
-### Domain language
-
-Glossary: `CONTEXT.md` (repo root). ADRs: `docs/adr/` (repo root). Read these files **directly** — they are fixed filesystem conventions, not block-resolved and not under the Config dir. They may be absent; degrade gracefully.
+Single-context: `CONTEXT.md` + `docs/adr/` at the repo root, read directly. See `docs/agents/domain.md`.
