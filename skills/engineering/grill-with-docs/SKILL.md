@@ -1,6 +1,7 @@
 ---
 name: grill-with-docs
 description: Grills a plan against the project's existing domain model — challenges proposed terminology, walks each branch of the decision tree, and writes new glossary entries / ADRs to the filesystem inline as decisions crystallise (glossary to `CONTEXT.md`, ADRs to `docs/adr/`). Use when the user says "grill this with docs", "stress-test this against our domain model", "challenge my plan", "let's grill this with the glossary", or when a design proposal needs to be confronted with the project's documented decisions before being adopted.
+disable-model-invocation: true
 ---
 
 <what-to-do>

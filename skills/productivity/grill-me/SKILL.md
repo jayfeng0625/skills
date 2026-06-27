@@ -1,6 +1,7 @@
 ---
 name: grill-me
 description: Interrogates the user about a plan, design, talk, or strategy — probing assumptions, surfacing edge cases, challenging trade-offs, and walking each branch of the decision tree until the thinking is fully resolved. Recommended answers are offered for every question. For non-code artifacts only — use `/grill-with-docs` instead when grilling against an existing codebase. Use when the user says "grill me", "stress-test this plan", "interrogate my design", "challenge this idea", "poke holes in this", or wants someone to push back hard on a draft / outline / proposal before committing to it.
+disable-model-invocation: true
 ---
 
 This skill is for **non-code grilling** — designs, strategies, plans, talks, and other artifacts where there is no codebase to read against. The point of the grilling is the user's own thinking, not domain alignment against a repository.
