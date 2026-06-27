@@ -1,0 +1,1 @@
+{ "description": "Improve a SKILL.md with embedded no-ops, duplication, missing completion criteria, and wrong invocation type", "include": ["./inputs"] }

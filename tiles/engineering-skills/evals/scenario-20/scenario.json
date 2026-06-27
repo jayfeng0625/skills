@@ -1,0 +1,1 @@
+{ "description": "Grill-with-docs challenges domain terminology, walks decision branches, and writes new glossary entries and ADRs inline", "include": ["./inputs"] }

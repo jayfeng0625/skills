@@ -1,0 +1,46 @@
+{
+  "context": "Tests whether the agent grounds a TDD plan in the project's filesystem domain docs — the CONTEXT.md glossary and the ADRs under docs/adr/ — rather than the generic vocabulary used in the task prompt. The task deliberately uses only generic words ('customer', 'premium features', 'failed-payment retry') and never names the canonical terms or the architectural constraints. The canonical terms (Subscriber, Entitlement, Dunning) live ONLY in CONTEXT.md, and two binding constraints (money as integer minor units; access only via EntitlementService) live ONLY in docs/adr/. Adopting them proves the agent read the filesystem domain conventions per ADR 0002. Also lightly checks TDD-plan quality.",
+  "type": "weighted_checklist",
+  "checklist": [
+    {
+      "name": "Uses canonical glossary terms",
+      "description": "The plan uses the canonical terms from CONTEXT.md — 'Subscriber' (not 'customer'/'user'), 'Entitlement' (not 'feature'/'permission'), and 'Dunning' (not generic 'retry') — for the corresponding concepts",
+      "max_score": 20
+    },
+    {
+      "name": "Grounds in CONTEXT.md not the prompt",
+      "description": "The plan reflects the glossary's definitions (e.g. an Entitlement is resolved not assumed; a Subscriber holds Plans; an exhausted Dunning sequence makes a Subscriber delinquent) rather than merely echoing the task's generic phrasing. This is evidence the agent read CONTEXT.md.",
+      "max_score": 15
+    },
+    {
+      "name": "Respects ADR: money as integer minor units",
+      "description": "Wherever money appears in the proposed interface or behaviors, it is integer minor units (e.g. cents), never floats, decimals, or formatted dollar strings — consistent with docs/adr/0001",
+      "max_score": 15
+    },
+    {
+      "name": "Respects ADR: access via EntitlementService",
+      "description": "The plan routes granting, revoking, and checking access through an EntitlementService boundary (grant/revoke/allows) and does NOT inspect Plan fields inline to infer access — consistent with docs/adr/0002",
+      "max_score": 15
+    },
+    {
+      "name": "Attributes constraints to their source",
+      "description": "The plan's constraints/conventions section names where each constraint comes from — i.e. it cites the ADRs (or the glossary) as the source of the minor-units rule and the EntitlementService rule, rather than presenting them as the agent's own invention",
+      "max_score": 10
+    },
+    {
+      "name": "Behaviors listed not steps",
+      "description": "The behaviors-to-test list describes user-facing outcomes (e.g. 'a Subscriber gains the Entitlements of their Plan after a successful charge') not implementation steps",
+      "max_score": 10
+    },
+    {
+      "name": "Public interface designed",
+      "description": "The plan proposes a concrete public interface (method signatures and return values), not just prose",
+      "max_score": 8
+    },
+    {
+      "name": "Incremental RED-GREEN order",
+      "description": "The proposed cycle order goes simplest to most complex (a tracer-bullet behavior first), each cycle introducing one behavior",
+      "max_score": 7
+    }
+  ]
+}

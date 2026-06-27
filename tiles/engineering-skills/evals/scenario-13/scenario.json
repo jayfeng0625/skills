@@ -1,0 +1,1 @@
+{ "description": "to-issues breaks a PRD into independently-grabbable tracer-bullet vertical-slice issues that reference the PRD for shared spec rather than duplicating it — created as local markdown files under .scratch/webhook-delivery-subscriptions/issues/ and labelled ready-for-agent", "include": ["./inputs"] }

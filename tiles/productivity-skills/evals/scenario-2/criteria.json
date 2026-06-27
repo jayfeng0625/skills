@@ -1,0 +1,41 @@
+{
+  "context": "Tests whether the agent makes the correct invocation-type decision and captures validation logic as stable reference rather than something to be re-derived each run. The env validation task is explicitly deterministic — same rules every time — which determines the invocation type (user-invoked: the developer explicitly runs it before deployment) and the information structure (validation rules as fixed, enumerable reference).",
+  "type": "weighted_checklist",
+  "checklist": [
+    {
+      "name": "User-invoked correctly chosen",
+      "description": "The skill has disable-model-invocation: true. An env-validation tool is explicitly run by the developer (not auto-triggered by context), so it is user-invoked. A model-invoked skill that auto-fires on any env-var mention would be the wrong choice.",
+      "max_score": 20
+    },
+    {
+      "name": "Description is human-facing",
+      "description": "Because the skill is user-invoked, the description is a concise human-facing summary — not a trigger-phrase list aimed at the model ('Use when the user mentions env vars...').",
+      "max_score": 10
+    },
+    {
+      "name": "Validation rules captured as stable reference",
+      "description": "The specific validation rules (required keys, format patterns, placeholder detection) are captured in the skill as fixed reference material — not described vaguely in a way that requires the agent to re-derive or invent them on each run.",
+      "max_score": 20
+    },
+    {
+      "name": "Completion criterion present",
+      "description": "The validation step ends on a checkable criterion: what constitutes 'done' — e.g. 'all checks pass: zero errors reported' — not just 'run validation'.",
+      "max_score": 14
+    },
+    {
+      "name": "No no-ops present",
+      "description": "No line says something the model already does by default ('check carefully', 'be thorough', 'report errors clearly', 'ensure it is correct').",
+      "max_score": 12
+    },
+    {
+      "name": "Single source of truth for rules",
+      "description": "Each validation rule appears exactly once. No rule is restated or paraphrased in multiple sections.",
+      "max_score": 10
+    },
+    {
+      "name": "Approach documented",
+      "description": "approach.md exists and explains the invocation-type choice and information structure decisions.",
+      "max_score": 14
+    }
+  ]
+}

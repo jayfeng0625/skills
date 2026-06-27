@@ -1,0 +1,51 @@
+{
+  "context": "Tests whether the agent creates a skill following writing-great-skills principles: correct invocation type declared, description written for its audience, steps with checkable completion criteria, no no-ops, and progressive disclosure applied if warranted.",
+  "type": "weighted_checklist",
+  "checklist": [
+    {
+      "name": "Invocation type declared",
+      "description": "The skill explicitly declares its invocation type: either (a) disable-model-invocation: true in frontmatter (user-invoked), OR (b) omits it and has a model-facing description with specific trigger phrasing (model-invoked). Not left as accidental default with a vague description.",
+      "max_score": 14
+    },
+    {
+      "name": "Description written for its audience",
+      "description": "If model-invoked: description front-loads the leading word and lists specific trigger phrasings ('Use when the user says...', 'mentions...', 'wants...'). If user-invoked: description is a concise human-facing summary without trigger lists.",
+      "max_score": 12
+    },
+    {
+      "name": "Steps have checkable completion criteria",
+      "description": "Steps that describe actions end with a condition the agent can verify as done-vs-not-done. Not just 'draft X' or 'gather Y' but a criterion: e.g. 'confirmed sent' or 'user approves the draft'.",
+      "max_score": 14
+    },
+    {
+      "name": "No no-ops present",
+      "description": "No line tells the model to do something it already does by default ('be clear and concise', 'make sure it's good', 'be thorough', 'write useful content'). Every line changes behaviour versus the default.",
+      "max_score": 14
+    },
+    {
+      "name": "Progressive disclosure applied if warranted",
+      "description": "If the skill's content is genuinely complex (multiple distinct branches or large reference tables), edge-case material is pushed behind a context pointer into a sibling file. If the content is simple, a single SKILL.md is correct — this check passes either way as long as the decision is justified.",
+      "max_score": 10
+    },
+    {
+      "name": "Description does not duplicate body",
+      "description": "The frontmatter description does not restate content already in the body — it is not a prose summary of the steps but a trigger-oriented or audience-oriented label.",
+      "max_score": 8
+    },
+    {
+      "name": "SKILL.md has valid frontmatter",
+      "description": "SKILL.md has YAML frontmatter with at minimum name and description fields.",
+      "max_score": 10
+    },
+    {
+      "name": "Skill directory name is kebab-case",
+      "description": "The directory is named social-media-scheduler (or a kebab-case variant), matching the skill name in frontmatter.",
+      "max_score": 8
+    },
+    {
+      "name": "No time-sensitive content",
+      "description": "SKILL.md does not contain dates, specific version numbers, or references that go stale.",
+      "max_score": 10
+    }
+  ]
+}

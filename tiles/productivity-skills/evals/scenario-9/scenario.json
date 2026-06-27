@@ -1,0 +1,1 @@
+{ "description": "handoff compacts the conversation into a structured document saved to the OS temp directory — all six canonical sections in order, forward-looking Goal, key files referenced by path, no sensitive info embedded", "include": ["./inputs"] }

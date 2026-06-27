@@ -1,0 +1,46 @@
+{
+  "context": "Tests whether the agent follows the full diagnosing-bugs discipline when faced with a flaky concurrency bug. The scenario involves a test that passes locally but fails under parallel execution — a classic shared-state / fixture-scope issue. The agent must build a reliable feedback loop (not just retry), minimise the reproducer, form ranked falsifiable hypotheses, instrument to confirm one, apply a minimal fix, and lock it down with a regression test. Skipping phases or jumping straight to a guess-and-check fix should score poorly.",
+  "type": "weighted_checklist",
+  "checklist": [
+    {
+      "name": "Builds a deterministic feedback loop",
+      "description": "The agent deliberately constructs a way to reproduce the failure reliably — e.g. runs the test repeatedly with parallelism flags, raises the flake rate with stress or sleep injection, or isolates the concurrent scenario in a harness. It does NOT simply retry the test once and assume it passed.",
+      "max_score": 18
+    },
+    {
+      "name": "Minimises to smallest reproducing case",
+      "description": "The agent identifies the minimal conditions that trigger the failure — e.g. two workers sharing the same session-scoped DB fixture — rather than treating the entire test suite as the reproduction unit.",
+      "max_score": 12
+    },
+    {
+      "name": "Forms ranked falsifiable hypotheses before inspecting the fix",
+      "description": "Before modifying or deeply reading production code, the agent produces 3–5 ranked hypotheses in the required format: 'If <X> is the cause, then <changing Y> will make the bug disappear / <changing Z> will make it worse.' Single-hypothesis anchoring or jumping straight to a fix without a ranked list should score 0.",
+      "max_score": 18
+    },
+    {
+      "name": "Instruments to confirm hypothesis",
+      "description": "The agent adds targeted instrumentation (logs, assertions, or a debugger breakpoint) that maps directly to a specific hypothesis prediction — e.g. logging fixture teardown timing or the DB state between concurrent inserts. It does not log everything indiscriminately. Debug logs are tagged with a unique prefix.",
+      "max_score": 14
+    },
+    {
+      "name": "Applies minimal fix",
+      "description": "The fix addresses only the diagnosed root cause (e.g. changes fixture scope, adds a unique DB namespace per worker, or adds a DB-level unique constraint guard) without unnecessary refactoring. The agent explicitly connects the fix back to the confirmed hypothesis.",
+      "max_score": 12
+    },
+    {
+      "name": "Writes regression test at correct seam",
+      "description": "A regression test is written that exercises the actual bug pattern — concurrent deduplication under shared fixture state — not a trivially passing unit test that cannot catch the same failure. If no correct seam exists, the agent documents this explicitly rather than writing a shallow test that gives false confidence.",
+      "max_score": 14
+    },
+    {
+      "name": "Cleanup and post-mortem",
+      "description": "Before declaring done: the original repro no longer reproduces, debug instrumentation is removed (grep for tagged prefix), and the confirmed hypothesis is stated in the commit or summary message so future maintainers understand the cause.",
+      "max_score": 6
+    },
+    {
+      "name": "Uses diagnosing-bugs vocabulary correctly",
+      "description": "The agent uses domain-specific terms from the skill: 'feedback loop', 'falsifiable hypothesis', 'correct seam', 'non-deterministic bug', 'reproduction rate'. Usage must be accurate, not decorative — e.g. does not call a retry loop a 'feedback loop' if it lacks a deterministic pass/fail signal.",
+      "max_score": 6
+    }
+  ]
+}

@@ -1,0 +1,51 @@
+{
+  "context": "Tests whether the agent applies progressive disclosure correctly when the domain is genuinely large: common-path content stays inline in SKILL.md, edge-case material is pushed behind a context pointer into a sibling file. The invoice domain has a universal workflow (every invoice) plus large edge-case material (vendor quirks, multi-currency, escalation thresholds) that most runs won't reach.",
+  "type": "weighted_checklist",
+  "checklist": [
+    {
+      "name": "SKILL.md stays legible",
+      "description": "SKILL.md covers the common path without being bloated by edge-case detail. It reads as a focused entry point, not an exhaustive encyclopedia.",
+      "max_score": 16
+    },
+    {
+      "name": "Edge-case material in sibling file",
+      "description": "Vendor-specific quirks, exception handling, multi-currency rules, escalation thresholds, or other rarely-needed material is in a sibling file (e.g. REFERENCE.md or EXCEPTIONS.md), not embedded inline in SKILL.md.",
+      "max_score": 16
+    },
+    {
+      "name": "Context pointer wording is reliable",
+      "description": "SKILL.md references the sibling file with wording that fires reliably when the situation calls for it — e.g. 'If handling a disputed invoice, see EXCEPTIONS.md' — not just a generic 'See REFERENCE.md' buried at the bottom that the agent may skip.",
+      "max_score": 14
+    },
+    {
+      "name": "Common path genuinely inline",
+      "description": "The standard workflow (receipt → validation → approval → posting) is present in SKILL.md, not hidden in the reference file. The reference file holds edge cases, not the primary path.",
+      "max_score": 12
+    },
+    {
+      "name": "Sibling file exists and is substantive",
+      "description": "The external reference file exists and contains actual domain content — not a stub, placeholder, or single-line file.",
+      "max_score": 10
+    },
+    {
+      "name": "Invocation type declared",
+      "description": "The skill explicitly declares its invocation type (disable-model-invocation: true OR model-facing description with trigger phrasing). Not left as an accidental default.",
+      "max_score": 10
+    },
+    {
+      "name": "No no-ops present",
+      "description": "No line tells the model to do what it already does by default ('be thorough', 'check carefully', 'ensure accuracy').",
+      "max_score": 10
+    },
+    {
+      "name": "Steps have completion criteria",
+      "description": "Steps end on a checkable condition, not just a vague action ('submit for approval: approval email or ticket status confirms received').",
+      "max_score": 8
+    },
+    {
+      "name": "Design notes explain disclosure decisions",
+      "description": "design-notes.md explains what content was kept inline vs pushed to the reference file, and why.",
+      "max_score": 4
+    }
+  ]
+}

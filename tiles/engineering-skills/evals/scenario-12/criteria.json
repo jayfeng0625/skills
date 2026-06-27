@@ -1,0 +1,56 @@
+{
+  "context": "Tests whether /to-prd synthesizes a FAITHFUL PRD from agreed design notes without re-interviewing. The notes in task.md contain load-bearing spec (an event-type table, a fixed backoff schedule, an HMAC signature format, and a prototype-sourced state machine) that must be reproduced verbatim — not summarized or paraphrased. A good PRD fills the upstream template sections (Problem / Solution / User Stories / Implementation Decisions / Testing Decisions / Out of Scope / Further Notes), keeps the User Stories extensive (upstream intent: cover all aspects), preserves every distinct decision, and is published to the local markdown issue tracker with the ready-for-agent label. The PRD is published as a file at .scratch/<feature-slug>/PRD.md per docs/agents/issue-tracker.md; score that file.",
+  "type": "weighted_checklist",
+  "checklist": [
+    {
+      "name": "PRD template sections present",
+      "description": "The PRD fills the upstream template: Problem Statement, Solution, User Stories, Implementation Decisions, Testing Decisions, Out of Scope, and Further Notes. The Problem and Solution are written from the user's perspective; Out of Scope lists the deferred items (inbound webhooks, hosted UI dashboard, per-event-type rate limiting, delivery ordering guarantees).",
+      "max_score": 18
+    },
+    {
+      "name": "User stories extensive, cover all aspects",
+      "description": "Per upstream intent, User Stories are an extensive numbered list covering all aspects — every actor (third-party developer, support engineer) and every capability (subscribe to events, delivery status, failure visibility, replay, secret rotation, subscription health) appears. Breadth is rewarded; do NOT penalise enumerating closely-related wants separately.",
+      "max_score": 14
+    },
+    {
+      "name": "Implementation Decisions captured",
+      "description": "The Implementation Decisions section records the architectural and schema decisions from the notes (datastore for subscriptions + delivery log, signing, retry policy, validation, rotation, seed catalog) without inventing decisions absent from the notes and without specific file paths or code snippets — except spec inlined per the section rules below.",
+      "max_score": 10
+    },
+    {
+      "name": "Event-type table verbatim",
+      "description": "The event-type table is reproduced with all four rows (order.created, order.refunded, customer.updated, payout.settled) and all three columns (event, payload, default-subscribed) intact — not summarized, truncated, or dropped.",
+      "max_score": 16
+    },
+    {
+      "name": "Backoff schedule verbatim",
+      "description": "The retry policy is reproduced exactly: up to 5 attempts with the fixed backoff 1 min, 5 min, 30 min, 2 hr, 6 hr, and dead-after-5th. All five intervals present and unchanged.",
+      "max_score": 11
+    },
+    {
+      "name": "Signature format verbatim",
+      "description": "The signing spec is reproduced exactly: header X-Signature: sha256=<hex>, where <hex> is lowercase hex HMAC-SHA256 of the raw body keyed by the subscription secret.",
+      "max_score": 8
+    },
+    {
+      "name": "State machine inlined with prototype provenance",
+      "description": "The delivery state machine is inlined as a snippet/diagram preserving its states and transitions (pending, delivering, delivered, failed, retrying, dead), AND the PRD notes it came from a prototype.",
+      "max_score": 8
+    },
+    {
+      "name": "No distinct decision dropped",
+      "description": "Every distinct decision from the notes is present: secret rotation with 24h overlap, committed-seed-merged-ahead-of-overrides storage, HTTPS-only + reachability-ping validation, disabled-subscriptions-retain-log. No decision is silently dropped.",
+      "max_score": 7
+    },
+    {
+      "name": "Published to local tracker at correct path",
+      "description": "The PRD is published as a file at .scratch/<feature-slug>/PRD.md (kebab-case feature directory) per docs/agents/issue-tracker.md — not written to an arbitrary path, and not created by calling gh or a hardcoded Notion/GitHub API. The agent followed the seeded local-markdown tracker conventions.",
+      "max_score": 10
+    },
+    {
+      "name": "ready-for-agent label applied",
+      "description": "The PRD is marked ready-for-agent — the skill applies the ready-for-agent triage label (using the default label string from docs/agents/triage-labels.md), e.g. a Status: ready-for-agent line in the file, rather than leaving it untriaged.",
+      "max_score": 8
+    }
+  ]
+}
