@@ -1,11 +1,11 @@
 # Bonai Skills
 
-A collection of agent skills (slash commands and behaviors) loaded by Claude Code. Skills are organized into buckets and consumed by per-repo configuration emitted by `/setup-bonai-skills`.
+A collection of agent skills (slash commands and behaviors) loaded by Claude Code. Skills are organized into buckets and consumed by per-repo configuration written by `/setup-matt-pocock-skills` under `docs/agents/`.
 
 ## Language
 
 **Workflow backend**:
-The per-repo tool that hosts a repo's **Issues**, **PRDs**, and **Handoffs** — one of Notion, GitHub, or a local `.scratch/` markdown convention. Selected by the `Backend:` token in the `## Agent skills` block; its IDs/paths live in `workflow-config.md`. `tracker-primitives/<backend>.md` translates each abstract verb into this backend's concrete calls.
+The per-repo tool that hosts a repo's **Issues**, **PRDs**, and **Handoffs** — one of Notion, GitHub, or a local `.scratch/` markdown convention. Selected by the `Backend:` token in the `## Agent skills` block; its IDs/paths live in `workflow-config.md`. The backend's recipe — each tracker operation mapped to concrete calls — lives in `docs/agents/issue-tracker.md`.
 _Avoid_: tracker (ambiguous with **Issue tracker**), backlog backend
 
 **Issue tracker**:
@@ -29,4 +29,4 @@ A canonical state-machine label applied to an **Issue** during triage (e.g. `nee
 
 - "backlog" was previously used to mean both the *tool* hosting issues and the *body of work* inside it — resolved: the tool is the **Issue tracker**; "backlog" is no longer used as a domain term.
 - "backlog backend" / "backlog manager" — resolved: collapsed into **Issue tracker**.
-- "tracker" / `tracker.md` was proposed as the unified config filename but conflates the umbrella **Workflow backend** with the narrower **Issue tracker** — resolved: the config file is `workflow-config.md`; "tracker" alone is avoided as a domain term (the verb-translation folder keeps its established `tracker-primitives/` name).
+- "tracker" / `tracker.md` was proposed as the unified config filename but conflates the umbrella **Workflow backend** with the narrower **Issue tracker** — resolved: the config file is `workflow-config.md` (with the backend recipe in `issue-tracker.md`); "tracker" alone is avoided as a domain term.

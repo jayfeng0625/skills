@@ -1,11 +1,11 @@
 # Bonai Skills
 
-A personal set of agent skills I use every day. Packaged as two private tessl tiles under the `bonai-dev` workspace; both ship at the same YYYY.M.patch calver. The workflow skills are tracker-agnostic (Notion, GitHub, or local markdown via `tracker-primitives`) — Notion is the default at setup.
+A personal set of agent skills I use every day, tracking [`mattpocock/skills`](https://github.com/mattpocock/skills) upstream. Packaged as two private tessl tiles under the `bonai-dev` workspace; both ship at the same `YYYY.M.patch` calver. The workflow skills are tracker-agnostic — the per-repo issue tracker is chosen at setup (GitHub, GitLab, local markdown, or any tracker described in prose). This repo runs Notion.
 
 | Tile | Skills | Latest |
 |---|---|---|
-| [`bonai-dev/engineering-skills`](./skills/engineering/) | Daily code-work skills (setup, TDD, implement, bug diagnosis, grilling, prototyping, triage, domain modeling, codebase design, PRD/issue conversion, architecture review) | `2026.6.5` |
-| [`bonai-dev/productivity-skills`](./skills/productivity/) | General workflow skills (non-code grilling, the reusable interview loop, teaching, cross-session handoffs, skill authoring, skill quality reference) | `2026.6.5` |
+| [`bonai-dev/engineering-skills`](./skills/engineering/) | Daily code-work skills (setup, TDD, implement, bug diagnosis, grilling, prototyping, triage, domain modeling, codebase design, PRD/issue conversion, architecture review) | `2026.6.6` |
+| [`bonai-dev/productivity-skills`](./skills/productivity/) | General workflow skills (non-code grilling, the reusable interview loop, teaching, cross-session handoffs, skill authoring, skill quality reference) | `2026.6.6` |
 
 Versions follow `YYYY.M.patch` calver and are published automatically on merge to `main` (see [Development & publishing](#development--publishing)).
 
@@ -14,9 +14,8 @@ Skills lean on the agent to interrogate the user (via `AskUserQuestion`-style fl
 ## Layout
 
 ```
-skills/               ← single source of truth for every skill
+skills/               ← single source of truth for every skill (tracks mattpocock/skills)
   engineering/        ← daily code work (tile: bonai-dev/engineering-skills)
-    tracker-primitives/ ← shared MCP/CLI recipes for the abstract-verb contract
   productivity/       ← daily non-code workflow (tile: bonai-dev/productivity-skills)
   misc/               ← kept around but rarely used
   personal/           ← tied to my own setup, not promoted
@@ -43,21 +42,23 @@ tessl install bonai-dev/productivity-skills
 Then run the setup skill once per repo:
 
 ```
-/setup-bonai-skills
+/setup-matt-pocock-skills
 ```
 
-This writes `commands.md` and `workflow-config.md` into a config dir chosen at setup (default `docs/agents/`): `commands.md` holds the canonical test/lint/typecheck/build commands, and `workflow-config.md` holds the `Backend:` token plus whatever per-repo config that backend needs (for the Notion default: the Issues / PRDs / Handoffs database IDs and property mappings, including the Handoffs DB's `Epic` column). The domain glossary and ADRs live on the filesystem (`CONTEXT.md` + `docs/adr/`), not in any tracker. Engineering skills read these to stay language-agnostic and tracker-agnostic. Most productivity skills are zero-config; the exception is `handoff`, which shares the engineering workflow config because it writes to the Handoffs store via `tracker-primitives`.
+This is prompt-driven: it explores the repo, then walks you through three choices — **issue tracker** (where issues live), **triage labels** (the strings for the canonical triage roles), and **domain docs** (where `CONTEXT.md` + ADRs live) — and writes the per-repo config under `docs/agents/` plus an `## Agent skills` block in `CLAUDE.md` / `AGENTS.md`. The engineering skills read that block to stay language- and tracker-agnostic.
 
-## The abstract-verb contract
+## Tracker configuration
 
-Skill bodies use only **abstract verbs** — never concrete tool calls. `skills/engineering/tracker-primitives/` translates each verb to the chosen backend (Notion is the default at setup; GitHub and local markdown are also supported). Per-repo config lives in `workflow-config.md`, resolved via the `Config dir:` named in the `## Agent skills` block. See [`tracker-primitives/README.md`](./skills/engineering/tracker-primitives/README.md) for the controlled vocabulary (6 workflow verbs; the glossary/ADR verbs are now filesystem conventions — `CONTEXT.md` + `docs/adr/`).
+Skill bodies never hardcode a tracker. They speak in terms of "the issue tracker" and delegate the *how* to a per-repo recipe written at setup: [`docs/agents/issue-tracker.md`](./docs/agents/issue-tracker.md) maps each tracker operation (publish, fetch, list, comment, transition state, attach an agent brief) to concrete calls for the chosen backend.
+
+This repo runs **Notion**: the recipe lives in `docs/agents/issue-tracker.md` and the private database IDs + property mappings in the gitignored `docs/agents/workflow-config.md` (maintained by hand). Repo-wide test/lint/build commands for `/tdd` and `/diagnosing-bugs` live in [`docs/agents/commands.md`](./docs/agents/commands.md). The domain glossary and ADRs are plain filesystem conventions — `CONTEXT.md` and `docs/adr/` at the repo root — read directly, never routed through a tracker.
 
 ## Skills
 
 ### Engineering (14)
 
 - [`ask-matt`](./skills/engineering/ask-matt/SKILL.md) — router over the entire skill system; maps idea→ship flow, on-ramps, and standalone skills
-- [`setup-bonai-skills`](./skills/engineering/setup-bonai-skills/SKILL.md) — per-repo config scaffolding
+- [`setup-matt-pocock-skills`](./skills/engineering/setup-matt-pocock-skills/SKILL.md) — per-repo config scaffolding (issue tracker, triage labels, domain docs)
 - [`tdd`](./skills/engineering/tdd/SKILL.md) — test-driven development loop
 - [`implement`](./skills/engineering/implement/SKILL.md) — implement a PRD or issue using /tdd at pre-agreed seams
 - [`diagnosing-bugs`](./skills/engineering/diagnosing-bugs/SKILL.md) — disciplined bug-diagnosis loop
@@ -65,7 +66,7 @@ Skill bodies use only **abstract verbs** — never concrete tool calls. `skills/
 - [`codebase-design`](./skills/engineering/codebase-design/SKILL.md) — shared deep-module vocabulary; model-invoked reference for designing interfaces and seams
 - [`grill-with-docs`](./skills/engineering/grill-with-docs/SKILL.md) — grilling that writes glossary / ADRs inline
 - [`prototype`](./skills/engineering/prototype/SKILL.md) — throwaway prototype for logic or UI questions
-- [`triage`](./skills/engineering/triage/SKILL.md) — issue triage state machine; posts agent briefs as child pages
+- [`triage`](./skills/engineering/triage/SKILL.md) — issue (and optionally PR) triage state machine; prepares agent briefs for AFK pickup
 - [`resolving-merge-conflicts`](./skills/engineering/resolving-merge-conflicts/SKILL.md) — resolve git merge/rebase conflicts by preserving original intent
 - [`to-issues`](./skills/engineering/to-issues/SKILL.md) — break a plan into independently-grabbable issues
 - [`to-prd`](./skills/engineering/to-prd/SKILL.md) — synthesize current context into a PRD
@@ -76,7 +77,7 @@ Skill bodies use only **abstract verbs** — never concrete tool calls. `skills/
 - [`grill-me`](./skills/productivity/grill-me/SKILL.md) — non-code interrogation about a plan / design / talk
 - [`grilling`](./skills/productivity/grilling/SKILL.md) — the reusable interview loop behind the grill skills (model-invoked)
 - [`teach`](./skills/productivity/teach/SKILL.md) — teach a skill or concept over multiple sessions in a stateful workspace
-- [`handoff`](./skills/productivity/handoff/SKILL.md) — cross-session handoff documents, written to the Handoffs store with an Epic tag (uses engineering's `tracker-primitives`; needs `/setup-bonai-skills`)
+- [`handoff`](./skills/productivity/handoff/SKILL.md) — cross-session handoff document so a fresh agent can resume work (written to the OS temp dir)
 - [`writing-great-skills`](./skills/productivity/writing-great-skills/SKILL.md) — reference for writing and editing skills well; the vocabulary and principles that make a skill predictable
 
 ### Misc (4)
