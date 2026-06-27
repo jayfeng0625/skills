@@ -1,190 +1,121 @@
-<p>
-  <a href="https://www.aihero.dev/s/skills-newsletter">
-    <picture>
-      <source media="(prefers-color-scheme: dark)" srcset="https://res.cloudinary.com/total-typescript/image/upload/v1777382277/skills-repo-dark_2x.png">
-      <source media="(prefers-color-scheme: light)" srcset="https://res.cloudinary.com/total-typescript/image/upload/v1777382277/skill-repo-light_2x.png">
-      <img alt="Skills" src="https://res.cloudinary.com/total-typescript/image/upload/v1777382277/skill-repo-light_2x.png" width="369">
-    </picture>
-  </a>
-</p>
+# Bonai Skills
 
-# Skills For Real Engineers
+A personal set of agent skills I use every day, tracking [`mattpocock/skills`](https://github.com/mattpocock/skills) upstream. Packaged as two private tessl tiles under the `bonai-dev` workspace; both ship at the same `YYYY.M.patch` calver. The workflow skills are tracker-agnostic — the per-repo issue tracker is chosen at setup (GitHub, GitLab, local markdown, or any tracker described in prose). This repo runs Notion.
 
-[![skills.sh](https://skills.sh/b/mattpocock/skills)](https://skills.sh/mattpocock/skills)
+| Tile | Skills | Latest |
+|---|---|---|
+| [`bonai-dev/engineering-skills`](./skills/engineering/) | Daily code-work skills (setup, TDD, implement, bug diagnosis, grilling, prototyping, triage, domain modeling, codebase design, PRD/issue conversion, architecture review) | `2026.6.6` |
+| [`bonai-dev/productivity-skills`](./skills/productivity/) | General workflow skills (non-code grilling, the reusable interview loop, teaching, cross-session handoffs, skill authoring, skill quality reference) | `2026.6.6` |
 
-My agent skills that I use every day to do real engineering - not vibe coding.
+Versions follow `YYYY.M.patch` calver and are published automatically on merge to `main` (see [Development & publishing](#development--publishing)).
 
-Developing real applications is hard. Approaches like GSD, BMAD, and Spec-Kit try to help by owning the process. But while doing so, they take away your control and make bugs in the process hard to resolve.
+Skills lean on the agent to interrogate the user (via `AskUserQuestion`-style flows) rather than prescribing rigid checklists. The set replaces my prior use of the `superpowers` plugin — bonai is standalone and has no superpowers fallback.
 
-These skills are designed to be small, easy to adapt, and composable. They work with any model. They're based on decades of engineering experience. Hack around with them. Make them your own. Enjoy.
+## Layout
 
-If you want to keep up with changes to these skills, and any new ones I create, you can join ~60,000 other devs on my newsletter:
-
-[Sign Up To The Newsletter](https://www.aihero.dev/s/skills-newsletter)
-
-## Quickstart (30-second setup)
-
-1. Run the skills.sh installer:
-
-```bash
-npx skills@latest add mattpocock/skills
+```
+skills/               ← single source of truth for every skill (tracks mattpocock/skills)
+  engineering/        ← daily code work (tile: bonai-dev/engineering-skills)
+  productivity/       ← daily non-code workflow (tile: bonai-dev/productivity-skills)
+  misc/               ← kept around but rarely used
+  personal/           ← tied to my own setup, not promoted
+  in-progress/        ← drafts not yet ready to ship
+  deprecated/         ← no longer used
+tiles/                ← packaging roots; each tile has .tessl-plugin/plugin.json,
+  engineering-skills/   its skills symlinked from skills/, and evals/ scenarios
+  productivity-skills/
+scripts/
+  tessl-with-tiles.sh ← run any tessl command against the tiles (materializes the symlinks)
 ```
 
-2. Pick the skills you want, and which coding agents you want to install them on. **Make sure you select `/setup-matt-pocock-skills`**.
+## How to install (consumer side)
 
-3. Run `/setup-matt-pocock-skills` in your agent. It will:
-   - Ask you which issue tracker you want to use (GitHub, Linear, or local files)
-   - Ask you what labels you apply to tickets when you triage them (`/triage` uses labels)
-   - Ask you where you want to save any docs we create
+In a target repo:
 
-4. Bam - you're ready to go.
+```sh
+tessl install bonai-dev/engineering-skills
+tessl install bonai-dev/productivity-skills
+```
 
-## Why These Skills Exist
+(Append `@<version>` to pin a specific calver release; omitting it installs the latest.)
 
-I built these skills as a way to fix common failure modes I see with Claude Code, Codex, and other coding agents.
+Then run the setup skill once per repo:
 
-### #1: The Agent Didn't Do What I Want
+```
+/setup-matt-pocock-skills
+```
 
-> "No-one knows exactly what they want"
->
-> David Thomas & Andrew Hunt, [The Pragmatic Programmer](https://www.amazon.co.uk/Pragmatic-Programmer-Anniversary-Journey-Mastery/dp/B0833F1T3V)
+This is prompt-driven: it explores the repo, then walks you through three choices — **issue tracker** (where issues live), **triage labels** (the strings for the canonical triage roles), and **domain docs** (where `CONTEXT.md` + ADRs live) — and writes the per-repo config under `docs/agents/` plus an `## Agent skills` block in `CLAUDE.md` / `AGENTS.md`. The engineering skills read that block to stay language- and tracker-agnostic.
 
-**The Problem**. The most common failure mode in software development is misalignment. You think the dev knows what you want. Then you see what they've built - and you realize it didn't understand you at all.
+## Tracker configuration
 
-This is just the same in the AI age. There is a communication gap between you and the agent. The fix for this is a **grilling session** - getting the agent to ask you detailed questions about what you're building.
+Skill bodies never hardcode a tracker. They speak in terms of "the issue tracker" and delegate the *how* to a per-repo recipe written at setup: [`docs/agents/issue-tracker.md`](./docs/agents/issue-tracker.md) maps each tracker operation (publish, fetch, list, comment, transition state, attach an agent brief) to concrete calls for the chosen backend.
 
-**The Fix** is to use:
+This repo runs **Notion**: the recipe lives in `docs/agents/issue-tracker.md` and the private database IDs + property mappings in the gitignored `docs/agents/workflow-config.md` (maintained by hand). Repo-wide test/lint/build commands for `/tdd` and `/diagnosing-bugs` live in [`docs/agents/commands.md`](./docs/agents/commands.md). The domain glossary and ADRs are plain filesystem conventions — `CONTEXT.md` and `docs/adr/` at the repo root — read directly, never routed through a tracker.
 
-- [`/grill-me`](./skills/productivity/grill-me/SKILL.md) - for non-code uses
-- [`/grill-with-docs`](./skills/engineering/grill-with-docs/SKILL.md) - same as [`/grill-me`](./skills/productivity/grill-me/SKILL.md), but adds more goodies (see below)
+## Skills
 
-These are my most popular skills. They help you align with the agent before you get started, and think deeply about the change you're making. Use them _every_ time you want to make a change.
-
-### #2: The Agent Is Way Too Verbose
-
-> With a ubiquitous language, conversations among developers and expressions of the code are all derived from the same domain model.
->
-> Eric Evans, [Domain-Driven-Design](https://www.amazon.co.uk/Domain-Driven-Design-Tackling-Complexity-Software/dp/0321125215)
-
-**The Problem**: At the start of a project, devs and the people they're building the software for (the domain experts) are usually speaking different languages.
-
-I felt the same tension with my agents. Agents are usually dropped into a project and asked to figure out the jargon as they go. So they use 20 words where 1 will do.
-
-**The Fix** for this is a shared language. It's a document that helps agents decode the jargon used in the project.
-
-<details>
-<summary>
-Example
-</summary>
-
-Here's an example [`CONTEXT.md`](https://github.com/mattpocock/course-video-manager/blob/076a5a7a182db0fe1e62971dd7a68bcadf010f1c/CONTEXT.md), from my `course-video-manager` repo. Which one is easier to read?
-
-- **BEFORE**: "There's a problem when a lesson inside a section of a course is made 'real' (i.e. given a spot in the file system)"
-- **AFTER**: "There's a problem with the materialization cascade"
-
-This concision pays off session after session.
-
-</details>
-
-This is built into [`/grill-with-docs`](./skills/engineering/grill-with-docs/SKILL.md). It's a grilling session, but that helps you build a shared language with the AI, and document hard-to-explain decisions in ADR's.
-
-It's hard to explain how powerful this is. It might be the single coolest technique in this repo. Try it, and see.
-
-> [!TIP]
-> A shared language has many other benefits than reducing verbosity:
->
-> - **Variables, functions and files are named consistently**, using the shared language
-> - As a result, the **codebase is easier to navigate** for the agent
-> - The agent also **spends fewer tokens on thinking**, because it has access to a more concise language
-
-### #3: The Code Doesn't Work
-
-> "Always take small, deliberate steps. The rate of feedback is your speed limit. Never take on a task that’s too big."
->
-> David Thomas & Andrew Hunt, [The Pragmatic Programmer](https://www.amazon.co.uk/Pragmatic-Programmer-Anniversary-Journey-Mastery/dp/B0833F1T3V)
-
-**The Problem**: Let's say that you and the agent are aligned on what to build. What happens when the agent _still_ produces crap?
-
-It's time to look at your feedback loops. Without feedback on how the code it produces actually runs, the agent will be flying blind.
-
-**The Fix**: You need the usual tranche of feedback loops: static types, browser access, and automated tests.
-
-For automated tests, a red-green-refactor loop is critical. This is where the agent writes a failing test first, then fixes the test. This helps give the agent a consistent level of feedback that results in far better code.
-
-I've built a **[`/tdd`](./skills/engineering/tdd/SKILL.md) skill** you can slot into any project. It encourages red-green-refactor and gives the agent plenty of guidance on what makes good and bad tests.
-
-For debugging, I've also built a **[`/diagnosing-bugs`](./skills/engineering/diagnosing-bugs/SKILL.md)** skill that wraps best debugging practices into a simple loop.
-
-### #4: We Built A Ball Of Mud
-
-> "Invest in the design of the system _every day_."
->
-> Kent Beck, [Extreme Programming Explained](https://www.amazon.co.uk/Extreme-Programming-Explained-Embrace-Change/dp/0321278658)
-
-> "The best modules are deep. They allow a lot of functionality to be accessed through a simple interface."
->
-> John Ousterhout, [A Philosophy Of Software Design](https://www.amazon.co.uk/Philosophy-Software-Design-2nd/dp/173210221X)
-
-**The Problem**: Most apps built with agents are complex and hard to change. Because agents can radically speed up coding, they also accelerate software entropy. Codebases get more complex at an unprecedented rate.
-
-**The Fix** for this is a radical new approach to AI-powered development: caring about the design of the code.
-
-This is built in to every layer of these skills:
-
-- [`/to-prd`](./skills/engineering/to-prd/SKILL.md) quizzes you about which modules you're touching before creating a PRD
-
-And crucially, [`/improve-codebase-architecture`](./skills/engineering/improve-codebase-architecture/SKILL.md) helps you rescue a codebase that has become a ball of mud. I recommend running it on your codebase once every few days.
-
-### Summary
-
-Software engineering fundamentals matter more than ever. These skills are my best effort at condensing these fundamentals into repeatable practices, to help you ship the best apps of your career. Enjoy.
-
-## Reference
-
-These split on one axis — who can invoke them. **User-invoked** skills are reachable only when you type them (e.g. `/grill-me`); their job is to orchestrate. **Model-invoked** skills can be invoked by you _or_ reached for automatically by the agent when the task fits; they hold the reusable discipline. A user-invoked skill may invoke model-invoked skills, but never another user-invoked one.
-
-### Engineering
-
-Skills I use daily for code work.
+### Engineering (14)
 
 **User-invoked**
 
-- **[ask-matt](./skills/engineering/ask-matt/SKILL.md)** — Ask which skill or flow fits your situation. A router over the user-invoked skills in this repo.
-- **[grill-with-docs](./skills/engineering/grill-with-docs/SKILL.md)** — Grilling session that also builds your project's domain model, sharpening terminology and updating `CONTEXT.md` and ADRs inline.
-- **[triage](./skills/engineering/triage/SKILL.md)** — Move issues through a state machine of triage roles.
-- **[improve-codebase-architecture](./skills/engineering/improve-codebase-architecture/SKILL.md)** — Scan a codebase for deepening opportunities, present them as a visual HTML report, then grill through whichever one you pick.
-- **[setup-matt-pocock-skills](./skills/engineering/setup-matt-pocock-skills/SKILL.md)** — Configure this repo for the engineering skills (issue tracker, triage labels, domain doc layout). Run once per repo before using the other engineering skills.
-- **[to-issues](./skills/engineering/to-issues/SKILL.md)** — Break any plan, spec, or PRD into independently-grabbable issues using vertical slices.
-- **[to-prd](./skills/engineering/to-prd/SKILL.md)** — Turn the current conversation into a PRD and publish it to the issue tracker. No interview — just synthesizes what you've already discussed.
-- **[prototype](./skills/engineering/prototype/SKILL.md)** — Build a throwaway prototype to flesh out a design — either a runnable terminal app for state/business-logic questions, or several radically different UI variations toggleable from one route.
+- [`ask-matt`](./skills/engineering/ask-matt/SKILL.md) — router over the entire skill system; maps idea→ship flow, on-ramps, and standalone skills
+- [`setup-matt-pocock-skills`](./skills/engineering/setup-matt-pocock-skills/SKILL.md) — per-repo config scaffolding (issue tracker, triage labels, domain docs)
+- [`implement`](./skills/engineering/implement/SKILL.md) — implement a PRD or issue using /tdd at pre-agreed seams
+- [`grill-with-docs`](./skills/engineering/grill-with-docs/SKILL.md) — grilling that writes glossary / ADRs inline
+- [`prototype`](./skills/engineering/prototype/SKILL.md) — throwaway prototype for logic or UI questions
+- [`triage`](./skills/engineering/triage/SKILL.md) — issue (and optionally PR) triage state machine; prepares agent briefs for AFK pickup
+- [`to-issues`](./skills/engineering/to-issues/SKILL.md) — break a plan into independently-grabbable issues
+- [`to-prd`](./skills/engineering/to-prd/SKILL.md) — synthesize current context into a PRD
+- [`improve-codebase-architecture`](./skills/engineering/improve-codebase-architecture/SKILL.md) — find deepening opportunities, HTML-report-driven
 
 **Model-invoked**
 
-- **[diagnosing-bugs](./skills/engineering/diagnosing-bugs/SKILL.md)** — Disciplined diagnosis loop for hard bugs and performance regressions: reproduce → minimise → hypothesise → instrument → fix → regression-test.
-- **[tdd](./skills/engineering/tdd/SKILL.md)** — Test-driven development with a red-green-refactor loop. Builds features or fixes bugs one vertical slice at a time.
-- **[domain-modeling](./skills/engineering/domain-modeling/SKILL.md)** — Actively build and sharpen a project's domain model — challenge terms against the glossary, stress-test with edge-case scenarios, and update `CONTEXT.md` and ADRs inline.
-- **[codebase-design](./skills/engineering/codebase-design/SKILL.md)** — Shared discipline and vocabulary for designing deep modules: a lot of behaviour behind a small interface, placed at a clean seam, testable through that interface.
+- [`tdd`](./skills/engineering/tdd/SKILL.md) — test-driven development loop
+- [`diagnosing-bugs`](./skills/engineering/diagnosing-bugs/SKILL.md) — disciplined bug-diagnosis loop
+- [`domain-modeling`](./skills/engineering/domain-modeling/SKILL.md) — build and sharpen the project's domain model; updates CONTEXT.md / ADRs inline
+- [`codebase-design`](./skills/engineering/codebase-design/SKILL.md) — shared deep-module vocabulary for designing interfaces and seams
+- [`resolving-merge-conflicts`](./skills/engineering/resolving-merge-conflicts/SKILL.md) — resolve git merge/rebase conflicts by preserving original intent
 
-### Productivity
-
-General workflow tools, not code-specific.
+### Productivity (5)
 
 **User-invoked**
 
-- **[grill-me](./skills/productivity/grill-me/SKILL.md)** — Get relentlessly interviewed about a plan or design until every branch of the decision tree is resolved.
-- **[handoff](./skills/productivity/handoff/SKILL.md)** — Compact the current conversation into a handoff document so another agent can continue the work.
-- **[teach](./skills/productivity/teach/SKILL.md)** — Teach the user a new skill or concept over multiple sessions, using the current directory as a stateful teaching workspace.
-- **[writing-great-skills](./skills/productivity/writing-great-skills/SKILL.md)** — Reference for writing and editing skills well: the vocabulary and principles that make a skill predictable.
+- [`grill-me`](./skills/productivity/grill-me/SKILL.md) — non-code interrogation about a plan / design / talk
+- [`teach`](./skills/productivity/teach/SKILL.md) — teach a skill or concept over multiple sessions in a stateful workspace
+- [`handoff`](./skills/productivity/handoff/SKILL.md) — cross-session handoff document so a fresh agent can resume work (written to the OS temp dir)
+- [`writing-great-skills`](./skills/productivity/writing-great-skills/SKILL.md) — reference for writing and editing skills well; the vocabulary and principles that make a skill predictable
 
 **Model-invoked**
 
-- **[grilling](./skills/productivity/grilling/SKILL.md)** — Interview the user relentlessly about a plan or design until every branch of the decision tree is resolved. The reusable loop behind `grill-me` and `grill-with-docs`.
+- [`grilling`](./skills/productivity/grilling/SKILL.md) — the reusable interview loop behind the grill skills
 
-### Misc
+### Misc (4)
 
-Tools I keep around but rarely use.
+Kept around but rarely used — not part of either published tile.
 
-- **[git-guardrails-claude-code](./skills/misc/git-guardrails-claude-code/SKILL.md)** — Set up Claude Code hooks to block dangerous git commands (push, reset --hard, clean, etc.) before they execute.
-- **[migrate-to-shoehorn](./skills/misc/migrate-to-shoehorn/SKILL.md)** — Migrate test files from `as` type assertions to @total-typescript/shoehorn.
-- **[scaffold-exercises](./skills/misc/scaffold-exercises/SKILL.md)** — Create exercise directory structures with sections, problems, solutions, and explainers.
-- **[setup-pre-commit](./skills/misc/setup-pre-commit/SKILL.md)** — Set up Husky pre-commit hooks with lint-staged, Prettier, type checking, and tests.
+- [`git-guardrails-claude-code`](./skills/misc/git-guardrails-claude-code/SKILL.md) — Claude Code hooks that block dangerous git commands (push, reset --hard, clean, etc.) before they execute
+- [`migrate-to-shoehorn`](./skills/misc/migrate-to-shoehorn/SKILL.md) — migrate test files from `as` type assertions to @total-typescript/shoehorn
+- [`scaffold-exercises`](./skills/misc/scaffold-exercises/SKILL.md) — create exercise directory structures with sections, problems, solutions, and explainers
+- [`setup-pre-commit`](./skills/misc/setup-pre-commit/SKILL.md) — set up Husky pre-commit hooks with lint-staged, Prettier, type checking, and tests
+
+## Development & publishing
+
+Each tile under `tiles/` is a Tessl plugin: a `.tessl-plugin/plugin.json` manifest, the tile's skills symlinked from `skills/`, and an `evals/` folder of scenarios that measure the skills' impact.
+
+Because the skills are symlinked (single source of truth in `skills/`) and Tessl excludes symlinks from plugins, run every tile command through the wrapper — it materializes the symlinks into real files for the duration of the command and restores them afterwards:
+
+```sh
+scripts/tessl-with-tiles.sh plugin lint    tiles/engineering-skills
+scripts/tessl-with-tiles.sh plugin pack    tiles/engineering-skills
+scripts/tessl-with-tiles.sh eval run       tiles/engineering-skills   # produces the registry Impact score
+scripts/tessl-with-tiles.sh plugin publish tiles/engineering-skills
+```
+
+Install the CLI with `curl -fsSL https://get.tessl.io | sh` and authenticate via `tessl login` (or a `TESSL_TOKEN` in the environment). Canonical repo commands live in [`docs/agents/commands.md`](./docs/agents/commands.md).
+
+**Releases are automated.** On merge to `main`, [`.github/workflows/publish.yml`](./.github/workflows/publish.yml) computes the next `YYYY.M.patch` version, bumps every tile manifest, publishes the tiles, and commits the bump back. It needs a `TESSL_TOKEN` repo secret with publish permission in `bonai-dev`.
+
+## License
+
+MIT — see [LICENSE](./LICENSE).
