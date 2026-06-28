@@ -8,7 +8,7 @@ disable-model-invocation: true
 
 Break a plan into independently-grabbable issues using vertical slices (tracer bullets).
 
-The issue tracker and triage label vocabulary should have been provided to you — run `/setup-matt-pocock-skills` if not.
+The backend and triage-label vocabulary should already be configured for this repo (see the `## Agent skills` block); an unconfigured repo runs `/setup-matt-pocock-skills` first.
 
 **Backend.** This skill drafts and orders the issues; it does not talk to any tracker directly. Route every read (fetch a parent) and write (publish) through the repo's configured backend (see the `## Agent skills` block) — a backend skill (this repo uses `/tracker-notion`; upstream default is `/github`) or, if the backend is a per-repo recipe, the workflow in `docs/agents/issue-tracker.md` (e.g. local markdown). You work in canonical triage roles; the backend maps them to real label strings.
 
