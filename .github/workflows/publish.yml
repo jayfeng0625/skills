@@ -13,9 +13,9 @@ name: Publish skills
 # TESSL_TOKEN — a Tessl API key with publish permission in the bonai-dev
 # workspace (`tessl api-key create --workspace bonai-dev --role publisher`).
 
-on:
-  push:
-    branches: [main]
+#on:
+#  push:
+#    branches: [main]
 
 # Serialize publish runs so two never race on the version bump / git push.
 concurrency:
