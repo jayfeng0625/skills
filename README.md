@@ -25,6 +25,8 @@ tiles/                ← packaging roots; each tile has .tessl-plugin/plugin.js
   engineering-skills/   its skills symlinked from skills/, and evals/ scenarios
   productivity-skills/
 scripts/
+  sync-upstream.sh    ← merge mattpocock/skills (upstream) into a sync branch
+  check-registry.py   ← check/regenerate plugin.json + tile symlinks; verify READMEs
   tessl-with-tiles.sh ← run any tessl command against the tiles (materializes the symlinks)
 ```
 
@@ -116,6 +118,19 @@ scripts/tessl-with-tiles.sh plugin publish tiles/engineering-skills
 Install the CLI with `curl -fsSL https://get.tessl.io | sh` and authenticate via `tessl login` (or a `TESSL_TOKEN` in the environment). Canonical repo commands live in [`docs/agents/commands.md`](./docs/agents/commands.md).
 
 **Releases are automated.** On merge to `main`, [`.github/workflows/publish.yml`](./.github/workflows/publish.yml) computes the next `YYYY.M.patch` version, bumps every tile manifest, publishes the tiles, and commits the bump back. It needs a `TESSL_TOKEN` repo secret with publish permission in `bonai-dev`.
+
+## Syncing upstream
+
+The fork tracks [`mattpocock/skills`](https://github.com/mattpocock/skills) by **merge**. Run [`scripts/sync-upstream.sh`](./scripts/sync-upstream.sh) — it adds the `upstream` remote (if missing), fetches, cuts a `sync-upstream-<date>` branch, merges `upstream/main`, and finishes by running `check-registry.py --write` to regenerate the manifests. Resolve conflicts with `/resolving-merge-conflicts`, then merge the sync branch back.
+
+Conflicts cluster into four layers, worst first:
+
+- **A — renamed / deleted skills.** Where the fork renamed (`diagnose`→`diagnosing-bugs`, `write-a-skill`→`writing-great-skills`) or dropped (`zoom-out`, `caveman`) an upstream skill, an upstream edit to the old path lands as a modify/delete conflict — re-apply it to the fork's path by hand.
+- **B — body-edited skills.** `to-prd`, `to-issues`, `triage`, and `handoff` carry the fork's backend-handoff edits; upstream edits to the same regions conflict. Expect the biggest collision when upstream's own content/backend split lands — its `/github` backend is the twin of our `tracker-notion`.
+- **C — registry / overlay files.** `README.md`, `CLAUDE.md`, `CONTEXT.md`, `.claude-plugin/plugin.json`, the bucket READMEs, and `tiles/*` are fork-owned and conflict on almost any upstream skill add/remove. [`check-registry.py`](./scripts/check-registry.py) `--write` regenerates the `plugin.json` manifests and tile symlinks; the READMEs it only verifies and reports (their prose is curated, so it won't rewrite them).
+- **D — fork-only files.** `docs/agents/*`, `tracker-notion`, the `tiles/*` evals — upstream has nothing there, so they never conflict.
+
+`scripts/check-registry.py` (no `--write`) doubles as a standalone lint: it fails if any shipped skill is missing from a manifest or README, if an excluded-bucket skill leaks in, or if a bucket count is wrong.
 
 ### Local install (escape hatch, skip the registry)
 

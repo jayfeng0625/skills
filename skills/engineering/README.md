@@ -14,6 +14,7 @@ Reachable only when you type them (`disable-model-invocation: true`).
 - **[to-issues](./to-issues/SKILL.md)** — Break any plan, spec, or PRD into independently-grabbable issues using vertical slices.
 - **[to-prd](./to-prd/SKILL.md)** — Turn the current conversation into a PRD and publish it to the issue tracker.
 - **[prototype](./prototype/SKILL.md)** — Build a throwaway prototype — a runnable terminal app for state/logic questions, or several toggleable UI variations.
+- **[implement](./implement/SKILL.md)** — Implement a PRD or set of issues using `/tdd` at pre-agreed seams.
 
 ## Model-invoked
 
@@ -24,3 +25,4 @@ Model- or user-reachable (rich trigger phrasing so the model can reach for them)
 - **[domain-modeling](./domain-modeling/SKILL.md)** — Actively build and sharpen a project's domain model — challenge terms, stress-test with scenarios, update `CONTEXT.md` and ADRs inline.
 - **[codebase-design](./codebase-design/SKILL.md)** — Shared discipline and vocabulary for designing deep modules: small interfaces, clean seams, testable through the interface.
 - **[tracker-notion](./tracker-notion/SKILL.md)** — Notion backend for the content skills: publishes PRDs/issues, fetches/lists tickets, posts comments, and applies triage state transitions via the Notion MCP.
+- **[resolving-merge-conflicts](./resolving-merge-conflicts/SKILL.md)** — Resolve an in-progress git merge/rebase conflict by preserving the original intent of both sides.
