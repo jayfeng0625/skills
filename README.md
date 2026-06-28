@@ -116,6 +116,22 @@ Install the CLI with `curl -fsSL https://get.tessl.io | sh` and authenticate via
 
 **Releases are automated.** On merge to `main`, [`.github/workflows/publish.yml`](./.github/workflows/publish.yml) computes the next `YYYY.M.patch` version, bumps every tile manifest, publishes the tiles, and commits the bump back. It needs a `TESSL_TOKEN` repo secret with publish permission in `bonai-dev`.
 
+### Local install (escape hatch, skip the registry)
+
+The registry publish lags a merge by several minutes (calver bump → publish → eval). To try a skill change in a target repo *now*, install the local working copy straight into it with [`scripts/install-local.sh`](./scripts/install-local.sh):
+
+```sh
+# from inside the consumer repo:
+/abs/path/to/skills/scripts/install-local.sh                  # both tiles
+/abs/path/to/skills/scripts/install-local.sh engineering-skills   # one tile
+
+# or target another repo without cd-ing into it:
+scripts/install-local.sh --target ~/code/app
+scripts/install-local.sh --global engineering-skills          # into ~/.tessl
+```
+
+It copies each tile to a temp dir with the skill symlinks dereferenced (Tessl excludes symlinks from plugins) and runs `tessl install <copy>` as a file-source install, so the target repo gets a real local copy under its `.tessl/`. The working tree is never mutated. Re-run after each change — it's a one-shot copy, not a live link (`--watch-local` can't be used because the dereferenced copy is transient).
+
 ## License
 
 MIT — see [LICENSE](./LICENSE).
