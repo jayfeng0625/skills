@@ -23,3 +23,4 @@ Model- or user-reachable (rich trigger phrasing so the model can reach for them)
 - **[tdd](./tdd/SKILL.md)** — Test-driven development with a red-green-refactor loop. Builds features or fixes bugs one vertical slice at a time.
 - **[domain-modeling](./domain-modeling/SKILL.md)** — Actively build and sharpen a project's domain model — challenge terms, stress-test with scenarios, update `CONTEXT.md` and ADRs inline.
 - **[codebase-design](./codebase-design/SKILL.md)** — Shared discipline and vocabulary for designing deep modules: small interfaces, clean seams, testable through the interface.
+- **[tracker-notion](./tracker-notion/SKILL.md)** — Notion backend for the content skills: publishes PRDs/issues, fetches/lists tickets, posts comments, and applies triage state transitions via the Notion MCP.

@@ -1,10 +1,10 @@
 # Bonai Skills
 
-A personal set of agent skills I use every day, tracking [`mattpocock/skills`](https://github.com/mattpocock/skills) upstream. Packaged as two private tessl tiles under the `bonai-dev` workspace; both ship at the same `YYYY.M.patch` calver. The workflow skills are tracker-agnostic — the per-repo issue tracker is chosen at setup (GitHub, GitLab, local markdown, or any tracker described in prose). This repo runs Notion.
+A personal set of agent skills I use every day, tracking [`mattpocock/skills`](https://github.com/mattpocock/skills) upstream. Packaged as two private tessl tiles under the `bonai-dev` workspace; both ship at the same `YYYY.M.patch` calver. The workflow skills are tracker-agnostic — the content skills hand tracker I/O to a configured backend (a backend skill, or a per-repo recipe), chosen at setup (GitHub, GitLab, local markdown, or any tracker described in prose). This repo runs Notion via the `tracker-notion` backend skill.
 
 | Tile | Skills | Latest |
 |---|---|---|
-| [`bonai-dev/engineering-skills`](./skills/engineering/) | Daily code-work skills (setup, TDD, implement, bug diagnosis, grilling, prototyping, triage, domain modeling, codebase design, PRD/issue conversion, architecture review) | `2026.6.6` |
+| [`bonai-dev/engineering-skills`](./skills/engineering/) | Daily code-work skills (setup, TDD, implement, bug diagnosis, grilling, prototyping, triage, domain modeling, codebase design, PRD/issue conversion, architecture review, Notion tracker backend) | `2026.6.6` |
 | [`bonai-dev/productivity-skills`](./skills/productivity/) | General workflow skills (non-code grilling, the reusable interview loop, teaching, cross-session handoffs, skill authoring, skill quality reference) | `2026.6.6` |
 
 Versions follow `YYYY.M.patch` calver and are published automatically on merge to `main` (see [Development & publishing](#development--publishing)).
@@ -49,13 +49,13 @@ This is prompt-driven: it explores the repo, then walks you through three choice
 
 ## Tracker configuration
 
-Skill bodies never hardcode a tracker. They speak in terms of "the issue tracker" and delegate the *how* to a per-repo recipe written at setup: [`docs/agents/issue-tracker.md`](./docs/agents/issue-tracker.md) maps each tracker operation (publish, fetch, list, comment, transition state, attach an agent brief) to concrete calls for the chosen backend.
+Skill bodies never hardcode a tracker. The content skills (`/to-prd`, `/to-issues`, `/triage`) produce canonical artifacts and **hand off** the actual publish / fetch / transition to the repo's configured backend — they never call a tracker's API themselves. The backend is one of two shapes: a **backend skill** (this repo's [`tracker-notion`](./skills/engineering/tracker-notion/SKILL.md), or upstream's `/github`) that owns every MCP / CLI call, or a per-repo **recipe** at `docs/agents/issue-tracker.md` that maps each operation to concrete calls (used for local-markdown and similar). Swapping trackers means swapping the backend, not touching the content skills.
 
-This repo runs **Notion**: the recipe lives in `docs/agents/issue-tracker.md` and the private database IDs + property mappings in the gitignored `docs/agents/workflow-config.md` (maintained by hand). Repo-wide test/lint/build commands for `/tdd` and `/diagnosing-bugs` live in [`docs/agents/commands.md`](./docs/agents/commands.md). The domain glossary and ADRs are plain filesystem conventions — `CONTEXT.md` and `docs/adr/` at the repo root — read directly, never routed through a tracker.
+This repo runs **Notion** via the `tracker-notion` skill, which owns the verb → Notion-MCP-call recipe. The private database IDs + property mappings live in the gitignored `docs/agents/workflow-config.md` (maintained by hand), read by the skill at runtime. Repo-wide test/lint/build commands for `/tdd` and `/diagnosing-bugs` live in [`docs/agents/commands.md`](./docs/agents/commands.md). The domain glossary and ADRs are plain filesystem conventions — `CONTEXT.md` and `docs/adr/` at the repo root — read directly, never routed through a tracker.
 
 ## Skills
 
-### Engineering (14)
+### Engineering (15)
 
 **User-invoked**
 
@@ -76,6 +76,7 @@ This repo runs **Notion**: the recipe lives in `docs/agents/issue-tracker.md` an
 - [`domain-modeling`](./skills/engineering/domain-modeling/SKILL.md) — build and sharpen the project's domain model; updates CONTEXT.md / ADRs inline
 - [`codebase-design`](./skills/engineering/codebase-design/SKILL.md) — shared deep-module vocabulary for designing interfaces and seams
 - [`resolving-merge-conflicts`](./skills/engineering/resolving-merge-conflicts/SKILL.md) — resolve git merge/rebase conflicts by preserving original intent
+- [`tracker-notion`](./skills/engineering/tracker-notion/SKILL.md) — Notion backend for the content skills; publishes PRDs/issues, fetches/lists tickets, applies triage outcomes via the Notion MCP
 
 ### Productivity (5)
 
