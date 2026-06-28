@@ -84,7 +84,7 @@ This repo runs **Notion** via the `tracker-notion` skill, which owns the verb �
 
 - [`grill-me`](./skills/productivity/grill-me/SKILL.md) — non-code interrogation about a plan / design / talk
 - [`teach`](./skills/productivity/teach/SKILL.md) — teach a skill or concept over multiple sessions in a stateful workspace
-- [`handoff`](./skills/productivity/handoff/SKILL.md) — cross-session handoff document so a fresh agent can resume work (written to the OS temp dir)
+- [`handoff`](./skills/productivity/handoff/SKILL.md) — cross-session handoff document so a fresh agent can resume work (persisted to the configured backend's Handoffs store, or the OS temp dir when none is configured)
 - [`writing-great-skills`](./skills/productivity/writing-great-skills/SKILL.md) — reference for writing and editing skills well; the vocabulary and principles that make a skill predictable
 
 **Model-invoked**

@@ -37,6 +37,10 @@ This skill owns prepending it: the content skill hands over the note body, and t
 
 Publish in dependency order (blockers first) so real page IDs exist before you reference them. For each issue's "Blocked by", set the **Blocked by** relation to the blocking issues' page IDs.
 
+### publishHandoff(doc)
+
+`/handoff` hands over a handoff document for a fresh session to pick up. Create a page in the **Handoffs DB**: `mcp__notion__notion-create-pages`, parent = Handoffs DB ID. Body = the handoff document. Return the page URL so the next session can reference it.
+
 ### fetchTicket(id | title)
 
 `mcp__notion__notion-fetch` on the page ID. Child pages (e.g. an attached agent brief) come back in the response, so no separate lookup is needed. If given a title rather than an ID, resolve it via `listIssues` first.

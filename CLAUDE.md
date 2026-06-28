@@ -27,7 +27,7 @@ Repo-wide commands for testing, linting, type-checking, and building. See `comma
 
 ### Workflow backend
 
-**Backend:** notion — the content skills (`/to-prd`, `/to-issues`, `/triage`) produce canonical artifacts and hand off all tracker I/O to the **`/tracker-notion`** backend skill (`skills/engineering/tracker-notion/`), which owns the verb → Notion-MCP-call recipe. The Issues / PRDs / Handoffs database IDs and property mappings live in `workflow-config.md` in the Config dir (gitignored), read by the backend skill at runtime.
+**Backend:** notion — the content skills (`/to-prd`, `/to-issues`, `/triage`) produce canonical artifacts and hand off all tracker I/O to the **`/tracker-notion`** backend skill (`skills/engineering/tracker-notion/`), which owns the verb → Notion-MCP-call recipe. `/handoff` likewise hands its document to the backend's Handoffs store (degrading to OS-temp when no backend is configured). The Issues / PRDs / Handoffs database IDs and property mappings live in `workflow-config.md` in the Config dir (gitignored), read by the backend skill at runtime.
 
 ### Domain language
 
