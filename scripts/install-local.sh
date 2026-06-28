@@ -7,13 +7,21 @@ set -euo pipefail
 # to land the new version in the registry.
 #
 # Tessl excludes symlinks from plugins, and each tile's skills are symlinks into
-# ../../../skills. So we copy the tile to a temp dir with symlinks dereferenced
-# (cp -RL), then `tessl install` that real-file copy. Unlike tessl-with-tiles.sh
-# this never mutates the working tree: the dereferenced copy lives in a temp dir
-# that's removed on exit. (tessl-with-tiles.sh materializes in place only because
-# `tessl eval run` must execute inside the linked project dir; `tessl install`
-# reads the tile as a source and copies it into the target's .tessl/, so a temp
-# copy anywhere works.)
+# ../../../skills. So we copy the tile to .local-dist/<tile> with symlinks
+# dereferenced (cp -RL), then `tessl install` that real-file copy. This never
+# mutates the working tree (unlike tessl-with-tiles.sh, which materializes in
+# place only because `tessl eval run` must run inside the linked project dir).
+#
+# The dereferenced copy is PERSISTENT (gitignored .local-dist/), not a temp dir,
+# because `tessl install` records the install path as a `file:` source in the
+# target's tessl.json. A temp dir would leave a dead path the moment this script
+# exits, breaking `tessl install`/`update`/sync there. .local-dist/ lives on this
+# machine, so that file: source keeps resolving.
+#
+# Consequence for the target repo: its tessl.json dependency is rewritten from a
+# registry version pin to `source: file:<abs path to .local-dist/<tile>>`. That
+# path is machine-local — do NOT commit it. To return the target to a published
+# version: `tessl install bonai-dev/<tile>@<version>` (or revert tessl.json).
 #
 # Usage (run from inside the consumer repo, or pass --target):
 #   /abs/path/to/skills/scripts/install-local.sh                  # both tiles -> cwd
@@ -22,9 +30,8 @@ set -euo pipefail
 #   scripts/install-local.sh --global engineering-skills          # install globally (~/.tessl)
 #
 # Positional args are tile names (dir names under tiles/); omit them for all
-# tiles. Re-run after each change to refresh the target. This is a one-shot copy,
-# not a live link: `tessl install --watch-local` can't be used here because the
-# dereferenced copy is transient.
+# tiles. Re-run after each skill change to refresh both .local-dist/ and the
+# target.
 
 REPO="$(cd "$(dirname "$0")/.." && pwd)"
 TILES_DIR="$REPO/tiles"
@@ -68,8 +75,10 @@ case "$target" in
     exit 1 ;;
 esac
 
-staging="$(mktemp -d)"
-trap 'rm -rf "$staging"' EXIT INT TERM
+# Persistent, gitignored materialization dir. tessl.json in the target will point
+# its file: source here, so this must outlive the script (see header).
+staging="$REPO/.local-dist"
+mkdir -p "$staging"
 
 for tile in "${tiles[@]}"; do
   src="$TILES_DIR/$tile"
@@ -78,6 +87,8 @@ for tile in "${tiles[@]}"; do
     exit 1
   }
   # -RL dereferences the skill symlinks into real files so Tessl ingests them.
+  # Refresh from scratch each run so removed skills don't linger.
+  rm -rf "$staging/$tile"
   cp -RL "$src" "$staging/$tile"
   echo "==> installing $tile -> $target"
   ( cd "$target" && tessl install "$staging/$tile" --yes ${global_flag[@]+"${global_flag[@]}"} )
