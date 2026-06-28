@@ -1,6 +1,6 @@
 {
   "name": "bonai-dev/productivity-skills",
-  "version": "2026.6.10",
+  "version": "2026.6.11",
   "description": "Productivity skills for non-code workflow — non-code grilling, the reusable interview loop, teaching, cross-session handoffs, skill authoring",
   "private": true,
   "skills": [
