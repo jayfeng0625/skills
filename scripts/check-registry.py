@@ -51,8 +51,9 @@ def skills_in(bucket: str) -> list[str]:
 def frontmatter(name: str, bucket: str) -> dict:
     text = (REPO / "skills" / bucket / name / "SKILL.md").read_text()
     fm = {"name": name, "description": "", "user_invoked": False}
-    if text.startswith("---"):
-        block = text.split("---", 2)[1]
+    parts = re.split(r"(?m)^---[ \t]*$", text, maxsplit=2)
+    if len(parts) >= 3:
+        block = parts[1]
         for line in block.splitlines():
             if ":" not in line:
                 continue
@@ -72,11 +73,15 @@ def targets(text: str) -> list[str]:
 
 
 def group_of(lines: list[str], ref_line: int) -> str | None:
-    """Nearest preceding User-/Model-invoked heading above ref_line."""
+    """Nearest preceding User-/Model-invoked heading, stopping at any other
+    heading (a bucket/section boundary) so a flat section can't inherit the
+    group heading of the section above it."""
     for i in range(ref_line, -1, -1):
         m = GROUP_HEADING.match(lines[i])
         if m:
             return m.group(1).lower()
+        if re.match(r"\s*#{1,6}\s", lines[i]):
+            return None
     return None
 
 
@@ -216,7 +221,7 @@ def main() -> int:
     # 4. bucket READMEs
     for bucket in SHIPPED:
         check_readme(REPO / "skills" / bucket / "README.md", shipped_fm[bucket],
-                     lambda n: f"{n}/SKILL.md", [], problems)
+                     lambda n: f"/{n}/SKILL.md", [], problems)
 
     # 5. README counts
     check_counts(problems)

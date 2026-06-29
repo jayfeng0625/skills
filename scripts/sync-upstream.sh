@@ -40,7 +40,7 @@ git fetch upstream "$UPSTREAM_BRANCH"
 
 # 3. sync branch
 base="$(git branch --show-current)"
-sync_branch="sync-upstream-$(date +%Y%m%d)"
+sync_branch="sync-upstream-$(date +%Y%m%d-%H%M%S)"
 echo "→ creating $sync_branch off $base"
 git switch -c "$sync_branch"
 
@@ -63,7 +63,7 @@ else
   echo "    B. body-edited skills      — to-prd/to-issues/triage/handoff + fork rewrites"
   echo "    C. registry/overlay files  — README/CLAUDE.md/CONTEXT.md/plugin.json/tiles"
   echo "  Then: git commit  &&  scripts/check-registry.py --write"
-  exit 0
+  exit 2
 fi
 
 # 5. post-merge invariants
