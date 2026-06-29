@@ -1,0 +1,24 @@
+name: Check registry
+
+# Fast pre-merge guard on every PR: the skill registry must satisfy the
+# CLAUDE.md invariants (every shipped skill in plugin.json + the top and bucket
+# READMEs under the right group, no excluded-bucket leakage, correct bucket
+# counts, tile manifests + symlinks in sync). No secrets, no tessl CLI.
+#
+# Intentionally PR-only: on main the same check runs as the first step of
+# publish.yml (where it also gates publishing), so triggering on push here too
+# would just run it twice per merge. Don't add `push: [main]`.
+
+on:
+  pull_request:
+
+permissions:
+  contents: read
+
+jobs:
+  registry:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Verify skill registry invariants
+        run: python3 scripts/check-registry.py

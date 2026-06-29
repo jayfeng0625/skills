@@ -13,13 +13,15 @@ Each skill entry in the top-level `README.md` must link the skill name to its `S
 
 Each bucket folder has a `README.md` that lists every skill in the bucket with a one-line description, with the skill name linked to its `SKILL.md`. Bucket `README.md`s and the top-level `README.md` group entries into **User-invoked** and **Model-invoked**.
 
+Run `scripts/check-registry.py` to verify all of the above; `--write` regenerates the `plugin.json` manifests and tile symlinks (READMEs are reported, not rewritten). `scripts/sync-upstream.sh` runs it automatically after an upstream merge.
+
 Every `SKILL.md` is either user-invoked (`disable-model-invocation: true`, reachable only by the human) or model-invoked (model- or user-reachable). For the full definitions, description conventions, and why a user-invoked skill can invoke model-invoked skills but never another user-invoked one, see [docs/invocation.md](./docs/invocation.md).
 
 ## Agent skills
 
 Per-repo agent config for this repo (consumer-state — distinct from what the published tile ships).
 
-**Config dir:** `docs/agents/` — holds the relocatable config below. `workflow-config.md` is gitignored (it carries private Notion IDs) and is maintained by hand; see `docs/agents/issue-tracker.md` for the database IDs and property mappings it must contain. Per-repo setup uses upstream's `/setup-matt-pocock-skills`.
+**Config dir:** `docs/agents/` — holds the relocatable config below. `workflow-config.md` is gitignored (it carries private Notion IDs) and is maintained by hand; see the `/tracker-notion` skill for the database IDs and property mappings it must contain. Per-repo setup uses upstream's `/setup-matt-pocock-skills`.
 
 ### Commands
 
@@ -27,7 +29,7 @@ Repo-wide commands for testing, linting, type-checking, and building. See `comma
 
 ### Workflow backend
 
-**Backend:** notion — the Notion recipe (each tracker verb → its Notion MCP call) lives in `docs/agents/issue-tracker.md`. The Issues / PRDs / Handoffs database IDs and property mappings live in `workflow-config.md` in the Config dir.
+**Backend:** notion — the content skills (`/to-prd`, `/to-issues`, `/triage`) produce canonical artifacts and hand off all tracker I/O to the **`/tracker-notion`** backend skill (`skills/engineering/tracker-notion/`), which owns the verb → Notion-MCP-call recipe. `/handoff` likewise hands its document to the backend's Handoffs store (degrading to OS-temp when no backend is configured). The Issues / PRDs / Handoffs database IDs and property mappings live in `workflow-config.md` in the Config dir (gitignored), read by the backend skill at runtime.
 
 ### Domain language
 

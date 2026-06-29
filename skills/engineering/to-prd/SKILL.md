@@ -6,7 +6,9 @@ disable-model-invocation: true
 
 This skill takes the current conversation context and codebase understanding and produces a PRD. Do NOT interview the user — just synthesize what you already know.
 
-The issue tracker and triage label vocabulary should have been provided to you — run `/setup-matt-pocock-skills` if not.
+The backend and triage-label vocabulary should already be configured for this repo (see the `## Agent skills` block); an unconfigured repo runs `/setup-matt-pocock-skills` first.
+
+**Backend.** This skill produces the PRD; it does not talk to any tracker directly. Hand the finished artifact to the repo's configured backend (see the `## Agent skills` block) to publish — a backend skill (this repo uses `/tracker-notion`; upstream default is `/github`) or, if the backend is a per-repo recipe, the workflow in `docs/agents/issue-tracker.md` (e.g. local markdown). You work in canonical triage roles; the backend maps them to real label strings.
 
 ## Process
 
@@ -16,7 +18,7 @@ The issue tracker and triage label vocabulary should have been provided to you �
 
 Check with the user that these seams match their expectations.
 
-3. Write the PRD using the template below, then publish it to the project issue tracker. Apply the `ready-for-agent` triage label - no need for additional triage.
+3. Write the PRD using the template below, then hand it to the configured backend to publish with the `ready-for-agent` state — no need for additional triage. Don't write to the tracker yourself.
 
 <prd-template>
 

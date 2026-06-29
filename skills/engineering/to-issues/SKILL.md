@@ -8,13 +8,15 @@ disable-model-invocation: true
 
 Break a plan into independently-grabbable issues using vertical slices (tracer bullets).
 
-The issue tracker and triage label vocabulary should have been provided to you — run `/setup-matt-pocock-skills` if not.
+The backend and triage-label vocabulary should already be configured for this repo (see the `## Agent skills` block); an unconfigured repo runs `/setup-matt-pocock-skills` first.
+
+**Backend.** This skill drafts and orders the issues; it does not talk to any tracker directly. Route every read (fetch a parent) and write (publish) through the repo's configured backend (see the `## Agent skills` block) — a backend skill (this repo uses `/tracker-notion`; upstream default is `/github`) or, if the backend is a per-repo recipe, the workflow in `docs/agents/issue-tracker.md` (e.g. local markdown). You work in canonical triage roles; the backend maps them to real label strings.
 
 ## Process
 
 ### 1. Gather context
 
-Work from whatever is already in the conversation context. If the user passes an issue reference (issue number, URL, or path) as an argument, fetch it from the issue tracker and read its full body and comments.
+Work from whatever is already in the conversation context. If the user passes an issue reference (issue number, URL, or path) as an argument, fetch it via the backend and read its full body and comments.
 
 ### 2. Explore the codebase (optional)
 
@@ -50,11 +52,11 @@ Ask the user:
 
 Iterate until the user approves the breakdown.
 
-### 5. Publish the issues to the issue tracker
+### 5. Publish the issues via the backend
 
-For each approved slice, publish a new issue to the issue tracker. Use the issue body template below. These issues are considered ready for AFK agents, so publish them with the correct triage label unless instructed otherwise.
+For each approved slice, draft an issue from the body template below. These issues are considered ready for AFK agents, so mark them with the `ready-for-agent` state unless instructed otherwise. Don't write to the tracker yourself — hand the drafted issues to the configured backend to publish.
 
-Publish issues in dependency order (blockers first) so you can reference real issue identifiers in the "Blocked by" field.
+Hand them over in dependency order (blockers first) so the backend can substitute real issue identifiers into each "Blocked by" field as it goes.
 
 <issue-template>
 ## Parent
