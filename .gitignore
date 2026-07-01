@@ -1,1 +1,7 @@
 node_modules
+
+# install-local symlink target when this repo is the install target
+.agents/skills/
+
+# tracker primitive: private Notion IDs, maintained by hand
+.agents/workflow-config.md
