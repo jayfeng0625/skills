@@ -1,0 +1,31 @@
+# AGENTS.md
+
+This repo publishes agent skills.
+
+## Distribution
+
+The repo is public on GitHub and installs through the skills CLI (`npx skills`, from vercel-labs/skills).
+
+- Each skill lives at `skills/<name>/`, the layout the CLI discovers.
+- A change reaches installed copies only after it is pushed and the user runs `npx skills update`. The CLI updates GitHub-sourced installs only; a local-path install is a one-off copy.
+
+## Skill folder standard
+
+Each `skills/<name>/` holds:
+
+- `SKILL.md`, written Claude-first. Frontmatter uses Claude Code fields (`name`, `description`, and `disable-model-invocation` or `argument-hint` when needed). The body names Claude Code tools (`Skill`, `Agent`, `AskUserQuestion`) and `.claude/` paths.
+- `agents/openai.yaml`, for Codex. It sets `interface.display_name` and `interface.short_description`. It sets `policy.allow_implicit_invocation: false` exactly when `SKILL.md` sets `disable-model-invocation: true`.
+
+## Writing
+
+These rules apply to prose authored in this repo. Commands, code, identifiers, and quoted text stay as written.
+
+- State each fact once. Cut a clause that restates an earlier point as a negation, contrast, or paraphrase; keep a second clause only when it adds a new fact.
+- Punctuate sentences with periods, commas, colons, semicolons, and parentheses. The em dash (U+2014) and en dash (U+2013) are banned; hyphens inside tokens, compound modifiers, flags, and identifiers are fine.
+- Banned words: `corpus`, and every form of `reinforce`.
+- Banned contrast phrases, since each carries a restatement: `is X, not Y` (and the `are`, `was`, `were` forms), `not X, but Y`, `X, and not Y`, `rather than`, `instead of`, `as opposed to`, `never a`, `never an`. A procedure may use `instead of` or `rather than` when the phrase names a real choice the reader makes.
+- Match length to what the task needs, and hold files on disk to the strictest budget.
+
+## Scripts
+
+`scripts/` holds TypeScript that Node runs directly (`node scripts/<file>.ts`), with no build step. `tsconfig.json` allows erasable syntax only.
