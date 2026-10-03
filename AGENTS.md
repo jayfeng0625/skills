@@ -13,8 +13,26 @@ The repo is public on GitHub and installs through the skills CLI (`npx skills`, 
 
 Each `skills/<name>/` holds:
 
-- `SKILL.md`, written Claude-first. Frontmatter uses Claude Code fields (`name`, `description`, and `disable-model-invocation` or `argument-hint` when needed). The body names Claude Code tools (`Skill`, `Agent`, `AskUserQuestion`) and `.claude/` paths.
+- `SKILL.md`, written Claude-first. Frontmatter uses Claude Code fields (`name`, `description`, and `disable-model-invocation` or `argument-hint` when needed), plus `metadata.tags`: labels describing what the skill does, for discovery once installed. The body names Claude Code tools (`Skill`, `Agent`, `AskUserQuestion`) and `.claude/` paths.
 - `agents/openai.yaml`, for Codex. It sets `interface.display_name` and `interface.short_description`. It sets `policy.allow_implicit_invocation: false` exactly when `SKILL.md` sets `disable-model-invocation: true`.
+- `LICENSE`, for a skill pulled from another repo: that repo's license text, so the notice ships with every install.
+
+## Upstream skills
+
+A skill pulled from another repo has a manifest at `upstream/<name>.yaml`. It lives outside `skills/` because the CLI installs every file in a skill folder, and the manifest serves this repo's workflow only.
+
+```yaml
+repo: https://github.com/<owner>/<repo>
+path: <folder of the skill in that repo>
+commit: <full SHA the local copy was last merged from>
+author: <upstream author>
+license: <SPDX identifier, matching skills/<name>/LICENSE>
+tags: [<label>, ...]
+merge_guidance: |
+  <optional prose for whoever merges the next upstream update>
+```
+
+Every key except `merge_guidance` is required. `tags` are selection labels for syncing skills from upstream, separate from the discovery tags in `SKILL.md`. Read `repo`, `path`, `commit`, and `license` from the upstream repo itself.
 
 ## Writing
 
