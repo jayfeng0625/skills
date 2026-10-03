@@ -34,6 +34,8 @@ merge_guidance: |
 
 Every key except `merge_guidance` is required. `tags` are selection labels for syncing skills from upstream, separate from the discovery tags in `SKILL.md`. Read `repo`, `path`, `commit`, and `license` from the upstream repo itself.
 
+Merge upstream updates with `/sync-upstream`.
+
 ## Writing
 
 These rules apply to prose authored in this repo. Commands, code, identifiers, and quoted text stay as written.
@@ -44,6 +46,8 @@ These rules apply to prose authored in this repo. Commands, code, identifiers, a
 - Banned contrast phrases, since each carries a restatement: `is X, not Y` (and the `are`, `was`, `were` forms), `not X, but Y`, `X, and not Y`, `rather than`, `instead of`, `as opposed to`, `never a`, `never an`. A procedure may use `instead of` or `rather than` when the phrase names a real choice the reader makes.
 - Match length to what the task needs, and hold files on disk to the strictest budget.
 
-## Scripts
+## Repo tooling
 
-`scripts/` holds TypeScript that Node runs directly (`node scripts/<file>.ts`), with no build step. `tsconfig.json` allows erasable syntax only.
+Repo-only skills live in `.claude/skills/`, with their scripts beside them. The CLI scans that folder too, so each one sets `metadata.internal: true` to stay out of installs.
+
+Node runs the TypeScript directly, with no build step; `tsconfig.json` allows erasable syntax only. Check with `npm test` and `npm run typecheck`.
