@@ -1,7 +1,7 @@
 ---
 name: sync-upstream
 description: Merge upstream changes into skills that have an upstream/<name>.yaml manifest.
-argument-hint: "<skill...> | --tag <tag>... | --all"
+argument-hint: "<skill...> | --tag <tag>... | --all | verbatim <skill...>"
 disable-model-invocation: true
 allowed-tools: Bash(node ${CLAUDE_SKILL_DIR}/scripts/upstream-diff.ts *)
 metadata:
@@ -9,6 +9,10 @@ metadata:
 ---
 
 Run the script from the repo root. It reads `upstream/<name>.yaml` and `skills/<name>/`, and changes nothing.
+
+## Verbatim comparison
+
+When `$ARGUMENTS` starts with `verbatim`, run `node ${CLAUDE_SKILL_DIR}/scripts/upstream-diff.ts $ARGUMENTS` and stop after reporting it. It prints one diff per named skill, from upstream HEAD to `skills/<name>/`, with no `merge_guidance`. Break the diff down for the user by file and by kind of change. The script accepts skill names only, and rejects `--all` and `--tag`.
 
 ## 1. Survey
 

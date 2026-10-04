@@ -289,3 +289,57 @@ for (const { title, args, error } of [
     assert.equal(result.status, 1);
   });
 }
+
+test("verbatim prints one diff from upstream HEAD to the local folder, without merge guidance", (t) => {
+  const { upstream, repo } = setup(t);
+  const pinned = upstream.commit({ "skills/arena/SKILL.md": "arena v1\n" });
+  const head = upstream.commit({ "skills/arena/SKILL.md": "arena v2\n" });
+  repo.addSkill("arena", {
+    path: "skills/arena",
+    commit: pinned,
+    tags: ["pstack"],
+    mergeGuidance: "Keep the local .claude/ paths.\n",
+  }, { "SKILL.md": "arena local\n", LICENSE: "MIT License\n" });
+
+  const result = repo.run("verbatim", "arena");
+  const [header = "", ...diffs] = result.stdout.split(/^-- .*\n/m);
+
+  assert.equal(result.stderr, "");
+  assert.match(header, new RegExp(`^head: ${head}$`, "m"));
+  assert.doesNotMatch(header, /merge_guidance|^commit:/m);
+  assert.equal(diffs.length, 1);
+  assert.match(diffs[0]!, /^-arena v2\n\+arena local$/m);
+  assert.match(diffs[0]!, /^diff --git a\/LICENSE b\/LICENSE\nnew file mode/m);
+  assert.equal(result.status, 0);
+});
+
+test("verbatim reports a skill whose path is gone at upstream HEAD", (t) => {
+  const { upstream, repo } = setup(t);
+  const pinned = upstream.commit({ "skills/arena/SKILL.md": "arena v1\n", "README.md": "x\n" });
+  upstream.commit({ "skills/arena/SKILL.md": null });
+  repo.addSkill("arena", { path: "skills/arena", commit: pinned, tags: ["pstack"] }, {
+    "SKILL.md": "arena v1\n",
+  });
+
+  const result = repo.run("verbatim", "arena");
+
+  assert.equal(result.stderr, "");
+  assert.equal(result.stdout.split(/^-- .*\n/m)[1]?.trim(), "(skills/arena not found at HEAD)");
+  assert.equal(result.status, 0);
+});
+
+for (const { title, args, error } of [
+  { title: "--all", args: ["verbatim", "--all"], error: "verbatim takes skill names only, not --all or --tag" },
+  { title: "--tag", args: ["verbatim", "arena", "--tag", "pstack"], error: "verbatim takes skill names only, not --all or --tag" },
+  { title: "no skill names", args: ["verbatim"], error: "verbatim needs at least one skill name" },
+]) {
+  test(`verbatim with ${title} is rejected before any upstream is fetched`, (t) => {
+    const { repo } = addThreeSkills(t);
+
+    const result = repo.run(...args);
+
+    assert.equal(result.stdout, "");
+    assert.equal(result.stderr, `error: ${error}\n`);
+    assert.equal(result.status, 1);
+  });
+}

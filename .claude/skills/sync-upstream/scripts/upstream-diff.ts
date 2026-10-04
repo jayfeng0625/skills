@@ -164,7 +164,23 @@ function printDiff(skill: Skill) {
   console.log(diffTrees(skill, skill.pinnedTree, skill.localTree) || "(none)");
 }
 
-const commands: Record<string, (skill: Skill) => void> = { status: printStatus, diff: printDiff };
+function printVerbatimDiff(skill: Skill) {
+  const { manifest } = skill;
+  console.log(`== ${skill.name}`);
+  console.log(`repo: ${manifest.repo}`);
+  console.log(`path: ${manifest.path}`);
+  console.log(`head: ${skill.head}`);
+  console.log(`-- verbatim (head..skills/${skill.name})`);
+  const diff =
+    skill.headTree === null ? `(${missingNote(skill)})` : diffTrees(skill, skill.headTree, skill.localTree) || "(none)";
+  console.log(diff);
+}
+
+const commands: Record<string, (skill: Skill) => void> = {
+  status: printStatus,
+  diff: printDiff,
+  verbatim: printVerbatimDiff,
+};
 
 function main(args: string[]) {
   const { positionals, values } = parseArgs({
@@ -178,6 +194,11 @@ function main(args: string[]) {
   const [command = "", ...names] = positionals;
   const print = commands[command];
   if (print === undefined) throw new Error(`unknown command: ${command}`);
+  if (command === "verbatim") {
+    // Verbatim drops merge_guidance, so it is limited to skills the caller names one by one.
+    if (values.all || values.tag.length > 0) throw new Error("verbatim takes skill names only, not --all or --tag");
+    if (names.length === 0) throw new Error("verbatim needs at least one skill name");
+  }
   const root = process.cwd();
   const manifests = readManifests(root);
   const selected = select(manifests, names, values.tag, values.all);
