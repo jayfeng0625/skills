@@ -4,3 +4,9 @@ commit: e43c7ee26e0038c6c1fa8380dd34ce86ff94cb2a
 author: Lauren Tan
 license: MIT
 tags: [pstack, explain]
+merge_guidance: |
+  Claude Code port. Role lines come from ~/.claude/pstack-models.md: `how explorer`
+  defaults to `sonnet` (the only sonnet role, by the user's choice), `how explainer` to
+  `opus`; `inherit` replaces `auto` and `inherit-parent`; a rejected default falls back to
+  `inherit`. Task became the Agent tool, `generalPurpose` became `general-purpose`, and
+  `readonly: true` became a brief that says the subagent edits no files.
