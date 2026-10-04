@@ -4,3 +4,6 @@ commit: 24fe0ef7737efae15c87225755e9f6f5965e4888
 author: Matt Pocock
 license: MIT
 tags: [mattpocock, engineering]
+merge_guidance: |
+  `/setup-matt-pocock-skills` reads `/setup-issue-tracker`, the local name
+  of that skill. Keep the local name when merging upstream changes.

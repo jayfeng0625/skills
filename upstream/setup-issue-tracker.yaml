@@ -1,0 +1,14 @@
+repo: https://github.com/mattpocock/skills
+path: skills/engineering/setup-matt-pocock-skills
+commit: 24fe0ef7737efae15c87225755e9f6f5965e4888
+author: Matt Pocock
+license: MIT
+tags: [mattpocock, engineering]
+merge_guidance: |
+  Renamed locally from setup-matt-pocock-skills to setup-issue-tracker
+  (user choice). Local edits: the folder name, the `name:` field, and
+  `display_name` in agents/openai.yaml. The other pulled skills point at
+  `/setup-issue-tracker` in place of `/setup-matt-pocock-skills`
+  (code-review, to-spec, to-tickets twice, implement-spec, triage,
+  wayfinder); see each one's merge_guidance. Keep the local name when
+  merging upstream changes.
