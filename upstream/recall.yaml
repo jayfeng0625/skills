@@ -4,3 +4,7 @@ commit: e43c7ee26e0038c6c1fa8380dd34ce86ff94cb2a
 author: Lauren Tan
 license: MIT
 tags: [pstack, workflow]
+merge_guidance: |
+  Claude Code port. The transcript path sentence describes ~/.claude/projects/<slug>/<uuid>.jsonl,
+  where the slug replaces every non-alphanumeric character with "-" and keeps the leading "-",
+  plus <uuid>/subagents/. Layout verified on disk 2026-10-04.

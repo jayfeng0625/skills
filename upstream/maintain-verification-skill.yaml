@@ -4,3 +4,6 @@ commit: e43c7ee26e0038c6c1fa8380dd34ce86ff94cb2a
 author: Lauren Tan
 license: MIT
 tags: [pstack, verification]
+merge_guidance: |
+  Claude Code port: the target is usually .claude/skills/verify-*/ in place of
+  .cursor/skills/.

@@ -4,3 +4,6 @@ commit: e43c7ee26e0038c6c1fa8380dd34ce86ff94cb2a
 author: Lauren Tan
 license: MIT
 tags: [pstack, workflow]
+merge_guidance: |
+  Claude Code port. The end-of-run check reads ~/.claude/projects/*/${CLAUDE_SESSION_ID}.jsonl,
+  matched by exact session ID, in place of Cursor's agent-transcripts/ directory.

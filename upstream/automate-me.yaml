@@ -4,3 +4,11 @@ commit: e43c7ee26e0038c6c1fa8380dd34ce86ff94cb2a
 author: Lauren Tan
 license: MIT
 tags: [pstack, workflow]
+merge_guidance: |
+  Claude Code port. Cursor's built-in `create-skill` became Anthropic's `skill-creator`
+  (skill-creator plugin) throughout, including the description. Skill paths moved to
+  .claude/skills/ and ~/.claude/skills/. Personal category folders
+  (.claude/skills/<handle>/<handle>-mode/) were dropped: Claude Code discovers skills only at
+  .claude/skills/<skill-name>/SKILL.md (code.claude.com/docs/en/skills, "Where skills live").
+  AskQuestion became AskUserQuestion, which takes 2-4 options and `multiSelect`. Transcripts
+  are ~/.claude/projects/<project>/<session-id>.jsonl.
