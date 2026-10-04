@@ -34,6 +34,8 @@ merge_guidance: |
 
 Every key except `merge_guidance` is required. `tags` are selection labels for syncing skills from upstream, separate from the discovery tags in `SKILL.md`. Read `repo`, `path`, `commit`, and `license` from the upstream repo itself.
 
+Right after pulling a skill, run `node .claude/skills/sync-upstream/scripts/upstream-diff.ts diff <name>`. The pull is done when its local edits are only the folder-standard additions and the adaptations `merge_guidance` records.
+
 Merge upstream updates with `/sync-upstream`.
 
 ## Writing
