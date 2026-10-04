@@ -7,7 +7,7 @@ metadata:
 
 # Remove AI code slop
 
-Check the diff against main and remove AI-generated slop introduced in the branch.
+Check the diff against main or master branch and remove AI-generated slop introduced in the branch.
 
 ## Focus Areas
 
