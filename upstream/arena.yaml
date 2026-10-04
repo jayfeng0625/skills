@@ -4,3 +4,11 @@ commit: e43c7ee26e0038c6c1fa8380dd34ce86ff94cb2a
 author: Lauren Tan
 license: MIT
 tags: [pstack, workflow]
+merge_guidance: |
+  Claude Code port. Model lines come from ~/.claude/pstack-models.md (see setup-pstack);
+  defaults are `opus`; `inherit` replaces `auto` and `inherit-parent`; a rejected entry runs
+  on `inherit`. The cross-family logic (claude-*/gpt-*/grok-* prefixes) is dropped.
+  Upstream got distinct candidates from different model families. With one model, the
+  orchestrator names structurally distinct directions (at least two) and gives each runner
+  one; the runners line names models only. Keep that when merging new Phase A text.
+  `readonly` became a brief that says the judge edits no files.
