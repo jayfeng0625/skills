@@ -1,0 +1,5 @@
+interface:
+  display_name: "Principle: Minimize Reader Load"
+  short_description: "Cut layers and hidden state readers trace"
+policy:
+  allow_implicit_invocation: false

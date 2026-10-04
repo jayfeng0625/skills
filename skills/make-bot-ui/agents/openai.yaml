@@ -1,0 +1,5 @@
+interface:
+  display_name: "Make Bot UI"
+  short_description: "Build a UI that wakes a bot over a webhook"
+policy:
+  allow_implicit_invocation: false

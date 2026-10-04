@@ -1,0 +1,5 @@
+interface:
+  display_name: "Principle: Guard the Context Window"
+  short_description: "Route bulk output away from context"
+policy:
+  allow_implicit_invocation: false

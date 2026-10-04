@@ -1,0 +1,5 @@
+interface:
+  display_name: "Principle: Separate Before Serializing"
+  short_description: "Remove shared state before locking it"
+policy:
+  allow_implicit_invocation: false

@@ -1,0 +1,5 @@
+interface:
+  display_name: "How"
+  short_description: "Explain how code works before changing it"
+policy:
+  allow_implicit_invocation: false

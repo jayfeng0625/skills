@@ -1,0 +1,5 @@
+interface:
+  display_name: "Principle: Attack the Premise"
+  short_description: "Question the shared premise of failed fixes"
+policy:
+  allow_implicit_invocation: false

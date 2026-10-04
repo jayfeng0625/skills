@@ -1,0 +1,5 @@
+interface:
+  display_name: "Principle: Make Operations Idempotent"
+  short_description: "Design steps that survive retries"
+policy:
+  allow_implicit_invocation: false

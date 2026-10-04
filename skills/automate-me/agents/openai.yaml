@@ -1,0 +1,5 @@
+interface:
+  display_name: "Automate Me"
+  short_description: "Capture your working style as a mode skill"
+policy:
+  allow_implicit_invocation: false

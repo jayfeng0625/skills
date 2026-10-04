@@ -1,0 +1,5 @@
+interface:
+  display_name: "Why"
+  short_description: "Trace why code or a decision is the way it is"
+policy:
+  allow_implicit_invocation: false

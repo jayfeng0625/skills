@@ -1,0 +1,5 @@
+interface:
+  display_name: "Principle: Test Behavior"
+  short_description: "Assert what users of the code observe"
+policy:
+  allow_implicit_invocation: false
