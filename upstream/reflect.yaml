@@ -12,7 +12,7 @@ merge_guidance: |
   (layout verified on disk 2026-10-04; ${CLAUDE_SESSION_ID} is a documented skill
   substitution). The first-line prompt match is dropped because the ID is exact. Role
   lines come from ~/.claude/pstack-models.md (format and spawn type in setup-pstack), all
-  defaulting to `claude-opus-5-5 high`; a rejected model runs on `inherit`. Task became Agent,
+  defaulting to `opus high`; a rejected model runs on `inherit`. Task became Agent,
   `readonly: false` notes became "the `pstack-<effort>` type carries the session's MCP tools". Cursor's built-in
   `create-skill` became Anthropic's `skill-creator` (here and in references/synthesizer.md).
   In the three reviewer references, skill-use evidence names `Skill` tool calls, Claude Code

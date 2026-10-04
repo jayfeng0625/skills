@@ -9,18 +9,19 @@ merge_guidance: |
   frontmatter, outside ~/.claude/rules/ so it costs context only when a pstack skill reads it.
   A role value is `<model> <effort>`: an Agent tool `model` value and one of low, medium,
   high, xhigh, max; `inherit` replaces `auto` and `inherit-parent`. Upstream encodes effort
-  in Cursor model slugs (`claude-opus-5-5-max`). The Agent tool takes `model` per call and no
+  in Cursor model slugs (`opus-max`). The Agent tool takes `model` per call and no
   effort, and a subagent's `effort` frontmatter sets it (code.claude.com/docs/en/sub-agents,
   checked 2026-10-04), so step 6 installs effort-tier types: `pstack-<effort>` from the local
   subagents/pstack.md (no upstream equivalent) and `poteto-agent-<effort>` copies. Skills spawn
   the tier type with the role's model; Workflow scripts pass the type as `agentType`.
   The user's defaults (2026-10-04): implementation roles (feature, bug-fix, perf-issue,
-  hillclimb, swarm workers) `claude-opus-5-5 medium`; `hardest tasks: claude-fable-5-1 medium`; analytical roles
-  (judgment and prose, how explainer, why, reflect, arena, interrogate) `claude-opus-5-5 high`;
-  `how explorer: claude-opus-5-5 medium` (was sonnet); `architect runners: claude-fable-5-1 high`;
-  `interrogate reviewers: claude-opus-5-5 high, claude-fable-5-1 medium`. Arena and architect runner counts come from
-  design directions. Defaults name full model IDs, `claude-opus-5-5` and `claude-fable-5-1`
-  (the user's choice: a full ID pins the version where an alias moves). The budget step
+  hillclimb, swarm workers) `opus medium`; `hardest tasks: fable medium`; analytical roles
+  (judgment and prose, how explainer, why, reflect, arena, interrogate) `opus high`;
+  `how explorer: opus medium` (was sonnet); `architect runners: fable high`;
+  `interrogate reviewers: opus high, fable medium`. Arena and architect runner counts come from
+  design directions. Defaults name the aliases `opus` and `fable`: the Agent tool's `model`
+  accepts only `sonnet`, `opus`, `haiku`, and `fable`, and rejects a full ID such as
+  `claude-opus-5-5` (tested 2026-10-04; the user chose aliases over full IDs). The budget step
   stays dropped: effort is set per role. Map any new upstream role to the closest tier and
   keep its label verbatim.
   Step 6 installs pstack's subagents (shipped in no-comments/ and poteto-mode/ under

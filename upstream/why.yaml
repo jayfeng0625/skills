@@ -6,7 +6,7 @@ license: MIT
 tags: [pstack, explain]
 merge_guidance: |
   Claude Code port. Role lines come from ~/.claude/pstack-models.md (format and spawn type in
-  setup-pstack); `why investigators` and `why synthesizer` default to `claude-opus-5-5 high`, and
+  setup-pstack); `why investigators` and `why synthesizer` default to `opus high`, and
   a rejected model runs on `inherit`. MCP discovery reads `mcp__<server>__<tool>` names
   from the session's tools, in place of Cursor's tools map and `mcps/` directory. Upstream's
   `readonly: false` notes became "the `pstack-<effort>` type carries MCP tools" (it omits `tools`); Claude

@@ -37,26 +37,26 @@ Write `~/.claude/pstack-models.md` with one line per role, using the same labels
 
 ```
 # pstack model configuration. One line per role. Delete a line to fall back to the skill default.
-# A value is "<model> <effort>". Model: an Agent tool `model` value (opus, fable, sonnet, haiku, or a full model ID).
+# A value is "<model> <effort>". Model: opus, fable, sonnet, or haiku (the Agent tool's `model` values).
 # Effort: low, medium, high, xhigh, or max. A value with no effort keeps the role's default effort.
 # `inherit` as the model: the role runs on the parent session's model (omit `model`). An `inherit` entry in a panel list still counts toward its fan-out.
-feature, refactoring: claude-opus-5-5 medium
-bug-fix: claude-opus-5-5 medium
-perf-issue: claude-opus-5-5 medium
-hillclimb: claude-opus-5-5 medium
-judgment and prose: claude-opus-5-5 high
-hardest tasks: claude-fable-5-1 medium
-how explorer: claude-opus-5-5 medium
-how explainer: claude-opus-5-5 high
-why investigators: claude-opus-5-5 high
-why synthesizer: claude-opus-5-5 high
-reflect tooling: claude-opus-5-5 high
-reflect judgment, divergent, synthesizer: claude-opus-5-5 high
-arena runners: claude-opus-5-5 high
-arena cross-judge pool: claude-opus-5-5 high
-swarm workers: claude-opus-5-5 medium
-architect runners: claude-fable-5-1 high
-interrogate reviewers: claude-opus-5-5 high, claude-fable-5-1 medium
+feature, refactoring: opus medium
+bug-fix: opus medium
+perf-issue: opus medium
+hillclimb: opus medium
+judgment and prose: opus high
+hardest tasks: fable medium
+how explorer: opus medium
+how explainer: opus high
+why investigators: opus high
+why synthesizer: opus high
+reflect tooling: opus high
+reflect judgment, divergent, synthesizer: opus high
+arena runners: opus high
+arena cross-judge pool: opus high
+swarm workers: opus medium
+architect runners: fable high
+interrogate reviewers: opus high, fable medium
 ```
 
 ### 6. Install the subagents

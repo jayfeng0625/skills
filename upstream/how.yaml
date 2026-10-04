@@ -6,7 +6,7 @@ license: MIT
 tags: [pstack, explain]
 merge_guidance: |
   Claude Code port. Role lines come from ~/.claude/pstack-models.md (format and spawn type in
-  setup-pstack). `how explorer` defaults to `claude-opus-5-5 medium`, `how explainer` to
-  `claude-opus-5-5 high` (the user's choice); `inherit` replaces `auto` and `inherit-parent`; a
+  setup-pstack). `how explorer` defaults to `opus medium`, `how explainer` to
+  `opus high` (the user's choice); `inherit` replaces `auto` and `inherit-parent`; a
   rejected model runs on `inherit`. Task became the Agent tool, `generalPurpose` became the
   `pstack-<effort>` type, and `readonly: true` became a brief that says the subagent edits no files.

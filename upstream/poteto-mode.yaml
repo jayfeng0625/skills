@@ -13,8 +13,8 @@ merge_guidance: |
   Local edits there: `background: true` for `is_background`, `general-purpose` for
   `generalPurpose`, and the SKILL.md paths (the subagent reads the file because Claude Code
   cannot preload a skill with disable-model-invocation). /setup-pstack installs it.
-  Models: role values are `<model> <effort>` (see setup-pstack); defaults `claude-opus-5-5 medium` for code,
-  `claude-opus-5-5 high` for judgment and prose, `hardest tasks` `claude-fable-5-1 medium`. Playbook delegates spawn
+  Models: role values are `<model> <effort>` (see setup-pstack); defaults `opus medium` for code,
+  `opus high` for judgment and prose, `hardest tasks` `fable medium`. Playbook delegates spawn
   `poteto-agent-<effort>`, which /setup-pstack installs per effort. Role lines in ~/.claude/pstack-models.md,
   `inherit` for `auto`/`inherit-parent`. Task became Agent; AskQuestion became
   AskUserQuestion; Cursor's create-skill became Anthropic's skill-creator; `/loop` is
