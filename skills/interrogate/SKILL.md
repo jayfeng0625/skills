@@ -48,7 +48,7 @@ For each reviewer:
 - `model`: the entry's model. For an `inherit` model, omit `model` so that reviewer runs on the parent model.
 - Read-only: the brief says the reviewer edits no files.
 
-If the Agent tool rejects a configured entry, run that reviewer on its table default and say so. If it rejects a table default, check the valid models in the Agent tool's error message, pick the closest equivalent, spawn with it, and open a separate PR to update the default table. Do not block the review on the model issue. Never treat an `inherit` entry as a rejected model or apply either fallback to it.
+If the Agent tool rejects an entry, run that reviewer on `inherit` and say so. Do not block the review on the model issue.
 
 Read `references/reviewer-prompt.md` and fill in the template with:
 1. The stated intent

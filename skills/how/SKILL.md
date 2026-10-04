@@ -10,7 +10,7 @@ metadata:
 
 Explore the codebase to answer "how does X work?" questions. Produce architectural explanations at the level of a senior engineer onboarding onto a subsystem, enough to build a working mental model, not so much that it reads like annotated source code.
 
-Each spawn below names a role line in `~/.claude/pstack-models.md` and a default. A value is a model and an effort, such as `claude-opus-5-5 high`. Take the line's value, or the default if the file or the line is missing; a value with no effort keeps the default's effort. Spawn subagent type `pstack-<effort>` with `model` set to the model, left unset when the model is `inherit`. In a Workflow script, pass that type as `agentType` and the model as `model`. If the Agent tool offers no `pstack-<effort>` type, spawn `general-purpose` and tell the user to run `/setup-pstack`. If the Agent tool rejects a model, use the default and say so. If it rejects the default, use `inherit` and say so.
+Each spawn below names a role line in `~/.claude/pstack-models.md` and a default. A value is a model and an effort, such as `claude-opus-5-5 high`. Take the line's value, or the default if the file or the line is missing; a value with no effort keeps the default's effort. Spawn subagent type `pstack-<effort>` with `model` set to the model, left unset when the model is `inherit`. In a Workflow script, pass that type as `agentType` and the model as `model`. If the Agent tool offers no `pstack-<effort>` type, spawn `general-purpose` and tell the user to run `/setup-pstack`. If the Agent tool rejects a model, use `inherit` and say so.
 
 ## Step 1. Assess Complexity
 

@@ -18,7 +18,7 @@ merge_guidance: |
   `poteto-agent-<effort>`, which /setup-pstack installs per effort. Role lines in ~/.claude/pstack-models.md,
   `inherit` for `auto`/`inherit-parent`. Task became Agent; AskQuestion became
   AskUserQuestion; Cursor's create-skill became Anthropic's skill-creator; `/loop` is
-  Claude Code's. Cursor's built-in babysit skill mentions are removed.
+  Claude Code's (autonomous-run.md, bug-fix.md). Cursor's built-in babysit skill mentions are removed.
   cursor-team-kit's deslop, control-ui, and control-cli live in this repo as their own
   upstream skills, so "from cursor-team-kit" wording is dropped.
   No cloud workers (user's choice): Cursor cloud agents became background subagents in

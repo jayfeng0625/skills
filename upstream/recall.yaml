@@ -7,4 +7,6 @@ tags: [pstack, workflow]
 merge_guidance: |
   Claude Code port. The transcript path sentence describes ~/.claude/projects/<slug>/<uuid>.jsonl,
   where the slug replaces every non-alphanumeric character with "-" and keeps the leading "-",
-  plus <uuid>/subagents/. Layout verified on disk 2026-10-04.
+  plus <uuid>/subagents/. The sentence also names the current session's
+  file (`${CLAUDE_SESSION_ID}`) and says the `user` and `assistant` records are the chat
+  messages. Layout verified on disk 2026-10-04.

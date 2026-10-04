@@ -10,4 +10,4 @@ merge_guidance: |
   (the user's choice, so agreement still spans two models). The model-diversity premise and
   the no-personas rule stay as upstream wrote them. Task became Agent, `generalPurpose`
   became the `pstack-<effort>` type, `readonly` became a read-only brief, and the family-prefix
-  fallback became a per-reviewer table default.
+  and closest-slug fallbacks became one rule: a rejected entry runs on `inherit`.

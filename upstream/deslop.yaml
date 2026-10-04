@@ -4,3 +4,6 @@ commit: e43c7ee26e0038c6c1fa8380dd34ce86ff94cb2a
 author: Eric Zakariasson
 license: MIT
 tags: [cursor-team-kit, code]
+merge_guidance: |
+  SKILL.md says "against main or master branch" where upstream says "against main"
+  (the user's edit, 2026-10-04). Keep it when merging.

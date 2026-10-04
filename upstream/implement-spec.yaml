@@ -5,5 +5,4 @@ author: Matt Pocock
 license: MIT
 tags: [mattpocock, engineering]
 merge_guidance: |
-  `/setup-matt-pocock-skills` reads `/setup-issue-tracker`, the local name
-  of that skill. Keep the local name when merging upstream changes.
+  `/setup-matt-pocock-skills` becomes `/setup-issue-tracker` (see setup-issue-tracker).

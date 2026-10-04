@@ -10,4 +10,4 @@ merge_guidance: |
   `isolation: "worktree"`; `cloud_base_branch` became a branch named in the brief.
   Drop any new upstream cloud parameter the same way. The `swarm workers` line lives in
   ~/.claude/pstack-models.md, default `claude-opus-5-5 medium`; workers spawn as type
-  `pstack-<effort>` (see setup-pstack).
+  `pstack-<effort>` (see setup-pstack); a rejected model runs on `inherit`.

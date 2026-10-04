@@ -5,10 +5,6 @@ author: Matt Pocock
 license: MIT
 tags: [mattpocock, engineering]
 merge_guidance: |
-  Renamed locally from setup-matt-pocock-skills to setup-issue-tracker
-  (user choice). Local edits: the folder name, the `name:` field, and
-  `display_name` in agents/openai.yaml. The other pulled skills point at
-  `/setup-issue-tracker` in place of `/setup-matt-pocock-skills`
-  (code-review, to-spec, to-tickets twice, implement-spec, triage,
-  wayfinder); see each one's merge_guidance. Keep the local name when
-  merging upstream changes.
+  Renamed locally from setup-matt-pocock-skills (the user's choice). Local edits: the folder
+  name, the `name:` field, and `display_name` in agents/openai.yaml. Pulled skills that call it
+  use `/setup-issue-tracker`; rename any new upstream reference when merging.
