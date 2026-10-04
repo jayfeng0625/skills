@@ -1,0 +1,3 @@
+interface:
+  display_name: "Control CLI"
+  short_description: "Drive an interactive CLI or TUI for proof"

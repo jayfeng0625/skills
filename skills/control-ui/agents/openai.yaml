@@ -1,0 +1,3 @@
+interface:
+  display_name: "Control UI"
+  short_description: "Drive a local web or Electron UI for proof"
