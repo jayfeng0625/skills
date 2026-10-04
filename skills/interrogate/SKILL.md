@@ -39,12 +39,12 @@ Launch all reviewers in a single message using the Agent tool. Use the `interrog
 
 | Subagent | Default |
 |----------|---------|
-| Reviewer A | `opus high` |
-| Reviewer B | `fable medium` |
+| Reviewer A | `opus` |
+| Reviewer B | `fable` |
 
 For each reviewer:
-- Entry: the configured `interrogate reviewers` entry, or the table default with no configured line. An entry is a model and an effort, such as `opus high`; an entry with no effort keeps its table default's effort.
-- `subagent_type`: `pstack-<effort>`. If the Agent tool offers no such type, use `general-purpose` and tell the user to run `/setup-pstack`. In a Workflow script, pass the type as `agentType`.
+- Entry: the configured `interrogate reviewers` entry, or the table default with no configured line.
+- `subagent_type`: `general-purpose`
 - `model`: the entry's model. For an `inherit` model, omit `model` so that reviewer runs on the parent model.
 - Read-only: the brief says the reviewer edits no files.
 

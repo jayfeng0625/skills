@@ -6,6 +6,6 @@ license: MIT
 tags: [pstack, workflow]
 merge_guidance: |
   Claude Code port, paired with arena's. The `architect runners` line in
-  ~/.claude/pstack-models.md names model and effort only, default `fable high` (the user's choice). Candidates differ by an
+  ~/.claude/pstack-models.md names models only, default `fable` (the user's choice). Candidates differ by an
   assigned direction set by the orchestrator, so the intro, Phase B, and
   references/runner-prompt.md say "direction" where upstream said "model".

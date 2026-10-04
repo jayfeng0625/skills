@@ -12,7 +12,7 @@ Investigate the motivation and intent behind code.
 
 Companion to the `how` skill. `how` answers what the code does and how it works. `why` answers what forces led to its shape.
 
-Each spawn below names a role line in `~/.claude/pstack-models.md` and a default. A value is a model and an effort, such as `opus high`. Take the line's value, or the default if the file or the line is missing; a value with no effort keeps the default's effort. Spawn subagent type `pstack-<effort>` with `model` set to the model, left unset when the model is `inherit`. In a Workflow script, pass that type as `agentType` and the model as `model`. If the Agent tool offers no `pstack-<effort>` type, spawn `general-purpose` and tell the user to run `/setup-pstack`. If the Agent tool rejects a model, use `inherit` and say so.
+Each spawn below names a role line in `~/.claude/pstack-models.md` and a default. Set `model` to that line's value, or to the default if the file or the line is missing. Leave `model` unset when the value is `inherit`. Spawn subagent type `general-purpose`. If the Agent tool rejects a model, use `inherit` and say so.
 
 ## Operating Posture
 
@@ -82,7 +82,7 @@ Aim for a complete **coverage map**, not a minimal one. Document the null, don't
 Launch all matching investigators in a single message so they run concurrently. Don't ask one agent to cover multiple MCPs.
 
 Subagent config (each):
-- Role: the `why investigators` line, default `opus high`. The `pstack-<effort>` type carries the session's MCP tools. Investigators still shouldn't write anything.
+- Role: the `why investigators` line, default `opus`. The `general-purpose` type carries the session's MCP tools. Investigators still shouldn't write anything.
 
 Each investigator gets:
 1. The base prompt from `references/investigator-prompt.md`
@@ -124,7 +124,7 @@ If your scope assessment suggests a single-commit trivial target where the PR de
 
 Spawn one synthesizer subagent:
 
-- Role: the `why synthesizer` line, default `opus high`. The synthesizer's quality check spot-verifies citations, which can require MCP access.
+- Role: the `why synthesizer` line, default `opus`. The synthesizer's quality check spot-verifies citations, which can require MCP access.
 
 The synthesizer gets:
 1. The investigator findings, including any null results and any categories skipped with justification

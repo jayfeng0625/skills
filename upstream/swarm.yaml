@@ -9,5 +9,5 @@ merge_guidance: |
   machine). Workers are local background Agent calls; a writing worker gets
   `isolation: "worktree"`; `cloud_base_branch` became a branch named in the brief.
   Drop any new upstream cloud parameter the same way. The `swarm workers` line lives in
-  ~/.claude/pstack-models.md, default `opus medium`; workers spawn as type
-  `pstack-<effort>` (see setup-pstack); a rejected model runs on `inherit`.
+  ~/.claude/pstack-models.md, default `opus`; workers spawn as
+  `general-purpose`; a rejected model runs on `inherit`.

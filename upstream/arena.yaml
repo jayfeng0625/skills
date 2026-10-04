@@ -6,10 +6,10 @@ license: MIT
 tags: [pstack, workflow]
 merge_guidance: |
   Claude Code port. Model lines come from ~/.claude/pstack-models.md (see setup-pstack);
-  entries are `<model> <effort>` spawned as type `pstack-<effort>`; defaults are
-  `opus high`; `inherit` replaces `auto` and `inherit-parent`; a rejected entry runs
+  runners and the judge spawn as `general-purpose`; defaults are
+  `opus`; `inherit` replaces `auto` and `inherit-parent`; a rejected entry runs
   on `inherit`. The cross-family logic (claude-*/gpt-*/grok-* prefixes) is dropped.
   Upstream got distinct candidates from different model families. With one model, the
   orchestrator names structurally distinct directions (at least two) and gives each runner
-  one; the runners line names model and effort only. Keep that when merging new Phase A text.
+  one; the runners line names models only. Keep that when merging new Phase A text.
   `readonly` became a brief that says the judge edits no files.

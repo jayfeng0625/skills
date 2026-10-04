@@ -26,21 +26,21 @@ Take the session path. If no path resolves, write a tight digest of the session 
 
 ### 2. Spawn three reviewers in parallel
 
-One message, three `Agent` calls, each with the subagent type and `model` its role line sets below. Reviewers need MCP access for context lookups (tickets, chat threads, observability traces referenced in the transcript), and the `pstack-<effort>` type carries the session's MCP tools.
+One message, three `Agent` calls, each with the subagent type and `model` its role line sets below. Reviewers need MCP access for context lookups (tickets, chat threads, observability traces referenced in the transcript), and the `general-purpose` type carries the session's MCP tools.
 
-Each reviewer and the synthesizer name a role line in `~/.claude/pstack-models.md` and a default. A value is a model and an effort, such as `opus high`. Take the line's value, or the default if the file or the line is missing; a value with no effort keeps the default's effort. Spawn subagent type `pstack-<effort>` with `model` set to the model, left unset when the model is `inherit`. In a Workflow script, pass that type as `agentType` and the model as `model`. If the Agent tool offers no `pstack-<effort>` type, spawn `general-purpose` and tell the user to run `/setup-pstack`. If the Agent tool rejects a model, use `inherit` and say so.
+Each reviewer and the synthesizer name a role line in `~/.claude/pstack-models.md` and a default. Set `model` to that line's value, or to the default if the file or the line is missing. Leave `model` unset when the value is `inherit`. Spawn subagent type `general-purpose`. If the Agent tool rejects a model, use `inherit` and say so.
 
 | Lens | Role line | Default | Prompt template |
 |---|---|---|---|
-| Judgment | `reflect judgment, divergent, synthesizer` | `opus high` | `references/judgment-reviewer.md` |
-| Tooling | `reflect tooling` | `opus high` | `references/tooling-reviewer.md` |
-| Divergent | `reflect judgment, divergent, synthesizer` | `opus high` | `references/divergent-reviewer.md` |
+| Judgment | `reflect judgment, divergent, synthesizer` | `opus` | `references/judgment-reviewer.md` |
+| Tooling | `reflect tooling` | `opus` | `references/tooling-reviewer.md` |
+| Divergent | `reflect judgment, divergent, synthesizer` | `opus` | `references/divergent-reviewer.md` |
 
 Pass each template verbatim, substituting the transcript path or digest where marked. Reviewers return findings in the `Agent` response body.
 
 ### 3. Synthesize
 
-One `Agent` call, with the subagent type and `model` from the `reflect judgment, divergent, synthesizer` line (default `opus high`). The synthesizer's quality check includes spot-verifying citations, which can require MCP access. Use `references/synthesizer.md` verbatim, with each reviewer's full output inlined where marked. The synthesizer returns a structured Accepted / Rejected / Backlog list.
+One `Agent` call, with the subagent type and `model` from the `reflect judgment, divergent, synthesizer` line (default `opus`). The synthesizer's quality check includes spot-verifying citations, which can require MCP access. Use `references/synthesizer.md` verbatim, with each reviewer's full output inlined where marked. The synthesizer returns a structured Accepted / Rejected / Backlog list.
 
 ### 4. Structural enforcement check
 

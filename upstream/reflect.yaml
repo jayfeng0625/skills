@@ -11,9 +11,9 @@ merge_guidance: |
   <session-id>/subagents/
   (layout verified on disk 2026-10-04; ${CLAUDE_SESSION_ID} is a documented skill
   substitution). The first-line prompt match is dropped because the ID is exact. Role
-  lines come from ~/.claude/pstack-models.md (format and spawn type in setup-pstack), all
-  defaulting to `opus high`; a rejected model runs on `inherit`. Task became Agent,
-  `readonly: false` notes became "the `pstack-<effort>` type carries the session's MCP tools". Cursor's built-in
+  lines come from ~/.claude/pstack-models.md (see setup-pstack), all
+  defaulting to `opus`; a rejected model runs on `inherit`. Task became Agent,
+  `readonly: false` notes became "the `general-purpose` type carries the session's MCP tools". Cursor's built-in
   `create-skill` became Anthropic's `skill-creator` (here and in references/synthesizer.md).
   In the three reviewer references, skill-use evidence names `Skill` tool calls, Claude Code
   skill paths, `Agent` prompts, and Bash for Cursor's Shell. The Bugbot and gpt-4 lines in
