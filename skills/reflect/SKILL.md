@@ -18,11 +18,7 @@ Invoke when the user says "reflect" or "/reflect". Skip when the conversation is
 
 ### 1. Locate the active transcript
 
-The parent finds its own transcript file before fanning out. Claude Code stores it at `~/.claude/projects/<project>/<session-id>.jsonl`, where `<project>` is the launch directory with every non-alphanumeric character replaced by `-`. Match this session's ID exactly. Do not open other files under `~/.claude/projects/`. That crosses project boundaries and reads private chats from unrelated projects.
-
-```bash
-ls ~/.claude/projects/*/${CLAUDE_SESSION_ID}.jsonl ~/.claude/projects/*/${CLAUDE_SESSION_ID}/subagents/*.jsonl 2>/dev/null
-```
+The parent finds its own transcript file before fanning out. Claude Code stores it at `~/.claude/projects/<project>/${CLAUDE_SESSION_ID}.jsonl`, where `<project>` is the launch directory with every non-alphanumeric character replaced by `-`. Build that absolute path and read its first line with the Read tool to confirm it exists. Do not open other files under `~/.claude/projects/`. That crosses project boundaries and reads private chats from unrelated projects.
 
 Two transcript layouts: the session (`<session-id>.jsonl`) and its subagents (`<session-id>/subagents/agent-<id>.jsonl`). Each line is one JSON record; `user` and `assistant` records carry `message.content`.
 
@@ -30,21 +26,21 @@ Take the session path. If no path resolves, write a tight digest of the session 
 
 ### 2. Spawn three reviewers in parallel
 
-One message, three `Agent` calls, `subagent_type: "general-purpose"`, with `model` set as below. Reviewers need MCP access for context lookups (tickets, chat threads, observability traces referenced in the transcript), and `general-purpose` carries the session's MCP tools.
+One message, three `Agent` calls, each with the subagent type and `model` its role line sets below. Reviewers need MCP access for context lookups (tickets, chat threads, observability traces referenced in the transcript), and the `pstack-<effort>` type carries the session's MCP tools.
 
-Each reviewer and the synthesizer name a role line in `~/.claude/pstack-models.md` and a default. Set `model` to that line's value, or to the default if the file or the line is missing. Leave `model` unset when the value is `inherit`. If the Agent tool rejects a model, use the default and say so. If it rejects the default, use `inherit` and say so.
+Each reviewer and the synthesizer name a role line in `~/.claude/pstack-models.md` and a default. A value is a model and an effort, such as `claude-opus-5-5 high`. Take the line's value, or the default if the file or the line is missing; a value with no effort keeps the default's effort. Spawn subagent type `pstack-<effort>` with `model` set to the model, left unset when the model is `inherit`. In a Workflow script, pass that type as `agentType` and the model as `model`. If the Agent tool offers no `pstack-<effort>` type, spawn `general-purpose` and tell the user to run `/setup-pstack`. If the Agent tool rejects a model, use the default and say so. If it rejects the default, use `inherit` and say so.
 
-| Lens | Role line | Default `model` | Prompt template |
+| Lens | Role line | Default | Prompt template |
 |---|---|---|---|
-| Judgment | `reflect judgment, divergent, synthesizer` | `opus` | `references/judgment-reviewer.md` |
-| Tooling | `reflect tooling` | `opus` | `references/tooling-reviewer.md` |
-| Divergent | `reflect judgment, divergent, synthesizer` | `opus` | `references/divergent-reviewer.md` |
+| Judgment | `reflect judgment, divergent, synthesizer` | `claude-opus-5-5 high` | `references/judgment-reviewer.md` |
+| Tooling | `reflect tooling` | `claude-opus-5-5 high` | `references/tooling-reviewer.md` |
+| Divergent | `reflect judgment, divergent, synthesizer` | `claude-opus-5-5 high` | `references/divergent-reviewer.md` |
 
 Pass each template verbatim, substituting the transcript path or digest where marked. Reviewers return findings in the `Agent` response body.
 
 ### 3. Synthesize
 
-One `Agent` call, `subagent_type: "general-purpose"`, with `model` from the `reflect judgment, divergent, synthesizer` line (default `opus`). The synthesizer's quality check includes spot-verifying citations, which can require MCP access. Use `references/synthesizer.md` verbatim, with each reviewer's full output inlined where marked. The synthesizer returns a structured Accepted / Rejected / Backlog list.
+One `Agent` call, with the subagent type and `model` from the `reflect judgment, divergent, synthesizer` line (default `claude-opus-5-5 high`). The synthesizer's quality check includes spot-verifying citations, which can require MCP access. Use `references/synthesizer.md` verbatim, with each reviewer's full output inlined where marked. The synthesizer returns a structured Accepted / Rejected / Backlog list.
 
 ### 4. Structural enforcement check
 

@@ -7,6 +7,6 @@ tags: [pstack, workflow]
 merge_guidance: |
   subagents/comment-sicko.md is upstream pstack/agents/comment-sicko.md, outside this
   manifest's path, so upstream-diff.ts does not track it. On each merge, diff it by hand
-  against pstack/agents/comment-sicko.md at the new head. The only local edit is the
-  identifier `name: comment-sicko`. /setup-pstack installs it into ~/.claude/agents/.
+  against pstack/agents/comment-sicko.md at the new head. Local edits: the identifier
+  `name: comment-sicko`, and `model: claude-opus-5-5`, `effort: medium` (the user's choice, 2026-10-04). /setup-pstack installs it into ~/.claude/agents/.
   Step 1 spawns it with the Agent tool by `subagent_type: "comment-sicko"`.

@@ -6,8 +6,8 @@ license: MIT
 tags: [pstack, workflow]
 merge_guidance: |
   Claude Code port. Reviewers come from the `interrogate reviewers` line in
-  ~/.claude/pstack-models.md; the default table is Reviewer A `opus`, Reviewer B `fable`
+  ~/.claude/pstack-models.md; the default table is Reviewer A `claude-opus-5-5 high`, Reviewer B `claude-fable-5-1 medium`
   (the user's choice, so agreement still spans two models). The model-diversity premise and
   the no-personas rule stay as upstream wrote them. Task became Agent, `generalPurpose`
-  became `general-purpose`, `readonly` became a read-only brief, and the family-prefix
+  became the `pstack-<effort>` type, `readonly` became a read-only brief, and the family-prefix
   fallback became a per-reviewer table default.

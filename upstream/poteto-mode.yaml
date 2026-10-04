@@ -13,7 +13,9 @@ merge_guidance: |
   Local edits there: `background: true` for `is_background`, `general-purpose` for
   `generalPurpose`, and the SKILL.md paths (the subagent reads the file because Claude Code
   cannot preload a skill with disable-model-invocation). /setup-pstack installs it.
-  Models: defaults `opus`, `hardest tasks` `fable`, role lines in ~/.claude/pstack-models.md,
+  Models: role values are `<model> <effort>` (see setup-pstack); defaults `claude-opus-5-5 medium` for code,
+  `claude-opus-5-5 high` for judgment and prose, `hardest tasks` `claude-fable-5-1 medium`. Playbook delegates spawn
+  `poteto-agent-<effort>`, which /setup-pstack installs per effort. Role lines in ~/.claude/pstack-models.md,
   `inherit` for `auto`/`inherit-parent`. Task became Agent; AskQuestion became
   AskUserQuestion; Cursor's create-skill became Anthropic's skill-creator; `/loop` is
   Claude Code's. Cursor's built-in babysit skill mentions are removed.
@@ -29,3 +31,8 @@ merge_guidance: |
   .claude/worktrees/x (Claude Code's default, code.claude.com/docs/en/worktrees); its
   ~/Library/Application Support/Cursor reclaim item stays.
   bug-fix.md's **tdd** reference resolves to mattpocock's tdd (pstack tdd is not ported).
+  Upstream assumes pstack lives in the repo under work (`pstack/skills/...`, read with
+  `git show origin/main:`). Here those become `<skills dir>/...`, the installed skills
+  folder that multi-phase-plan step 4 defines, read from disk; autopilot-full and
+  autopilot-stack re-read their playbook from the skill folder. check-plan.mjs's program
+  marker `git show origin/main:` became `Re-read them at every tick` to match.

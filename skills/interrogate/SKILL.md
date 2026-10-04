@@ -37,14 +37,15 @@ Write one clear paragraph. If you're unsure about the intent, ask the user befor
 
 Launch all reviewers in a single message using the Agent tool. Use the `interrogate reviewers` line in `~/.claude/pstack-models.md`, one reviewer per entry, extending or shrinking the Reviewer A/B labels below to the configured entry count. If the file or that line is missing, use the table defaults.
 
-| Subagent | Default model |
-|----------|---------------|
-| Reviewer A | `opus` |
-| Reviewer B | `fable` |
+| Subagent | Default |
+|----------|---------|
+| Reviewer A | `claude-opus-5-5 high` |
+| Reviewer B | `claude-fable-5-1 medium` |
 
 For each reviewer:
-- `subagent_type`: `general-purpose`
-- `model`: the configured `interrogate reviewers` entry, or the table default with no configured line. For an `inherit` entry, omit `model` so that reviewer runs on the parent model.
+- Entry: the configured `interrogate reviewers` entry, or the table default with no configured line. An entry is a model and an effort, such as `claude-opus-5-5 high`; an entry with no effort keeps its table default's effort.
+- `subagent_type`: `pstack-<effort>`. If the Agent tool offers no such type, use `general-purpose` and tell the user to run `/setup-pstack`. In a Workflow script, pass the type as `agentType`.
+- `model`: the entry's model. For an `inherit` model, omit `model` so that reviewer runs on the parent model.
 - Read-only: the brief says the reviewer edits no files.
 
 If the Agent tool rejects a configured entry, run that reviewer on its table default and say so. If it rejects a table default, check the valid models in the Agent tool's error message, pick the closest equivalent, spawn with it, and open a separate PR to update the default table. Do not block the review on the model issue. Never treat an `inherit` entry as a rejected model or apply either fallback to it.

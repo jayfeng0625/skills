@@ -5,5 +5,5 @@ author: Lauren Tan
 license: MIT
 tags: [pstack, workflow]
 merge_guidance: |
-  Claude Code port. The end-of-run check reads ~/.claude/projects/*/${CLAUDE_SESSION_ID}.jsonl,
-  matched by exact session ID, in place of Cursor's agent-transcripts/ directory.
+  Claude Code port. The end-of-run check reads ~/.claude/projects/<project>/${CLAUDE_SESSION_ID}.jsonl
+  with the Read tool, an exact path with no glob, in place of Cursor's agent-transcripts/ directory.

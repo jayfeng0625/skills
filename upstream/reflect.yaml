@@ -6,10 +6,12 @@ license: MIT
 tags: [pstack, workflow]
 merge_guidance: |
   Claude Code port. Step 1 finds the transcript by exact session ID:
-  ~/.claude/projects/*/${CLAUDE_SESSION_ID}.jsonl plus <session-id>/subagents/*.jsonl
+  ~/.claude/projects/<project>/${CLAUDE_SESSION_ID}.jsonl, read with the Read tool (no Bash:
+  the user's hook denies any Bash command containing ~/.claude); subagents sit under
+  <session-id>/subagents/
   (layout verified on disk 2026-10-04; ${CLAUDE_SESSION_ID} is a documented skill
   substitution). The first-line prompt match is dropped because the ID is exact. Role
-  lines come from ~/.claude/pstack-models.md, all defaulting to `opus`. Task became Agent,
+  lines come from ~/.claude/pstack-models.md, all defaulting to `claude-opus-5-5 high`; a role value is `<model> <effort>`, spawned as type `pstack-<effort>` with `model` (see setup-pstack). Task became Agent,
   `readonly: false` notes became "general-purpose carries MCP tools". Cursor's built-in
   `create-skill` became Anthropic's `skill-creator` (here and in references/synthesizer.md).
   In the three reviewer references, skill-use evidence names `Skill` tool calls, Claude Code

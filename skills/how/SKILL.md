@@ -10,7 +10,7 @@ metadata:
 
 Explore the codebase to answer "how does X work?" questions. Produce architectural explanations at the level of a senior engineer onboarding onto a subsystem, enough to build a working mental model, not so much that it reads like annotated source code.
 
-Each spawn below names a role line in `~/.claude/pstack-models.md` and a default. Set `model` to that line's value, or to the default if the file or the line is missing. Leave `model` unset when the value is `inherit`. If the Agent tool rejects a model, use the default and say so. If it rejects the default, use `inherit` and say so.
+Each spawn below names a role line in `~/.claude/pstack-models.md` and a default. A value is a model and an effort, such as `claude-opus-5-5 high`. Take the line's value, or the default if the file or the line is missing; a value with no effort keeps the default's effort. Spawn subagent type `pstack-<effort>` with `model` set to the model, left unset when the model is `inherit`. In a Workflow script, pass that type as `agentType` and the model as `model`. If the Agent tool offers no `pstack-<effort>` type, spawn `general-purpose` and tell the user to run `/setup-pstack`. If the Agent tool rejects a model, use the default and say so. If it rejects the default, use `inherit` and say so.
 
 ## Step 1. Assess Complexity
 
@@ -25,8 +25,7 @@ When in doubt, take the simple path.
 
 Decompose the question into 2 to 4 exploration angles, each a distinct slice of the subsystem. Spawn all explorers in a single message:
 
-- `subagent_type`: `general-purpose`
-- `model`: the `how explorer` line, default `sonnet`
+- Role: the `how explorer` line, default `claude-opus-5-5 medium`
 - Read-only: the brief says the subagent edits no files.
 
 Each explorer gets the prompt in `references/explorer-prompt.md` with its angle filled in. Then go to Step 3.
@@ -35,8 +34,7 @@ Each explorer gets the prompt in `references/explorer-prompt.md` with its angle 
 
 Spawn one subagent with the Agent tool that explores and explains in one pass:
 
-- `subagent_type`: `general-purpose`
-- `model`: the `how explainer` line, default `opus`
+- Role: the `how explainer` line, default `claude-opus-5-5 high`
 - Read-only: the brief says the subagent edits no files.
 
 Build its prompt from `references/explainer-prompt.md` without the explorer-findings section. Go to Step 4.
@@ -45,8 +43,7 @@ Build its prompt from `references/explainer-prompt.md` without the explorer-find
 
 Once all explorers have returned, spawn one subagent with the Agent tool to synthesize their findings into one explanation:
 
-- `subagent_type`: `general-purpose`
-- `model`: the `how explainer` line, default `opus`
+- Role: the `how explainer` line, default `claude-opus-5-5 high`
 - Read-only: the brief says the subagent edits no files.
 
 Build its prompt from `references/explainer-prompt.md` with every explorer's findings filled in.
