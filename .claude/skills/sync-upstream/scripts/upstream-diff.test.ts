@@ -290,7 +290,7 @@ for (const { title, args, error } of [
   });
 }
 
-test("verbatim prints one diff from upstream HEAD to the local folder, without merge guidance", (t) => {
+function runVerbatimOnEditedArena(t: TestContext) {
   const { upstream, repo } = setup(t);
   const pinned = upstream.commit({ "skills/arena/SKILL.md": "arena v1\n" });
   const head = upstream.commit({ "skills/arena/SKILL.md": "arena v2\n" });
@@ -303,14 +303,24 @@ test("verbatim prints one diff from upstream HEAD to the local folder, without m
 
   const result = repo.run("verbatim", "arena");
   const [header = "", ...diffs] = result.stdout.split(/^-- .*\n/m);
+  return { head, result, header, diffs };
+}
+
+test("verbatim prints one diff from upstream HEAD to the local folder", (t) => {
+  const { head, result, header, diffs } = runVerbatimOnEditedArena(t);
 
   assert.equal(result.stderr, "");
   assert.match(header, new RegExp(`^head: ${head}$`, "m"));
-  assert.doesNotMatch(header, /merge_guidance|^commit:/m);
   assert.equal(diffs.length, 1);
   assert.match(diffs[0]!, /^-arena v2\n\+arena local$/m);
   assert.match(diffs[0]!, /^diff --git a\/LICENSE b\/LICENSE\nnew file mode/m);
   assert.equal(result.status, 0);
+});
+
+test("verbatim omits merge guidance and the pinned commit", (t) => {
+  const { header } = runVerbatimOnEditedArena(t);
+
+  assert.doesNotMatch(header, /merge_guidance|^commit:/m);
 });
 
 test("verbatim reports a skill whose path is gone at upstream HEAD", (t) => {
@@ -329,8 +339,8 @@ test("verbatim reports a skill whose path is gone at upstream HEAD", (t) => {
 });
 
 for (const { title, args, error } of [
-  { title: "--all", args: ["verbatim", "--all"], error: "verbatim takes skill names only, not --all or --tag" },
-  { title: "--tag", args: ["verbatim", "arena", "--tag", "pstack"], error: "verbatim takes skill names only, not --all or --tag" },
+  { title: "--all", args: ["verbatim", "--all"], error: "verbatim takes skill names only" },
+  { title: "--tag", args: ["verbatim", "arena", "--tag", "pstack"], error: "verbatim takes skill names only" },
   { title: "no skill names", args: ["verbatim"], error: "verbatim needs at least one skill name" },
 ]) {
   test(`verbatim with ${title} is rejected before any upstream is fetched`, (t) => {

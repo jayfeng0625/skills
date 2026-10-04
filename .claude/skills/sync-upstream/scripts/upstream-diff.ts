@@ -144,42 +144,45 @@ function printStatus(skill: Skill) {
   console.log(`${skill.name}: ${state} (upstream ${upstreamCount} files, local ${localCount} files)`);
 }
 
+function printSource(skill: Skill) {
+  console.log(`== ${skill.name}`);
+  console.log(`repo: ${skill.manifest.repo}`);
+  console.log(`path: ${skill.manifest.path}`);
+}
+
+function printSection(skill: Skill, title: string, from: string | null, to: string | null) {
+  console.log(`-- ${title}`);
+  console.log(from === null || to === null ? `(${missingNote(skill)})` : diffTrees(skill, from, to) || "(none)");
+}
+
 function printDiff(skill: Skill) {
   const { manifest } = skill;
-  console.log(`== ${skill.name}`);
-  console.log(`repo: ${manifest.repo}`);
-  console.log(`path: ${manifest.path}`);
+  printSource(skill);
   console.log(`commit: ${manifest.commit}`);
   console.log(`head: ${skill.head}`);
   if (manifest.merge_guidance !== undefined) {
     console.log(`merge_guidance:\n${manifest.merge_guidance.trimEnd()}`);
   }
-  console.log(`-- upstream changes (commit..head)`);
-  const upstreamChanges =
-    skill.headTree === null
-      ? `(${missingNote(skill)})`
-      : diffTrees(skill, skill.pinnedTree, skill.headTree) || "(none)";
-  console.log(upstreamChanges);
-  console.log(`-- local edits (commit..skills/${skill.name})`);
-  console.log(diffTrees(skill, skill.pinnedTree, skill.localTree) || "(none)");
+  printSection(skill, "upstream changes (commit..head)", skill.pinnedTree, skill.headTree);
+  printSection(skill, `local edits (commit..skills/${skill.name})`, skill.pinnedTree, skill.localTree);
 }
 
 function printVerbatimDiff(skill: Skill) {
-  const { manifest } = skill;
-  console.log(`== ${skill.name}`);
-  console.log(`repo: ${manifest.repo}`);
-  console.log(`path: ${manifest.path}`);
+  printSource(skill);
   console.log(`head: ${skill.head}`);
-  console.log(`-- verbatim (head..skills/${skill.name})`);
-  const diff =
-    skill.headTree === null ? `(${missingNote(skill)})` : diffTrees(skill, skill.headTree, skill.localTree) || "(none)";
-  console.log(diff);
+  printSection(skill, `verbatim (head..skills/${skill.name})`, skill.headTree, skill.localTree);
 }
 
-const commands: Record<string, (skill: Skill) => void> = {
-  status: printStatus,
-  diff: printDiff,
-  verbatim: printVerbatimDiff,
+type Command = {
+  print: (skill: Skill) => void;
+  /** Verbatim drops merge_guidance, so it is limited to skills the caller names one by one. */
+  namesOnly?: boolean;
+};
+
+const commands: Record<string, Command> = {
+  status: { print: printStatus },
+  diff: { print: printDiff },
+  verbatim: { print: printVerbatimDiff, namesOnly: true },
 };
 
 function main(args: string[]) {
@@ -192,12 +195,11 @@ function main(args: string[]) {
     },
   });
   const [command = "", ...names] = positionals;
-  const print = commands[command];
+  const { print, namesOnly = false } = commands[command] ?? {};
   if (print === undefined) throw new Error(`unknown command: ${command}`);
-  if (command === "verbatim") {
-    // Verbatim drops merge_guidance, so it is limited to skills the caller names one by one.
-    if (values.all || values.tag.length > 0) throw new Error("verbatim takes skill names only, not --all or --tag");
-    if (names.length === 0) throw new Error("verbatim needs at least one skill name");
+  if (namesOnly) {
+    if (values.all || values.tag.length > 0) throw new Error(`${command} takes skill names only`);
+    if (names.length === 0) throw new Error(`${command} needs at least one skill name`);
   }
   const root = process.cwd();
   const manifests = readManifests(root);
