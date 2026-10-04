@@ -4,3 +4,28 @@ commit: e43c7ee26e0038c6c1fa8380dd34ce86ff94cb2a
 author: Lauren Tan
 license: MIT
 tags: [pstack, workflow]
+merge_guidance: |
+  Claude Code port. Frontmatter: `name: poteto-mode` (identifier); the Cursor mode keys
+  `mode`, `icon`, `color`, and `reminder` are dropped (Claude Code has no modes; user's
+  choice). `disable-model-invocation: true` stays as upstream sets it.
+  subagents/poteto-agent.md is upstream pstack/agents/poteto-agent.md, outside this
+  manifest's path, so upstream-diff.ts does not track it; diff it by hand on each merge.
+  Local edits there: `background: true` for `is_background`, `general-purpose` for
+  `generalPurpose`, and the SKILL.md paths (the subagent reads the file because Claude Code
+  cannot preload a skill with disable-model-invocation). /setup-pstack installs it.
+  Models: defaults `opus`, `hardest tasks` `fable`, role lines in ~/.claude/pstack-models.md,
+  `inherit` for `auto`/`inherit-parent`. Task became Agent; AskQuestion became
+  AskUserQuestion; Cursor's create-skill became Anthropic's skill-creator; `/loop` is
+  Claude Code's. Cursor's built-in babysit skill mentions are removed.
+  cursor-team-kit's deslop, control-ui, and control-cli live in this repo as their own
+  upstream skills, so "from cursor-team-kit" wording is dropped.
+  No cloud workers (user's choice): Cursor cloud agents became background subagents in
+  their own worktree; orchestrate's workers are local, restacks run one at a time, and the
+  Cursor dashboard and cloud recovery steps are gone; multi-phase-plan lanes run in local
+  worktrees; session-pickup drops cloud-agent URLs. Drop new cloud features the same way.
+  Transcripts: ~/.claude/projects/<project>/<session-id>.jsonl and
+  <session-id>/subagents/agent-<id>.jsonl. scripts/worktree-audit.sh searches the main
+  checkout's and each worktree's project dirs. worktree-cleanup's example path is
+  .claude/worktrees/x (Claude Code's default, code.claude.com/docs/en/worktrees); its
+  ~/Library/Application Support/Cursor reclaim item stays.
+  bug-fix.md's **tdd** reference resolves to mattpocock's tdd (pstack tdd is not ported).
