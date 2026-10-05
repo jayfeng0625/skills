@@ -96,7 +96,8 @@ type Clone = { dir: string; head: string };
 
 function cloneRepo(temp: string, repo: string, index: number): Clone {
   const dir = join(temp, `clone-${index}`);
-  git(temp, ["clone", "--quiet", "--no-checkout", "--filter=blob:none", repo, dir]);
+  // A lazy blob fetch ends in detached auto maintenance, which would write into the clone while main deletes it.
+  git(temp, ["clone", "--quiet", "--no-checkout", "--filter=blob:none", "--config", "maintenance.auto=false", repo, dir]);
   return { dir, head: git(dir, ["rev-parse", "HEAD"]) };
 }
 

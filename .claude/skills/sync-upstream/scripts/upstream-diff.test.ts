@@ -1,6 +1,6 @@
 import assert from "node:assert/strict";
 import { execFileSync, spawnSync } from "node:child_process";
-import { mkdirSync, mkdtempSync, rmSync, writeFileSync } from "node:fs";
+import { mkdirSync, mkdtempSync, readFileSync, rmSync, writeFileSync } from "node:fs";
 import { tmpdir } from "node:os";
 import { dirname, join } from "node:path";
 import { test, type TestContext } from "node:test";
@@ -40,6 +40,8 @@ function setup(t: TestContext) {
   const git = (...args: string[]) =>
     execFileSync("git", args, { cwd: upstreamDir, env: gitEnv, encoding: "utf8" }).trim();
   git("init", "--quiet", "--initial-branch=main");
+  // Serve partial clones, so the script fetches blobs lazily as it does against GitHub.
+  git("config", "uploadpack.allowFilter", "true");
 
   const upstream = {
     url: `file://${upstreamDir}`,
@@ -76,9 +78,12 @@ function setup(t: TestContext) {
       writeFiles(repoDir, { [`upstream/${name}.yaml`]: [...lines, ""].join("\n") });
     },
     run(...args: string[]) {
+      return this.runWithEnv({}, ...args);
+    },
+    runWithEnv(env: Record<string, string>, ...args: string[]) {
       const result = spawnSync(process.execPath, [script, ...args], {
         cwd: repoDir,
-        env: gitEnv,
+        env: { ...gitEnv, ...env },
         encoding: "utf8",
       });
       return { status: result.status, stdout: result.stdout, stderr: result.stderr };
@@ -185,6 +190,23 @@ test("a skill whose path is gone at upstream HEAD is reported as missing upstrea
   assert.equal(diff.stderr, "");
   assert.equal(sections(diff.stdout).upstreamChanges.trim(), "(skills/arena not found at HEAD)");
   assert.equal(diff.status, 0);
+});
+
+test("a lazy blob fetch into the clone starts no background maintenance", (t) => {
+  const { upstream, repo } = setup(t);
+  const pinned = upstream.commit({ "skills/arena/SKILL.md": "arena v1\n" });
+  upstream.commit({ "skills/arena/SKILL.md": "arena v2\n" });
+  repo.addSkill("arena", { path: "skills/arena", commit: pinned, tags: ["pstack"] }, {
+    "SKILL.md": "arena v1\n",
+  });
+  const trace = join(repo.root, "git-trace.log");
+
+  const result = repo.runWithEnv({ GIT_TRACE: trace }, "diff", "arena");
+  const log = readFileSync(trace, "utf8");
+
+  assert.equal(result.status, 0);
+  assert.match(log, /built-in: git fetch .*--filter=blob:none/);
+  assert.doesNotMatch(log, /git maintenance run/);
 });
 
 function addThreeSkills(t: TestContext) {
