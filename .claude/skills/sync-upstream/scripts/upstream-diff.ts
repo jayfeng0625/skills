@@ -13,12 +13,15 @@ type Manifest = {
   merge_guidance?: string;
 };
 
-function git(cwd: string, args: string[], env: Record<string, string> = {}) {
+type GitOptions = { env?: Record<string, string>; input?: string };
+
+function git(cwd: string, args: string[], { env = {}, input = "" }: GitOptions = {}) {
   return execFileSync("git", args, {
     cwd,
     encoding: "utf8",
     env: { ...process.env, ...env },
-    stdio: ["ignore", "pipe", "pipe"],
+    input,
+    stdio: "pipe",
   }).trim();
 }
 
@@ -95,7 +98,7 @@ function treeExists(clone: string, treeish: string) {
 
 function cloneRepo(temp: string, repo: string, index: number): Clone {
   const dir = join(temp, `clone-${index}`);
-  // A lazy blob fetch ends in detached auto maintenance, which would write into the clone while main deletes it.
+  // A blob fetch ends in detached auto maintenance, which would write into the clone while main deletes it.
   const options = ["--quiet", "--no-checkout", "--filter=blob:none", "--config", "maintenance.auto=false"];
   git(temp, ["clone", ...options, repo, dir]);
   return { dir, head: git(dir, ["rev-parse", "HEAD"]) };
@@ -106,8 +109,8 @@ function inspectSkill(root: string, temp: string, name: string, manifest: Manife
   const skillDir = resolve(root, "skills", name);
   const localEnv = { GIT_INDEX_FILE: join(temp, `${name}.index`) };
   const gitDir = join(clone.dir, ".git");
-  git(skillDir, ["--git-dir", gitDir, "--work-tree", skillDir, "add", "--all"], localEnv);
-  const localTree = git(skillDir, ["--git-dir", gitDir, "write-tree"], localEnv);
+  git(skillDir, ["--git-dir", gitDir, "--work-tree", skillDir, "add", "--all"], { env: localEnv });
+  const localTree = git(skillDir, ["--git-dir", gitDir, "write-tree"], { env: localEnv });
 
   const headTree = `${clone.head}:${manifest.path}`;
   return {
@@ -118,6 +121,21 @@ function inspectSkill(root: string, temp: string, name: string, manifest: Manife
     headTree: treeExists(clone.dir, headTree) ? headTree : null,
     localTree,
   };
+}
+
+/** Fetches the missing blobs in one batch per clone, where a lazy fetch from diff costs a round trip per skill. */
+function fetchBlobs(skills: Skill[], blobTrees: (skill: Skill) => (string | null)[]) {
+  for (const clone of new Set(skills.map((skill) => skill.clone))) {
+    const cloneSkills = skills.filter((skill) => skill.clone === clone);
+    const trees = cloneSkills.flatMap(blobTrees).filter((tree) => tree !== null);
+    const objects = git(clone.dir, ["rev-list", "--objects", "--missing=print", ...trees]).split("\n");
+    const missing = objects.filter((line) => line.startsWith("?")).map((line) => line.slice(1));
+    if (missing.length === 0) continue;
+    // The flags git itself passes for a lazy fetch.
+    const options = ["--no-tags", "--no-write-fetch-head", "--recurse-submodules=no", "--filter=blob:none"];
+    const input = missing.join("\n");
+    git(clone.dir, ["-c", "fetch.negotiationAlgorithm=noop", "fetch", ...options, "--stdin", "origin"], { input });
+  }
 }
 
 function diffTrees(skill: Skill, from: string, to: string, ...options: string[]) {
@@ -175,14 +193,16 @@ function printVerbatimDiff(skill: Skill) {
 
 type Command = {
   print: (skill: Skill) => void;
+  /** Upstream trees whose blobs print reads. */
+  blobTrees?: (skill: Skill) => (string | null)[];
   /** Verbatim drops merge_guidance, so it is limited to skills the caller names one by one. */
   namesOnly?: boolean;
 };
 
 const commands: Record<string, Command> = {
   status: { print: printStatus },
-  diff: { print: printDiff },
-  verbatim: { print: printVerbatimDiff, namesOnly: true },
+  diff: { print: printDiff, blobTrees: (skill) => [skill.pinnedTree, skill.headTree] },
+  verbatim: { print: printVerbatimDiff, blobTrees: (skill) => [skill.headTree], namesOnly: true },
 };
 
 function main(args: string[]) {
@@ -195,7 +215,7 @@ function main(args: string[]) {
     },
   });
   const [command = "", ...names] = positionals;
-  const { print, namesOnly = false } = commands[command] ?? {};
+  const { print, blobTrees, namesOnly = false } = commands[command] ?? {};
   if (print === undefined) throw new Error(`unknown command: ${command}`);
   if (namesOnly) {
     if (values.all || values.tag.length > 0) throw new Error(`${command} takes skill names only`);
@@ -209,15 +229,17 @@ function main(args: string[]) {
   const temp = mkdtempSync(join(tmpdir(), "upstream-diff-"));
   try {
     const clones = new Map<string, Clone>();
-    for (const name of selected) {
+    const skills = selected.map((name) => {
       const manifest = manifests.get(name)!;
       let clone = clones.get(manifest.repo);
       if (clone === undefined) {
         clone = cloneRepo(temp, manifest.repo, clones.size);
         clones.set(manifest.repo, clone);
       }
-      print(inspectSkill(root, temp, name, manifest, clone));
-    }
+      return inspectSkill(root, temp, name, manifest, clone);
+    });
+    if (blobTrees !== undefined) fetchBlobs(skills, blobTrees);
+    for (const skill of skills) print(skill);
   } finally {
     rmSync(temp, { recursive: true, force: true });
   }

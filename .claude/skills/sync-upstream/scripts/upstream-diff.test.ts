@@ -42,7 +42,7 @@ function setup(t: TestContext) {
   const git = (...args: string[]) =>
     execFileSync("git", args, { cwd: upstreamDir, env: gitEnv, encoding: "utf8" }).trim();
   git("init", "--quiet", "--initial-branch=main");
-  // Serve partial clones, so the script fetches blobs lazily as it does against GitHub.
+  // Serve partial clones, as GitHub does.
   git("config", "uploadpack.allowFilter", "true");
 
   const upstream = {
@@ -192,7 +192,7 @@ test("a skill whose path is gone at upstream HEAD is reported as missing upstrea
   assert.equal(diff.status, 0);
 });
 
-test("a lazy blob fetch into the clone starts no background maintenance", (t) => {
+test("a blob fetch into the clone starts no background maintenance", (t) => {
   const { upstream, repo } = setup(t);
   const pinned = upstream.commit({ "skills/arena/SKILL.md": "arena v1\n" });
   upstream.commit({ "skills/arena/SKILL.md": "arena v2\n" });
@@ -207,6 +207,24 @@ test("a lazy blob fetch into the clone starts no background maintenance", (t) =>
   assert.equal(result.status, 0);
   assert.match(log, /built-in: git fetch .*--filter=blob:none/);
   assert.doesNotMatch(log, /git maintenance run/);
+});
+
+test("diff fetches the blobs for every skill from one upstream in a single fetch", (t) => {
+  const { upstream, repo } = setup(t);
+  const pinned = upstream.commit({ "skills/arena/SKILL.md": "arena v1\n", "skills/how/SKILL.md": "how v1\n" });
+  upstream.commit({ "skills/arena/SKILL.md": "arena v2\n", "skills/how/SKILL.md": "how v2\n" });
+  repo.addSkill("arena", { commit: pinned }, { "SKILL.md": "arena v1\n" });
+  repo.addSkill("how", { commit: pinned }, { "SKILL.md": "how v1\n" });
+  const trace = join(repo.root, "git-trace.log");
+
+  const result = repo.runWithEnv({ GIT_TRACE: trace }, "diff", "arena", "how");
+  const fetches = readFileSync(trace, "utf8").match(/built-in: git fetch /g) ?? [];
+
+  assert.equal(result.stderr, "");
+  assert.match(result.stdout, /^-arena v1\n\+arena v2$/m);
+  assert.match(result.stdout, /^-how v1\n\+how v2$/m);
+  assert.equal(fetches.length, 1);
+  assert.equal(result.status, 0);
 });
 
 function addThreeSkills(t: TestContext) {
