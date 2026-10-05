@@ -57,34 +57,32 @@ function setup(t: TestContext) {
 
   const repoDir = join(base, "repo");
   mkdirSync(repoDir);
+  let runs = 0;
   const repo = {
     root: repoDir,
     addSkill(name: string, manifest: { commit: string; tags?: string[]; mergeGuidance?: string }, files: Files) {
       writeFiles(join(repoDir, "skills", name), files);
-      writeFiles(repoDir, {
-        [`upstream/${name}.yaml`]: stringify({
-          repo: upstream.url,
-          path: `skills/${name}`,
-          commit: manifest.commit,
-          author: "Test Author",
-          license: "MIT",
-          tags: manifest.tags ?? [],
-          merge_guidance: manifest.mergeGuidance,
-        }),
+      this.writeManifest(name, {
+        repo: upstream.url,
+        path: `skills/${name}`,
+        commit: manifest.commit,
+        author: "Test Author",
+        license: "MIT",
+        tags: manifest.tags ?? [],
+        merge_guidance: manifest.mergeGuidance,
       });
     },
-    writeManifest(name: string, lines: string[]) {
-      writeFiles(repoDir, { [`upstream/${name}.yaml`]: [...lines, ""].join("\n") });
+    writeManifest(name: string, fields: Record<string, unknown>) {
+      writeFiles(repoDir, { [`upstream/${name}.yaml`]: stringify(fields) });
     },
     run(...args: string[]) {
-      return this.runWithEnv({}, ...args);
-    },
-    runWithEnv(env: Record<string, string>, ...args: string[]) {
-      return spawnSync(process.execPath, [script, ...args], {
+      const trace = join(base, `git-trace-${runs++}.log`);
+      const result = spawnSync(process.execPath, [script, ...args], {
         cwd: repoDir,
-        env: { ...gitEnv, ...env },
+        env: { ...gitEnv, GIT_TRACE: trace },
         encoding: "utf8",
       });
+      return { ...result, readTrace: () => readFileSync(trace, "utf8") };
     },
   };
 
@@ -199,13 +197,12 @@ test("a blob fetch into the clone starts no background maintenance", (t) => {
   repo.addSkill("arena", { commit: pinned }, {
     "SKILL.md": "arena v1\n",
   });
-  const trace = join(repo.root, "git-trace.log");
 
-  const result = repo.runWithEnv({ GIT_TRACE: trace }, "diff", "arena");
-  const log = readFileSync(trace, "utf8");
+  const result = repo.run("diff", "arena");
+  const log = result.readTrace();
 
   assert.equal(result.status, 0);
-  assert.match(log, /built-in: git fetch .*--filter=blob:none/);
+  assert.match(log, /built-in: git fetch /);
   assert.doesNotMatch(log, /git maintenance run/);
 });
 
@@ -215,10 +212,9 @@ test("diff fetches the blobs for every skill from one upstream in a single fetch
   upstream.commit({ "skills/arena/SKILL.md": "arena v2\n", "skills/how/SKILL.md": "how v2\n" });
   repo.addSkill("arena", { commit: pinned }, { "SKILL.md": "arena v1\n" });
   repo.addSkill("how", { commit: pinned }, { "SKILL.md": "how v1\n" });
-  const trace = join(repo.root, "git-trace.log");
 
-  const result = repo.runWithEnv({ GIT_TRACE: trace }, "diff", "arena", "how");
-  const fetches = readFileSync(trace, "utf8").match(/built-in: git fetch /g) ?? [];
+  const result = repo.run("diff", "arena", "how");
+  const fetches = result.readTrace().match(/built-in: git fetch /g) ?? [];
 
   assert.equal(result.stderr, "");
   assert.match(result.stdout, /^-arena v1\n\+arena v2$/m);
@@ -283,26 +279,28 @@ test("--all combined with names or tags is rejected", (t) => {
   assert.equal(result.status, 1);
 });
 
-for (const { title, lines, error } of [
+const validFields = { repo: "x", path: "skills/arena", commit: "abc", author: "A", license: "MIT", tags: [] };
+
+for (const { title, fields, error } of [
   {
     title: "a missing required key",
-    lines: ["repo: x", "path: skills/arena", "author: A", "license: MIT", "tags: [pstack]"],
+    fields: { ...validFields, commit: undefined },
     error: "upstream/arena.yaml: commit must be a non-empty string",
   },
   {
     title: "tags that are not a list of strings",
-    lines: ["repo: x", "path: skills/arena", "commit: abc", "author: A", "license: MIT", "tags: pstack"],
+    fields: { ...validFields, tags: "pstack" },
     error: "upstream/arena.yaml: tags must be a list of strings",
   },
   {
     title: "merge guidance that is not a string",
-    lines: ["repo: x", "path: p", "commit: c", "author: A", "license: MIT", "tags: []", "merge_guidance: [a]"],
+    fields: { ...validFields, merge_guidance: ["a"] },
     error: "upstream/arena.yaml: merge_guidance must be a non-empty string",
   },
 ]) {
   test(`a manifest with ${title} is rejected`, (t) => {
     const { repo } = setup(t);
-    repo.writeManifest("arena", lines);
+    repo.writeManifest("arena", fields);
 
     const result = repo.run("status", "arena");
 

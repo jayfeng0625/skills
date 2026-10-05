@@ -123,16 +123,15 @@ function inspectSkill(root: string, temp: string, name: string, manifest: Manife
   };
 }
 
-/** Fetches the missing blobs in one batch per clone, where a lazy fetch from diff costs a round trip per skill. */
-function fetchBlobs(skills: Skill[], blobTrees: (skill: Skill) => (string | null)[]) {
-  for (const clone of new Set(skills.map((skill) => skill.clone))) {
-    const cloneSkills = skills.filter((skill) => skill.clone === clone);
+/** A lazy fetch from diff would cost a round trip per skill. */
+function fetchBlobs(skills: Skill[], blobTrees: NonNullable<Command["blobTrees"]>) {
+  for (const [clone, cloneSkills] of Map.groupBy(skills, (skill) => skill.clone)) {
     const trees = cloneSkills.flatMap(blobTrees).filter((tree) => tree !== null);
     const objects = git(clone.dir, ["rev-list", "--objects", "--missing=print", ...trees]).split("\n");
     const missing = objects.filter((line) => line.startsWith("?")).map((line) => line.slice(1));
     if (missing.length === 0) continue;
-    // The flags git itself passes for a lazy fetch.
-    const options = ["--no-tags", "--no-write-fetch-head", "--recurse-submodules=no", "--filter=blob:none"];
+    // The flags git itself passes for a lazy fetch, less the filter, which the clone's config supplies.
+    const options = ["--no-tags", "--no-write-fetch-head", "--recurse-submodules=no"];
     const input = missing.join("\n");
     git(clone.dir, ["-c", "fetch.negotiationAlgorithm=noop", "fetch", ...options, "--stdin", "origin"], { input });
   }
