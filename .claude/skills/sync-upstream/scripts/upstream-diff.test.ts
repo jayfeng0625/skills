@@ -4,6 +4,8 @@ import { mkdirSync, mkdtempSync, readFileSync, rmSync, writeFileSync } from "nod
 import { tmpdir } from "node:os";
 import { dirname, join } from "node:path";
 import { test, type TestContext } from "node:test";
+import { pathToFileURL } from "node:url";
+import { stringify } from "yaml";
 
 const script = join(import.meta.dirname, "upstream-diff.ts");
 
@@ -44,7 +46,7 @@ function setup(t: TestContext) {
   git("config", "uploadpack.allowFilter", "true");
 
   const upstream = {
-    url: `file://${upstreamDir}`,
+    url: pathToFileURL(upstreamDir).href,
     commit(files: Files) {
       writeFiles(upstreamDir, files);
       git("add", "--all");
@@ -57,22 +59,19 @@ function setup(t: TestContext) {
   mkdirSync(repoDir);
   const repo = {
     root: repoDir,
-    addSkill(
-      name: string,
-      manifest: { path: string; commit: string; tags: string[]; mergeGuidance?: string },
-      files: Files,
-    ) {
+    addSkill(name: string, manifest: { commit: string; tags?: string[]; mergeGuidance?: string }, files: Files) {
       writeFiles(join(repoDir, "skills", name), files);
-      const guidance = manifest.mergeGuidance?.trimEnd().split("\n").map((line) => `  ${line}`);
-      this.writeManifest(name, [
-        `repo: ${upstream.url}`,
-        `path: ${manifest.path}`,
-        `commit: ${manifest.commit}`,
-        "author: Test Author",
-        "license: MIT",
-        `tags: [${manifest.tags.join(", ")}]`,
-        ...(guidance ? ["merge_guidance: |", ...guidance] : []),
-      ]);
+      writeFiles(repoDir, {
+        [`upstream/${name}.yaml`]: stringify({
+          repo: upstream.url,
+          path: `skills/${name}`,
+          commit: manifest.commit,
+          author: "Test Author",
+          license: "MIT",
+          tags: manifest.tags ?? [],
+          merge_guidance: manifest.mergeGuidance,
+        }),
+      });
     },
     writeManifest(name: string, lines: string[]) {
       writeFiles(repoDir, { [`upstream/${name}.yaml`]: [...lines, ""].join("\n") });
@@ -81,34 +80,37 @@ function setup(t: TestContext) {
       return this.runWithEnv({}, ...args);
     },
     runWithEnv(env: Record<string, string>, ...args: string[]) {
-      const result = spawnSync(process.execPath, [script, ...args], {
+      return spawnSync(process.execPath, [script, ...args], {
         cwd: repoDir,
         env: { ...gitEnv, ...env },
         encoding: "utf8",
       });
-      return { status: result.status, stdout: result.stdout, stderr: result.stderr };
     },
   };
 
   return { upstream, repo };
 }
 
+const upToDate = (name: string) => `${name}: up to date (upstream 0 files, local 0 files)\n`;
+
 test("status reports a skill as up to date when upstream has not changed since the pinned commit", (t) => {
   const { upstream, repo } = setup(t);
   const pinned = upstream.commit({ "skills/arena/SKILL.md": "arena v1\n" });
-  repo.addSkill("arena", { path: "skills/arena", commit: pinned, tags: ["pstack"] }, {
+  repo.addSkill("arena", { commit: pinned }, {
     "SKILL.md": "arena v1\n",
   });
 
   const result = repo.run("status", "arena");
 
   assert.equal(result.stderr, "");
-  assert.equal(result.stdout, "arena: up to date (upstream 0 files, local 0 files)\n");
+  assert.equal(result.stdout, upToDate("arena"));
   assert.equal(result.status, 0);
 });
 
+const sectionHeader = /^-- .*\n/m;
+
 function sections(stdout: string) {
-  const [header = "", upstreamChanges = "", localEdits = ""] = stdout.split(/^-- .*\n/m);
+  const [header = "", upstreamChanges = "", localEdits = ""] = stdout.split(sectionHeader);
   return { header, upstreamChanges, localEdits };
 }
 
@@ -116,7 +118,7 @@ test("diff shows upstream changes between the pinned commit and upstream HEAD", 
   const { upstream, repo } = setup(t);
   const pinned = upstream.commit({ "skills/arena/SKILL.md": "arena v1\n" });
   const head = upstream.commit({ "skills/arena/SKILL.md": "arena v2\n" });
-  repo.addSkill("arena", { path: "skills/arena", commit: pinned, tags: ["pstack"] }, {
+  repo.addSkill("arena", { commit: pinned }, {
     "SKILL.md": "arena v1\n",
   });
 
@@ -138,7 +140,7 @@ test("diff shows local edits against the pinned commit, including nested and loc
     "skills/arena/SKILL.md": "arena v1\n",
     "skills/arena/references/guide.md": "read .cursor/rules\n",
   });
-  repo.addSkill("arena", { path: "skills/arena", commit: pinned, tags: ["pstack"] }, {
+  repo.addSkill("arena", { commit: pinned }, {
     "SKILL.md": "arena v1\n",
     "references/guide.md": "read .claude/rules\n",
     LICENSE: "MIT License\n",
@@ -159,9 +161,7 @@ test("diff prints the manifest's merge guidance ahead of the diffs", (t) => {
   const { upstream, repo } = setup(t);
   const pinned = upstream.commit({ "skills/arena/SKILL.md": "arena v1\n" });
   repo.addSkill("arena", {
-    path: "skills/arena",
     commit: pinned,
-    tags: ["pstack"],
     mergeGuidance: "Keep the local .claude/ paths.\nDrop Grok model slugs.\n",
   }, { "SKILL.md": "arena v1\n" });
 
@@ -177,7 +177,7 @@ test("a skill whose path is gone at upstream HEAD is reported as missing upstrea
   const { upstream, repo } = setup(t);
   const pinned = upstream.commit({ "skills/arena/SKILL.md": "arena v1\n", "README.md": "x\n" });
   upstream.commit({ "skills/arena/SKILL.md": null });
-  repo.addSkill("arena", { path: "skills/arena", commit: pinned, tags: ["pstack"] }, {
+  repo.addSkill("arena", { commit: pinned }, {
     "SKILL.md": "arena v1\n",
   });
 
@@ -196,7 +196,7 @@ test("a lazy blob fetch into the clone starts no background maintenance", (t) =>
   const { upstream, repo } = setup(t);
   const pinned = upstream.commit({ "skills/arena/SKILL.md": "arena v1\n" });
   upstream.commit({ "skills/arena/SKILL.md": "arena v2\n" });
-  repo.addSkill("arena", { path: "skills/arena", commit: pinned, tags: ["pstack"] }, {
+  repo.addSkill("arena", { commit: pinned }, {
     "SKILL.md": "arena v1\n",
   });
   const trace = join(repo.root, "git-trace.log");
@@ -217,7 +217,7 @@ function addThreeSkills(t: TestContext) {
     "skills/tdd/SKILL.md": "tdd\n",
   });
   const add = (name: string, tags: string[]) =>
-    fixture.repo.addSkill(name, { path: `skills/${name}`, commit: pinned, tags }, {
+    fixture.repo.addSkill(name, { commit: pinned, tags }, {
       "SKILL.md": `${name}\n`,
     });
   add("arena", ["pstack", "verifiers"]);
@@ -225,8 +225,6 @@ function addThreeSkills(t: TestContext) {
   add("tdd", ["testing"]);
   return fixture;
 }
-
-const upToDate = (name: string) => `${name}: up to date (upstream 0 files, local 0 files)\n`;
 
 test("names and repeated --tag flags select every skill matching any of them, in name order", (t) => {
   const { repo } = addThreeSkills(t);
@@ -297,14 +295,29 @@ for (const { title, lines, error } of [
 }
 
 for (const { title, args, error } of [
-  { title: "a name without a manifest", args: ["arena", "nope"], error: "no manifest at upstream/nope.yaml" },
-  { title: "a tag no skill carries", args: ["--tag", "pstack", "--tag", "nope"], error: "no skill has tag: nope" },
-  { title: "an empty selection", args: [], error: "select skills by name, --tag, or --all" },
+  {
+    title: "a name without a manifest",
+    args: ["status", "arena", "nope"],
+    error: "no manifest at upstream/nope.yaml",
+  },
+  {
+    title: "a tag no skill carries",
+    args: ["status", "--tag", "pstack", "--tag", "nope"],
+    error: "no skill has tag: nope",
+  },
+  { title: "an empty selection", args: ["status"], error: "select skills by name, --tag, or --all" },
+  { title: "verbatim with --all", args: ["verbatim", "--all"], error: "verbatim takes skill names only" },
+  {
+    title: "verbatim with --tag",
+    args: ["verbatim", "arena", "--tag", "pstack"],
+    error: "verbatim takes skill names only",
+  },
+  { title: "verbatim with no skill names", args: ["verbatim"], error: "verbatim needs at least one skill name" },
 ]) {
   test(`${title} is rejected before any upstream is fetched`, (t) => {
     const { repo } = addThreeSkills(t);
 
-    const result = repo.run("status", ...args);
+    const result = repo.run(...args);
 
     assert.equal(result.stdout, "");
     assert.equal(result.stderr, `error: ${error}\n`);
@@ -317,14 +330,12 @@ function runVerbatimOnEditedArena(t: TestContext) {
   const pinned = upstream.commit({ "skills/arena/SKILL.md": "arena v1\n" });
   const head = upstream.commit({ "skills/arena/SKILL.md": "arena v2\n" });
   repo.addSkill("arena", {
-    path: "skills/arena",
     commit: pinned,
-    tags: ["pstack"],
     mergeGuidance: "Keep the local .claude/ paths.\n",
   }, { "SKILL.md": "arena local\n", LICENSE: "MIT License\n" });
 
   const result = repo.run("verbatim", "arena");
-  const [header = "", ...diffs] = result.stdout.split(/^-- .*\n/m);
+  const [header = "", ...diffs] = result.stdout.split(sectionHeader);
   return { head, result, header, diffs };
 }
 
@@ -349,29 +360,13 @@ test("verbatim reports a skill whose path is gone at upstream HEAD", (t) => {
   const { upstream, repo } = setup(t);
   const pinned = upstream.commit({ "skills/arena/SKILL.md": "arena v1\n", "README.md": "x\n" });
   upstream.commit({ "skills/arena/SKILL.md": null });
-  repo.addSkill("arena", { path: "skills/arena", commit: pinned, tags: ["pstack"] }, {
+  repo.addSkill("arena", { commit: pinned }, {
     "SKILL.md": "arena v1\n",
   });
 
   const result = repo.run("verbatim", "arena");
 
   assert.equal(result.stderr, "");
-  assert.equal(result.stdout.split(/^-- .*\n/m)[1]?.trim(), "(skills/arena not found at HEAD)");
+  assert.equal(result.stdout.split(sectionHeader)[1]?.trim(), "(skills/arena not found at HEAD)");
   assert.equal(result.status, 0);
 });
-
-for (const { title, args, error } of [
-  { title: "--all", args: ["verbatim", "--all"], error: "verbatim takes skill names only" },
-  { title: "--tag", args: ["verbatim", "arena", "--tag", "pstack"], error: "verbatim takes skill names only" },
-  { title: "no skill names", args: ["verbatim"], error: "verbatim needs at least one skill name" },
-]) {
-  test(`verbatim with ${title} is rejected before any upstream is fetched`, (t) => {
-    const { repo } = addThreeSkills(t);
-
-    const result = repo.run(...args);
-
-    assert.equal(result.stdout, "");
-    assert.equal(result.stderr, `error: ${error}\n`);
-    assert.equal(result.status, 1);
-  });
-}

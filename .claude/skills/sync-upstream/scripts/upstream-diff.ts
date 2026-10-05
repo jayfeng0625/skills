@@ -72,11 +72,12 @@ function select(manifests: Map<string, Manifest>, names: string[], tags: string[
   return [...selected].sort();
 }
 
+type Clone = { dir: string; head: string };
+
 type Skill = {
   name: string;
   manifest: Manifest;
-  clone: string;
-  head: string;
+  clone: Clone;
   /** Tree-ish of the skill folder at the pinned commit, upstream HEAD, and in this repo. */
   pinnedTree: string;
   headTree: string | null;
@@ -92,12 +93,11 @@ function treeExists(clone: string, treeish: string) {
   }
 }
 
-type Clone = { dir: string; head: string };
-
 function cloneRepo(temp: string, repo: string, index: number): Clone {
   const dir = join(temp, `clone-${index}`);
   // A lazy blob fetch ends in detached auto maintenance, which would write into the clone while main deletes it.
-  git(temp, ["clone", "--quiet", "--no-checkout", "--filter=blob:none", "--config", "maintenance.auto=false", repo, dir]);
+  const options = ["--quiet", "--no-checkout", "--filter=blob:none", "--config", "maintenance.auto=false"];
+  git(temp, ["clone", ...options, repo, dir]);
   return { dir, head: git(dir, ["rev-parse", "HEAD"]) };
 }
 
@@ -113,8 +113,7 @@ function inspectSkill(root: string, temp: string, name: string, manifest: Manife
   return {
     name,
     manifest,
-    clone: clone.dir,
-    head: clone.head,
+    clone,
     pinnedTree: `${manifest.commit}:${manifest.path}`,
     headTree: treeExists(clone.dir, headTree) ? headTree : null,
     localTree,
@@ -122,7 +121,7 @@ function inspectSkill(root: string, temp: string, name: string, manifest: Manife
 }
 
 function diffTrees(skill: Skill, from: string, to: string, ...options: string[]) {
-  return git(skill.clone, ["diff", "--no-color", "--no-ext-diff", ...options, from, to]);
+  return git(skill.clone.dir, ["diff", "--no-color", "--no-ext-diff", ...options, from, to]);
 }
 
 function countFiles(skill: Skill, from: string, to: string) {
@@ -160,7 +159,7 @@ function printDiff(skill: Skill) {
   const { manifest } = skill;
   printSource(skill);
   console.log(`commit: ${manifest.commit}`);
-  console.log(`head: ${skill.head}`);
+  console.log(`head: ${skill.clone.head}`);
   if (manifest.merge_guidance !== undefined) {
     console.log(`merge_guidance:\n${manifest.merge_guidance.trimEnd()}`);
   }
@@ -170,7 +169,7 @@ function printDiff(skill: Skill) {
 
 function printVerbatimDiff(skill: Skill) {
   printSource(skill);
-  console.log(`head: ${skill.head}`);
+  console.log(`head: ${skill.clone.head}`);
   printSection(skill, `verbatim (head..skills/${skill.name})`, skill.headTree, skill.localTree);
 }
 
