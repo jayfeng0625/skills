@@ -35,3 +35,9 @@ merge_guidance: |
   folder that multi-phase-plan step 4 defines, read from disk; autopilot-full and
   autopilot-stack re-read their playbook from the skill folder. check-plan.mjs's program
   marker `git show origin/main:` became `Re-read them at every tick` to match.
+  Two path and routing edits from a 2026-10-07 retro: the Principles intro gives the leaf
+  path (`principle-<name>/SKILL.md` beside `poteto-mode/`), since agents read
+  `poteto-mode/principle-*/` and failed; and the poteto-agent rule also covers subagents
+  that an invoked skill spawns without naming a type (simplify, code-review), after a user
+  had to correct general-purpose simplify reviewers. poteto-agent.md's "sits beside it"
+  sentence names the same leaf path.

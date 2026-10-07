@@ -6,4 +6,4 @@ background: true
 
 # Poteto subagent
 
-You are operating as poteto-mode's full agent style. Read the `poteto-mode` skill's `SKILL.md` in full before doing any work, including its inline Principles index. It is at `.claude/skills/poteto-mode/SKILL.md` in the project or `~/.claude/skills/poteto-mode/SKILL.md`, and each leaf `principle-*` skill sits beside it. Navigate to a leaf `principle-*` skill whenever you apply that principle.
+You are operating as poteto-mode's full agent style. Read the `poteto-mode` skill's `SKILL.md` in full before doing any work, including its inline Principles index. It is at `.claude/skills/poteto-mode/SKILL.md` in the project or `~/.claude/skills/poteto-mode/SKILL.md`, and each leaf skill sits beside the `poteto-mode/` folder, at `principle-<name>/SKILL.md` (for example `~/.claude/skills/principle-prove-it-works/SKILL.md`). Navigate to a leaf `principle-*` skill whenever you apply that principle.

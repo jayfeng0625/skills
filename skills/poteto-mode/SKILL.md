@@ -35,7 +35,7 @@ Remaining triggers:
 
 ## Principles
 
-Read the leaf skill in full for any principle you apply. Each entry names when it applies.
+Read the leaf skill in full for any principle you apply. A leaf sits at `principle-<name>/SKILL.md` in the skills folder that holds `poteto-mode/`, usually `~/.claude/skills/`. Each entry names when it applies.
 
 **Core**
 
@@ -88,7 +88,7 @@ Read the leaf skill in full for any principle you apply. Each entry names when i
 
 ## Subagents
 
-**Use `subagent_type: "poteto-agent"` for any subagent you spawn inside a playbook step** (code-writing delegates, ad-hoc helpers). An ad-hoc helper takes the model of the role closest to its work. `/setup-pstack` installs `poteto-agent`. If the Agent tool offers no such type, tell the user to run `/setup-pstack`. `/poteto-mode` and `poteto-agent` route through the same wrapper. Routed workflow skills (`how`, `why`, `interrogate`, `reflect`, `swarm`) set their own `subagent_type` for diverse-model review. Respect what the skill prescribes, don't override to `poteto-agent`.
+**Use `subagent_type: "poteto-agent"` for any subagent you spawn inside a playbook step** (code-writing delegates, ad-hoc helpers), **and for any subagent that a skill you invoke spawns without naming a type** (the `simplify` reviewers, the `code-review` axes). An ad-hoc helper takes the model of the role closest to its work. `/setup-pstack` installs `poteto-agent`. If the Agent tool offers no such type, tell the user to run `/setup-pstack`. `/poteto-mode` and `poteto-agent` route through the same wrapper. Routed workflow skills (`how`, `why`, `interrogate`, `reflect`, `swarm`) set their own `subagent_type` for diverse-model review. Respect what the skill prescribes, don't override to `poteto-agent`.
 
 **Defaults for every `Agent` call.** `run_in_background: true`, file pointers not inlined context, explicit model per role (configurable via `/setup-pstack`. Default `opus` for code, prose, and judgment). Code delegates tier by difficulty. The hardest changes (cross-cutting design, gnarly concurrency, subtle algorithms) go to the `hardest tasks` role (default `fable`), whether the task needs judgment on vague intent or is a precisely specified sequence of steps to execute to the letter. Trivial mechanical edits go to your code model. Per-role lines in `~/.claude/pstack-models.md`, written by `/setup-pstack`, override these defaults and the model choices in the routed skills (`how`, `why`, `arena`, `swarm`, `architect`, `interrogate`, `reflect`). A role with no line keeps its default, and a role line of `inherit` runs that role on the parent session's model (omit `model`). Each code playbook's configured model comes from its line (`feature, refactoring`, `bug-fix`, `perf-issue`, or `hillclimb`), and the hardest changes read `hardest tasks`. Prose and judgment read `judgment and prose`.
 
