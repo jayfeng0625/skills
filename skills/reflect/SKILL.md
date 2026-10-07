@@ -26,9 +26,9 @@ Take the session path. If no path resolves, write a tight digest of the session 
 
 ### 2. Spawn three reviewers in parallel
 
-One message, three `Agent` calls, each with the subagent type and `model` its role line sets below. Reviewers need MCP access for context lookups (tickets, chat threads, observability traces referenced in the transcript), and the `general-purpose` type carries the session's MCP tools.
+One message, three `Agent` calls, each with the subagent type, `model`, and `effort` its role line sets below. Reviewers need MCP access for context lookups (tickets, chat threads, observability traces referenced in the transcript), and the `general-purpose` type carries the session's MCP tools.
 
-Each reviewer and the synthesizer name a role line in `~/.claude/pstack-models.md` and a default. Set `model` to that line's value, or to the default if the file or the line is missing. Leave `model` unset when the value is `inherit`. Spawn subagent type `general-purpose`. If the Agent tool rejects a model, use `inherit` and say so.
+Each reviewer and the synthesizer name a role line in `~/.claude/pstack-models.md` and a default. The line's value is a model and an optional effort, such as `opus high`. Set `model` and `effort` from it, or `model` from the default if the file or the line is missing. Leave `model` unset when the model is `inherit`, and leave `effort` unset when the value names none. Spawn subagent type `general-purpose`. If the Agent tool rejects a model, use `inherit` and say so.
 
 | Lens | Role line | Default | Prompt template |
 |---|---|---|---|
@@ -40,7 +40,7 @@ Pass each template verbatim, substituting the transcript path or digest where ma
 
 ### 3. Synthesize
 
-One `Agent` call, with the subagent type and `model` from the `reflect judgment, divergent, synthesizer` line (default `opus`). The synthesizer's quality check includes spot-verifying citations, which can require MCP access. Use `references/synthesizer.md` verbatim, with each reviewer's full output inlined where marked. The synthesizer returns a structured Accepted / Rejected / Backlog list.
+One `Agent` call, with the subagent type, `model`, and `effort` from the `reflect judgment, divergent, synthesizer` line (default `opus`). The synthesizer's quality check includes spot-verifying citations, which can require MCP access. Use `references/synthesizer.md` verbatim, with each reviewer's full output inlined where marked. The synthesizer returns a structured Accepted / Rejected / Backlog list.
 
 ### 4. Structural enforcement check
 

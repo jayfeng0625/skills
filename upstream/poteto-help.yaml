@@ -9,7 +9,8 @@ merge_guidance: |
   landed upstream in 4e5b1cf, after that commit.
   Public links go to github.com/jayfeng0625/skills/blob/main/skills/. The model file is
   ~/.claude/pstack-models.md, roles use `inherit` for `auto`/`inherit-parent`, and the
-  reasoning-budget question is dropped (setup-pstack here sets models only).
+  reasoning-budget question is dropped (setup-pstack here sets a model and effort per entry,
+  with no global budget).
   Cursor-only material is dropped: /add-plugin and Customize install (became
   `npx skills add jayfeng0625/skills`), Custom Modes and Enter vs Option+Enter (became how
   a typed skill stays in the conversation, and the cost of retyping /poteto-mode), the

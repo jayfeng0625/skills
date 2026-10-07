@@ -46,6 +46,7 @@ For each reviewer:
 - Entry: the configured `interrogate reviewers` entry, or the table default with no configured line.
 - `subagent_type`: `general-purpose`
 - `model`: the entry's model. For an `inherit` model, omit `model` so that reviewer runs on the parent model.
+- `effort`: the entry's effort, such as `high` in `opus high`. Omit it when the entry names none.
 - Read-only: the brief says the reviewer edits no files.
 
 If the Agent tool rejects an entry, run that reviewer on `inherit` and say so. Do not block the review on the model issue.

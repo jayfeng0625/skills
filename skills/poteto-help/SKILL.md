@@ -37,12 +37,12 @@ When the model file is missing and it matters, ask whether the user wants to pic
 ## Get set up
 
 1. Install with `npx skills add jayfeng0625/skills`.
-2. Run [`/setup-pstack`](../setup-pstack/SKILL.md). It maps a model to each role, writes `~/.claude/pstack-models.md`, and installs pstack's subagents into `~/.claude/agents/`. The model file applies to the next pstack skill run.
+2. Run [`/setup-pstack`](../setup-pstack/SKILL.md). It maps a model and effort to each role, writes `~/.claude/pstack-models.md`, and installs pstack's subagents into `~/.claude/agents/`. The model file applies to the next pstack skill run.
 3. Start a real task with `/poteto-mode`, a goal, and a check that can pass or fail.
 
 Installing changes nothing until the user invokes a skill. Of the skills this file routes to, only `/setup-pstack`, `/tdd`, and `/deslop` load from the user's words. Offer to word their first prompt with them, per [`references/prompting.md`](references/prompting.md).
 
-If cost is the worry, say where the tokens go and how to spend fewer. pstack spends extra tokens on subagents and review panels. Rerun `/setup-pstack` and pick cheaper models. A role set to `inherit` runs on the session's model. A shorter panel list runs fewer subagents, one for each entry. Save `/poteto-mode` for work that needs rigor.
+If cost is the worry, say where the tokens go and how to spend fewer. pstack spends extra tokens on subagents and review panels. Rerun `/setup-pstack` and pick cheaper models or lower efforts. A role set to `inherit` runs on the session's model. A shorter panel list runs fewer subagents, one for each entry. Save `/poteto-mode` for work that needs rigor.
 
 ## Start a task with `/poteto-mode`
 
@@ -79,7 +79,7 @@ The default answer is `/poteto-mode`, which runs most of the others when its ste
 | Vet a performance number before reporting or acting on it | [`/benchmark-checklist`](../benchmark-checklist/SKILL.md) |
 | Run a large or cross-cutting change, or one to review after stepping away | [`/figure-it-out`](../figure-it-out/SKILL.md) |
 | Keep a decision log during a run, and review it afterward | [`/show-me-your-work`](../show-me-your-work/SKILL.md) |
-| Pick a model for each role | [`/setup-pstack`](../setup-pstack/SKILL.md) |
+| Pick a model and effort for each role | [`/setup-pstack`](../setup-pstack/SKILL.md) |
 | Turn their own working habits into a personal mode skill | [`/automate-me`](../automate-me/SKILL.md) |
 | Turn what a finished task taught into skill edits | [`/reflect`](../reflect/SKILL.md) |
 | Stop agents from repeating the same mistakes in this repo | [`/correct`](../correct/SKILL.md) |

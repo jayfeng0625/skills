@@ -10,7 +10,7 @@ metadata:
 
 Explore the codebase to answer "how does X work?" questions. Produce architectural explanations at the level of a senior engineer onboarding onto a subsystem, enough to build a working mental model, not so much that it reads like annotated source code.
 
-Each spawn below names a role line in `~/.claude/pstack-models.md` and a default. Set `model` to that line's value, or to the default if the file or the line is missing. Leave `model` unset when the value is `inherit`. Spawn subagent type `general-purpose`. If the Agent tool rejects a model, use `inherit` and say so.
+Each spawn below names a role line in `~/.claude/pstack-models.md` and a default. The line's value is a model and an optional effort, such as `opus high`. Set `model` and `effort` from it, or `model` from the default if the file or the line is missing. Leave `model` unset when the model is `inherit`, and leave `effort` unset when the value names none. Spawn subagent type `general-purpose`. If the Agent tool rejects a model, use `inherit` and say so.
 
 ## Step 1. Assess Complexity
 
